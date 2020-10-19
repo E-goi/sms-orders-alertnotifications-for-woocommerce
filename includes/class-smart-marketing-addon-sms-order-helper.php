@@ -411,7 +411,9 @@ Obrigado'
 		$args = array(
 			"status" => array(
 				"pending",
-				"on-hold"
+				"on-hold",
+                "wc-on-hold",
+                "wc-pending",
 			),
 			"date_created" => (time() - $limit_time) . '...' . (time() - $seconds),
 			'limit' => -1
@@ -563,7 +565,7 @@ Obrigado'
         $reference = $this->smsonw_get_payment_data($order, 'ref');
         $lang = $this->smsonw_get_lang($order['billing']['country']);
         $mb_image = plugin_dir_url( __FILE__ ) . "../admin/img/multibanco-logo.png";
-        
+
         $tags = array(
             '%order_id%'        => $order['id'],
             '%order_status%'    => $order['status'],
@@ -587,9 +589,9 @@ Obrigado'
                 ?$carriers_url[$codes[0]['carrier']]
                 :'',
             '%mb_table%'         => $this->smsonw_get_mb_table_html(
-                $entity, 
+                $entity,
                 $reference,
-                $order['total'].$order['currency'], 
+                $order['total'].$order['currency'],
                 $mb_image,
                 $lang)
         );
@@ -642,7 +644,7 @@ Obrigado'
         }
 
         $img ='<img src="'.$img_src.'" style="width:70%;display:block;margin-left: auto; margin-right: auto; padding:10px 0 10px 0">';
-       
+
 
         $content = '<table style="width:50%;margin-left: auto !important; margin-right: auto !important;" >
         <tbody>
@@ -680,7 +682,7 @@ Obrigado'
 	 * @return mixed
 	 */
 	public function smsonw_send_sms($recipient, $message, $type, $order_id, $gsm = false, $max_count = 3) {
-		$url = 'http://dev-web-agency.e-team.biz/smaddonsms/sms'; 
+		$url = 'http://dev-web-agency.e-team.biz/smaddonsms/sms';
 
 		$sender = json_decode(get_option('egoi_sms_order_sender'), true);
 
@@ -712,7 +714,7 @@ Obrigado'
 
 		return $result;
     }
-    
+
     /**
 	 * Method to send SMS
 	 *
@@ -725,7 +727,7 @@ Obrigado'
 	 * @return mixed
 	 */
 	public function smsonw_send_email($email, $message, $order) {
-        
+
         $subject = '['.get_bloginfo( 'name' ).']:'.  __( 'Order', 'smart-marketing-addon-sms-order' ).' #'.$order.' - '.__( 'Payment reminder', 'smart-marketing-addon-sms-order' );
         $content = str_replace(array('\n'), '<br>', $message);
 
@@ -733,8 +735,8 @@ Obrigado'
         $thumbnail = '';
         $blog_info = array(
             'description' => get_bloginfo('description'),
-        );       
-        
+        );
+
         $template_file = apply_filters('egoi_email_remider', plugin_dir_path( __DIR__ ).'../smart-marketing-for-wp/admin/partials/emailcampaignwidget/email_campaign.php', $title, $content, $thumbnail, $blog_info);
 
         ob_start();
