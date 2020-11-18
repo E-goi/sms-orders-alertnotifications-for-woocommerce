@@ -168,8 +168,7 @@ class Smart_Marketing_Addon_Sms_Order {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'smsonw_enqueue_scripts' );
 
 		// CRON and payment reminder
-		$this->loader->add_action('cron_schedules', $plugin_admin, 'smsonw_my_add_every_fifteen_minutes');
-		$this->loader->add_filter('egoi_sms_order_event', $plugin_admin, 'smsonw_sms_order_reminder');
+		$this->loader->add_action('egoi_sms_order_event', $plugin_admin, 'smsonw_sms_order_reminder');
 
 		// Box send SMS in admin order page
 		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'smsonw_order_add_sms_meta_box');
@@ -190,7 +189,12 @@ class Smart_Marketing_Addon_Sms_Order {
         // PagSeguro integration
         $this->loader->add_action('rest_api_init', $plugin_admin, 'smsonw_billet_endpoint');
 
-	}
+        $this->loader->add_action( 'woocommerce_before_product_object_save', $plugin_admin, 'update_the_product_price', 10, 1 );
+
+        //abandoned cart reminder
+        $this->loader->add_action('egoi_sms_order_event', $plugin_admin, 'smsonw_sms_abandoned_cart_process');
+
+    }
 
 	/**
 	 * Register all of the hooks related to the public-facing functionality
@@ -210,7 +214,22 @@ class Smart_Marketing_Addon_Sms_Order {
 		$this->loader->add_action('woocommerce_after_checkout_billing_form', $plugin_public, 'smsonw_notification_checkout_field');
 		$this->loader->add_action('woocommerce_checkout_update_order_meta', $plugin_public, 'smsonw_notification_checkout_field_update_order_meta');
 
-	}
+		// Add follow price button to product page
+		$follow_price = json_decode(get_option('egoi_sms_follow_price'), true);
+		if( isset($follow_price["follow_price_enable"]) && $follow_price["follow_price_enable"] == "on" ){
+			if(isset($follow_price['follow_price_position'])){
+				$this->loader->add_action($follow_price['follow_price_position'], $plugin_public, 'smsonw_follow_price_add_button');
+			}
+		}
+
+		//abandoned_cart
+		$this->loader->add_action('wp_head', $plugin_public, 'smsonw_notification_abandoned_cart_trigger');
+        $this->loader->add_action('woocommerce_new_order', $plugin_public, 'smsonw_notification_abandoned_cart_clear');
+
+        $this->loader->add_action('wp_ajax_egoi_cellphone_actions', $plugin_public, 'egoi_cellphone_actions');
+        $this->loader->add_action('wp_ajax_nopriv_egoi_cellphone_actions', $plugin_public, 'egoi_cellphone_actions');
+
+    }
 
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.

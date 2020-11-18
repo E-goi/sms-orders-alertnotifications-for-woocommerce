@@ -22,6 +22,48 @@ $sender_option = json_decode(get_option('egoi_sms_order_sender'), true);
 $recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
 $texts = json_decode(get_option('egoi_sms_order_texts'), true);
 $payment_texts = json_decode(get_option('egoi_sms_order_payment_texts'), true);
+$follow_price = json_decode(get_option('egoi_sms_follow_price'), true);
+$abandoned_cart_obj = json_decode(get_option('egoi_sms_abandoned_cart'), true);
+
+if (empty($abandoned_cart_obj)) {
+	$abandoned_cart_obj = [
+		"message"            => __('Olá relembramos que deixou produtos no seu carrinho, clique aqui para recuperar %link%', 'smart-marketing-addon-sms-order'),
+		"title_pop"          => __('Olá deixe aqui o seu contacto para conseguirmos entrar em contacto consigo.', 'smart-marketing-addon-sms-order'),
+		"button_name"        => __('Enviar', 'smart-marketing-addon-sms-order'),
+		"button_cancel_name" => __('Cancelar', 'smart-marketing-addon-sms-order'),
+		"enable"             => "",
+		"shortener"          => "on",
+		"background_color"   => "#000000",
+		"text_color"         => "#ffffff",
+		"button_color"       => "#a19fa1",
+		"button_text_color"  => "#000000"
+	];
+	update_option('egoi_sms_abandoned_cart', json_encode($abandoned_cart_obj));
+}
+
+if (empty($follow_price)) {
+	$follow_price = [
+		"follow_price_message"     => __( 'Olá, alteramos o preço de %product%, clique aqui para ver as alterações %link%', 'smart-marketing-addon-sms-order' ),
+		"follow_title_pop"         => __( 'Olá deixe aqui o seu contacto para conseguirmos entrar em contacto consigo.', 'smart-marketing-addon-sms-order' ),
+		"follow_price_button_name" => __( 'Enviar', 'smart-marketing-addon-sms-order' ),
+		"enable"                   => "",
+		"shortener"                => "on",
+		"background_color"         => "#000000",
+		"text_color"               => "#ffffff",
+		"button_color"             => "#a19fa1",
+		"button_text_color"        => "#000000"
+	];
+	update_option('egoi_sms_follow_price', json_encode($follow_price));
+}
+
+if (empty($follow_price["follow_background_color"])) {
+	$follow_price["follow_background_color"] = "#000000";
+	$follow_price["follow_text_color"] = "#ffffff";
+	$follow_price["follow_button_color"] = "#a19fa1";
+	$follow_price["follow_button_text_color"] = "#000000";
+}
+
+
 $senders = $this->helper->smsonw_get_senders();
 $soap_error = $this->helper->smsonw_get_soap_error();
 $balance = $this->helper->smsonw_get_balance();
@@ -53,6 +95,14 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
 
     <a class="nav-tab nav-tab-addon" id="nav-tab-sms-tracking-texts">
         <?php _e('SMS URL Tracking', 'smart-marketing-addon-sms-order'); ?>
+    </a>
+
+    <a class="nav-tab nav-tab-addon" id="nav-tab-sms-follow-price">
+        <?php _e('SMS Follow Price', 'smart-marketing-addon-sms-order'); ?>
+    </a>
+
+    <a class="nav-tab nav-tab-addon" id="nav-tab-sms-abandoned-cart">
+        <?php _e('Abandoned Cart', 'smart-marketing-addon-sms-order'); ?>
     </a>
 
     <a class="nav-tab nav-tab-addon" id="nav-tab-sms-help">
@@ -518,6 +568,195 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
 </div>
 
 
+<!-- wrap SMS FOLLOW PRICES -->
+<div class="wrap tab wrap-addon" id="tab-sms-follow-price">
+    <div class="wrap egoi4wp-settings" id="tab-forms">
+        <?php
+        if (isset($_POST['form_id']) && $_POST['form_id'] == 'form-sms-follow-price') {
+            if ($result) {
+                $this->helper->smsonw_admin_notice_success();
+            } else {
+                $this->helper->smsonw_admin_notice_error();
+            }
+        }
+        ?>
+        <div class="main-content col col-12" style="margin:0 0 20px;">
+            <p class="label_text"><?php _e('Use this plugin to send Follow price SMS.', 'smart-marketing-addon-sms-order'); ?></p>
+            <br>
+            <form action="#" method="post" class="form-sms-follow-price" id="form-sms-follow-price">
+                <?php wp_nonce_field( 'form-sms-follow-price' ); ?>
+                <input name="form_id" type="hidden" value="form-sms-follow-price" />
+
+                <div id="sms_follow_price">
+                    <table border="0" class="widefat striped" style="max-width: 900px;">
+                         <thead>
+                            <tr>
+                                <th><?php _e('Configurations', 'smart-marketing-addon-sms-order');?></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span><?php _e('Positions', 'smart-marketing-addon-sms-order');?></span></td>
+                                <td>
+                                    <select name="follow_price_position" id="egoi_sms_follow_price_position" style="min-width: 400px;width: 100%;">
+                                        <?php
+
+                                        foreach ($this->helper->smsonw_admin_follow_price_positions() as $k => $v) {
+                                            $selected = '';
+
+                                            if(isset($follow_price['follow_price_position'])){
+                                                $selected = ($follow_price['follow_price_position'] == $k) ? 'selected' : '';
+                                            }
+
+                                            echo '<option ' .$selected. ' value="'.$k.'">';
+                                            _e($v, "smart-marketing-addon-sms-order");
+                                            echo '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span><?php _e('Message', 'smart-marketing-addon-sms-order');?></span></td>
+                                <td>
+                                    <textarea name="follow_price_message" id="egoi_sms_follow_price_message" style="min-width: 400px;width: 100%;"><?php
+                                            echo (isset($follow_price["follow_price_message"]) && trim($follow_price["follow_price_message"]) != '') ? $follow_price["follow_price_message"] : '';
+                                    ?></textarea>
+                                    <p>
+                                        <?php _e('Use <b>%link%</b> to choose the position of the link otherwise the link will be placed at the end','smart-marketing-addon-sms-order');?><br>
+	                                    <?php _e('Use <b>%shop_name%</b> for shop name display.','smart-marketing-addon-sms-order');?><br>
+	                                    <?php _e('Use <b>%product%</b> for product name.','smart-marketing-addon-sms-order');?>
+                                    </p>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><span><?php _e('Title Pop', 'smart-marketing-addon-sms-order');?></span></td>
+                                <td>
+                                    <div>
+                                        <input type="text" id="follow_title_pop" name="follow_title_pop" style="width: 100%;"
+                                               value="<?php
+			                                   echo (isset($follow_price["follow_title_pop"]) ) ? $follow_price["follow_title_pop"] : ''; ?>"
+                                        >
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><span><?php _e('Text on button', 'egoi_sms_follow_price_button_name');?></span></td>
+                                <td>
+                                    <div>
+                                        <input type="text" id="follow_price_button_name" name="follow_price_button_name" style="width: 100%;"
+                                               value="<?php
+                                            echo (isset($follow_price["follow_price_button_name"]) ) ? $follow_price["follow_price_button_name"] : ''; ?>"
+                                        >
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><span><?php _e('Enabled', 'egoi_sms_follow_price_enable_title');?></span></td>
+                                <td>
+                                    <div>
+                                      <input type="checkbox" id="follow_price_enable" name="follow_price_enable"
+                                       <?php
+                                        echo (isset($follow_price["follow_price_enable"]) && $follow_price["follow_price_enable"] == "on") ? 'checked' : ''; ?>
+                                      >
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><span><?php _e('Shortener', 'egoi_sms_follow_price_enable_title');?></span></td>
+                                <td>
+                                    <div>
+                                        <input type="checkbox" id="follow_price_shortener" name="follow_price_shortener"
+                                            <?php
+                                            echo (isset($follow_price["follow_price_shortener"]) && $follow_price["follow_price_shortener"] == "on") ? 'checked' : ''; ?>
+                                        >
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="2">
+                                    <b><?php _e( 'Styles for dialog', 'egoi_sms_follow_price_enable_title' ); ?></b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <div>
+                                        <div class="smsnf-input-group">
+                                            <label for="bar-text-color" style="font-size: 13px;"><?php _e( 'Background Color', 'egoi_sms_follow_price_enable_title' ); ?></label>
+
+                                            <div class="colorpicker-wrapper">
+                                                <div style="background-color:<?= esc_attr( $follow_price['follow_background_color'] ) ?>" class="view" ></div>
+                                                <input id="follow_background_color" type="text" name="follow_background_color" value="<?= esc_attr( $follow_price['follow_background_color'] ) ?>"  autocomplete="off" />
+                                                <p><?= _e( 'Select Color', 'egoi_sms_follow_price_enable_title' ) ?></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <div>
+                                        <div class="smsnf-input-group">
+                                            <label for="bar-text-color" style="font-size: 13px;"><?php _e( 'Text Color', 'egoi_sms_follow_price_enable_title' ); ?></label>
+
+                                            <div class="colorpicker-wrapper">
+                                                <div style="background-color:<?= esc_attr( $follow_price['follow_text_color'] ) ?>" class="view" ></div>
+                                                <input id="follow_text_color" type="text" name="follow_text_color" value="<?= esc_attr( $follow_price['follow_text_color'] ) ?>"  autocomplete="off" />
+                                                <p><?= _e( 'Select Color', 'egoi_sms_follow_price_enable_title' ) ?></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="2">
+                                    <div>
+                                        <div class="smsnf-input-group">
+                                            <label for="bar-text-color" style="font-size: 13px;"><?php _e( 'Button Color', 'egoi_sms_follow_price_enable_title' ); ?></label>
+
+                                            <div class="colorpicker-wrapper">
+                                                <div style="background-color:<?= esc_attr( $follow_price['follow_button_color'] ) ?>" class="view" ></div>
+                                                <input id="follow_button_color" type="text" name="follow_button_color" value="<?= esc_attr( $follow_price['follow_button_color'] ) ?>"  autocomplete="off" />
+                                                <p><?= _e( 'Select Color', 'egoi_sms_follow_price_enable_title' ) ?></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="2">
+                                    <div>
+                                        <div class="smsnf-input-group">
+                                            <label for="bar-text-color" style="font-size: 13px;"><?php _e( 'Button Text Color', 'egoi_sms_follow_price_enable_title' ); ?></label>
+
+                                            <div class="colorpicker-wrapper">
+                                                <div style="background-color:<?= esc_attr( $follow_price['follow_button_text_color'] ) ?>" class="view" ></div>
+                                                <input id="follow_button_text_color" type="text" name="follow_button_text_color" value="<?= esc_attr( $follow_price['follow_button_text_color'] ) ?>"  autocomplete="off" />
+                                                <p><?= _e( 'Select Color', 'egoi_sms_follow_price_enable_title' ) ?></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <?php submit_button(); ?>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <!-- wrap SMS Help -->
 <div class="wrap tab wrap-addon" id="tab-sms-help">
@@ -725,3 +964,5 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
         </div>
     </div>
 </div>
+
+<?php require_once  plugin_dir_path( __FILE__ ) . 'smart-marketing-addon-sms-order-admin-config-abandonned-cart.php'?>

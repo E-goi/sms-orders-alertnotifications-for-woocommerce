@@ -16,7 +16,7 @@
  * Plugin Name:       SMS Orders Alert/Notifications for WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/sms-orders-alertnotifications-for-woocommerce/
  * Description:       Send SMS notifications to your buyers and admins for each change to the order status in your WooCommerce store. Increase your conversions and better communicate with your customers.
- * Version:           1.4.3
+ * Version:           1.5.0
  * Author:            E-goi
  * Author URI:        https://www.e-goi.com
  * License:           GPL-2.0+
@@ -24,7 +24,7 @@
  * Text Domain:       smart-marketing-addon-sms-order
  * Domain Path:       /languages
  * WC requires at least: 3.2
- * WC tested up to: 4.6.1
+ * WC tested up to: 4.7.0
  */
 
 // If this file is called directly, abort.
@@ -78,7 +78,7 @@ function smsonw_child_plugin_notice(){
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'PLUGIN_NAME_VERSION', '1.4.3' );
+define( 'PLUGIN_NAME_VERSION', '1.5.0' );
 
 /**
  * The code that runs during plugin activation.
@@ -122,4 +122,105 @@ function run_smart_marketing_addon_sms_order() {
 	$plugin->run();
 
 }
+
+function run_smart_marketing_addon_sms_order_action($action){
+    $plugin = new Smart_Marketing_Addon_Sms_Order_Public();
+    $plugin->$action();
+}
+
+/**
+ * @param false $url
+ *
+ * @return bool
+ */
+function egoi_add_multiple_products_to_cart( $url = false ) {
+
+    if ( ! class_exists( 'WC_Form_Handler' ) || empty( $_REQUEST['create-cart'] ) || false === strpos( $_REQUEST['create-cart'], ',' ) ) {
+        return false;
+    }
+    add_filter( 'wc_add_to_cart_message_html', '__return_false' );
+    $product_ids = explode( ',', $_REQUEST['create-cart'] );
+
+	if(!empty($_REQUEST['sid_eg'])){
+		global $wpdb;
+		$_SESSION['sid_eg'] = filter_var($_REQUEST['sid_eg'], FILTER_SANITIZE_STRING);
+		$wpdb->update($wpdb->prefix.'egoi_sms_abandoned_carts', ['status' => 'clicked'], ['php_session_key' => $_SESSION['sid_eg']]);
+	} else {
+	    return false;
+    }
+
+	WC()->cart->empty_cart();
+    foreach ( $product_ids as $id_and_quantity ) {
+
+	    $id_and_quantity = explode( ':', $id_and_quantity );
+
+	    $product_id = $id_and_quantity[0];
+	    $quantity = ! empty( $id_and_quantity[1] ) ? absint( $id_and_quantity[1] ) : 1;
+
+	    $adding_to_cart    = wc_get_product( $product_id );
+        if ( ! $adding_to_cart ) {
+            continue;
+        }
+
+	    WC()->cart->add_to_cart( $product_id, $quantity );
+
+    }
+
+    return true;
+}
+
+add_action( 'wp_loaded', 'egoi_add_multiple_products_to_cart', 15 );
+
+
+/**
+ * Invoke class private method
+ *
+ * @param string $class_name
+ * @param string $methodName
+ *
+ * @return  mixed
+ * @throws ReflectionException
+ *
+ */
+function woo_hack_invoke_private_method( $class_name, $methodName ) {
+    if ( version_compare( phpversion(), '5.3', '<' ) ) {
+        throw new Exception( 'PHP version does not support ReflectionClass::setAccessible()', __LINE__ );
+    }
+
+    $args = func_get_args();
+    unset( $args[0], $args[1] );
+    $reflection = new ReflectionClass( $class_name );
+    $method = $reflection->getMethod( $methodName );
+    $method->setAccessible( true );
+
+    //$args = array_merge( array( $class_name ), $args );
+    $args = array_merge( array( $reflection ), $args );
+    return call_user_func_array( array( $method, 'invoke' ), $args );
+}
+
+add_action('wp_ajax_process_cellphone', 'process_cellphone');
+add_action('wp_ajax_nopriv_process_cellphone', 'process_cellphone');
+function process_cellphone(){
+    run_smart_marketing_addon_sms_order_action(__FUNCTION__);
+}
+
+/**
+ * Add new interval to wordpress cron schedules
+ * @param $schedules
+ *
+ * @return mixed
+ */
+function smsonw_my_add_every_fifteen_minutes($schedules) {
+    $schedules['every_fifteen_minutes'] = array(
+        'interval' => 60 * 15,
+        'display' => __('Every Fifteen Minutes')
+    );
+    return $schedules;
+}
+add_filter('cron_schedules', 'smsonw_my_add_every_fifteen_minutes');
+// Schedule an action if it's not already scheduled
+if ( ! wp_next_scheduled( 'smsonw_my_add_every_fifteen_minutes' ) ) {
+    wp_schedule_event( time(), 'every_fifteen_minutes', 'smsonw_my_add_every_fifteen_minutes' );
+}
+
 run_smart_marketing_addon_sms_order();
