@@ -10,8 +10,8 @@
         var form_method = $("#form_info").data('form-method');
 
 		if ($( "#form_info" ).length && form_id != 'form-sms-order-senders' && form_id != 'form-sms-order-tests' && form_id != '') {
-			var form_type = form_id.split("-");
-			var element = 'tab-sms-'+form_type[3];
+            var form_type = form_id.split("-");
+            var element = 'tab-sms-'+form_type[3];
             if (typeof form_type[4] !== "undefined") {
                 element = element+'-'+form_type[4];
             }
@@ -21,11 +21,15 @@
 
 			$("#sms_text_language").val(form_lang);
             $("#sms_payment_methode").val(form_method);
+            $("#email_payment_method").val(form_method);
             disableAllSmsOrderTexts(languages, methods);
             enableSmsOrderText(form_lang, form_method);
+            disableAllEmailOrderTexts(methods);
+            enableEmailOrderText(form_method);
 		} else {
             showConfigWrap('#tab-sms-senders');
             disableAllSmsOrderTexts(languages, methods);
+            disableAllEmailOrderTexts(methods);
 		}
 
         $(".nav-tab-addon").on("click", function () {
@@ -53,6 +57,13 @@
             enableSmsOrderText(lang, method);
         });
 
+        $("#email_payment_method").on("change", function () {
+            var method_email = $(this).val();
+
+            disableAllEmailOrderTexts(methods);
+            enableEmailOrderText(method_email);
+        });
+
         $("#button-test-sms").on("click", function () {
         	$("#test-sms").show();
 		});
@@ -75,6 +86,19 @@
             text_el = $(this);
             position = $(this).getCursorPosition();
         });
+        $("#form-email-order-payment-texts textarea").focusout( function () {
+            text_el = $(this);
+            position = $(this).getCursorPosition();
+        });
+
+        $( "#form-email-order-payment-texts textarea" ).keydown(function(event) {
+            if(event.keyCode == 13){
+                var text = $(this).val();
+                var position = $(this).getCursorPosition();
+                var new_text = text.substring(0, position) + "\n" + text.substring(position);
+                $(this).val(new_text);
+            }            
+          });
 
         var sender = $("#sender_hash");
         if (sender.val() == null) {
@@ -300,6 +324,30 @@
                 $("#sms_order_payment_texts_" + method + " :input[type='submit']").attr('disabled', false);
             }
             $("#sms_payment_texts_tags").show();
+        }
+    }
+
+    function disableAllEmailOrderTexts(methods) {
+
+        methods.forEach(function (method) {
+            $("#email_order_payment_texts_"+method).hide();
+            $("#email_order_payment_texts_"+method+" :input").attr("disabled", true);
+        });
+
+        $("#email_payment_texts_tags").hide();
+    }
+
+    function enableEmailOrderText(method) {
+
+        if (method) {
+            $("#email_order_payment_texts_" + method).show();
+            if (method !== 'billet') {
+                $("#email_order_payment_texts_" + method + " :input").attr("disabled", false);
+            } else {
+                $("#email_order_payment_texts_" + method + " :input[name='egoi_sms_order_reminder_email_text_pt_BR']").attr('disabled', false);
+                $("#email_order_payment_texts_" + method + " :input[type='submit']").attr('disabled', false);
+            }
+            $("#email_payment_texts_tags").show();
         }
     }
 
