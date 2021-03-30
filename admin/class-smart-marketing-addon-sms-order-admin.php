@@ -161,15 +161,19 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                 }
 
                 $egoi_reminders_time = (int) filter_var($post['egoi_reminders_time'], FILTER_SANITIZE_NUMBER_INT);
+                $egoi_email_reminders_time = (int) filter_var($post['egoi_email_reminders_time'], FILTER_SANITIZE_NUMBER_INT);
 //                $egoi_reminders_billet_time = (int) filter_var($post['egoi_reminders_billet_time'], FILTER_SANITIZE_NUMBER_INT);
 
                 $recipients = array_merge($recipients, array(
                     'notification_option' => $this->helper->smsonw_sanitize_boolean_field('notification_option'),
                     'egoi_payment_info' => $this->helper->smsonw_sanitize_boolean_field('egoi_payment_info'),
                     'egoi_reminders' => $this->helper->smsonw_sanitize_boolean_field('egoi_reminders'),
+                    'egoi_email_reminders' => $this->helper->smsonw_sanitize_boolean_field('egoi_email_reminders'),
                     'egoi_reminders_time' => empty($egoi_reminders_time) ? 48 : $egoi_reminders_time,
+                    'egoi_email_reminders_time' => empty($egoi_email_reminders_time) ? 48 : $egoi_email_reminders_time,
                     'egoi_payment_info_billet' => $this->helper->smsonw_sanitize_boolean_field('egoi_payment_info_billet'),
                     'egoi_reminders_billet' => $this->helper->smsonw_sanitize_boolean_field('egoi_reminders_billet'),
+                    'egoi_email_reminders_billet' => $this->helper->smsonw_sanitize_boolean_field('egoi_email_reminders_billet'),
 //                    'egoi_reminders_billet_time' => empty($egoi_reminders_billet_time) ? 48 : $egoi_reminders_billet_time
                 ));
 
@@ -214,6 +218,21 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                 $texts[$method] = $messages;
 
                 update_option('egoi_sms_order_payment_texts', json_encode($texts));
+
+            } else if (isset($form_id) && $form_id == 'form-email-order-payment-texts') {
+
+                $texts = json_decode(get_option('egoi_email_order_payment_texts'), true);
+                $method = sanitize_text_field($post['email_payment_method']);
+
+                foreach ($this->helper->smsonw_get_languages() as $code => $lang) {
+                    if (trim($post['egoi_sms_order_reminder_email_text_'.$code]) != '') {
+                        $messages['egoi_sms_order_reminder_email_text_' . $code] = sanitize_textarea_field($post['egoi_sms_order_reminder_email_text_' . $code]);
+                    }
+                }
+
+                $texts[$method] = $messages;
+
+                update_option('egoi_email_order_payment_texts', json_encode($texts));
 
             } else if (isset($form_id) && $form_id == 'form-sms-order-tests') {
 
@@ -275,7 +294,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                 $sql = " SELECT DISTINCT order_id FROM $table_name ";
                 $order_ids = $wpdb->get_col($sql);
 
-                $orders = $this->helper->smsonw_get_not_paid_orders();
+                $orders = $this->helper->smsonw_get_not_paid_orders('egoi_reminders_time');
 
                 if (isset($orders)) {
 
@@ -336,6 +355,77 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
         } catch (Exception $e) {
 	        $this->helper->smsonw_save_logs('sms_order_reminder: ' . $e->getMessage());
+        }
+    }
+
+    /**
+	 * Process SMS reminders (CRON every fifteen minutes)
+	 */
+    public function smsonw_email_order_reminder() {
+        try {
+
+            global $wpdb;
+
+            $table_name = $wpdb->prefix . 'egoi_email_order_reminders';
+
+            $sql = " SELECT DISTINCT order_id FROM $table_name ";
+            $order_ids = $wpdb->get_col($sql);
+
+            $orders = $this->helper->smsonw_get_not_paid_orders('egoi_email_reminders_time');
+
+            if (isset($orders)) {
+
+                $recipient_options = json_decode(get_option('egoi_sms_order_recipients'), true);
+                $count = 0;
+
+                foreach ($orders as $order) {
+
+                    if ($count >= 40) {
+                        break;
+                    }
+
+                    $order_data = $order->get_data();
+
+                    $lang = $this->helper->smsonw_get_lang($order->get_billing_country());
+                    $messages = json_decode(get_option('egoi_email_order_payment_texts'), true);
+                    $payment_method = $this->helper->smsonw_get_option_payment_method($order->get_payment_method());
+                    $text = isset($messages[$payment_method]['egoi_sms_order_reminder_email_text_'.$lang])
+                        ? $messages[$payment_method]['egoi_sms_order_reminder_email_text_'.$lang]
+                        : $this->helper->email_payment_info[$payment_method]['reminder'][$lang];
+                    $send_message = false;
+
+                    if (!$order->is_paid() && !in_array($order->get_id(), $order_ids) &&
+                        $recipient_options['egoi_email_reminders'] && array_key_exists($order->get_payment_method(), $this->helper->payment_map)) {
+                            set_transient( 'teste_egoi_1',$order->get_data());
+
+                        $message = $this->helper->smsonw_get_tags_content($order_data, $text);
+                        $send_message = $message ? true : false;
+
+                    } else if (!$order->is_paid() && !in_array($order->get_id(), $order_ids) &&
+                        $recipient_options['egoi_email_reminders_billet'] && $order_data['payment_method'] == 'pagseguro') {
+
+                        $code = $this->smsonw_get_billet_code($order->get_id());
+                        if ($code) {
+                            $message = $this->helper->smsonw_get_tags_content($order_data, $text, $code);
+                            $send_message = $message ? true : false;
+                        }
+                    }
+
+                    if ($send_message && !empty($order_data['billing']['email'])) {
+                        
+                        $this->helper->smsonw_send_email($order_data['billing']['email'], $message, $order->get_id());
+                        $count++;
+
+                        $wpdb->insert($table_name, array(
+                            "time" => current_time('mysql'),
+                            "order_id" => $order->get_id()
+                        ));
+                    }
+                }
+            }
+
+        } catch (Exception $e) {
+	        $this->helper->smsonw_save_logs('email_order_reminder: ' . $e->getMessage());
         }
     }
 

@@ -142,6 +142,60 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
         )
     );
 
+    public $email_payment_info = array(
+        'multibanco' => array(
+            'reminder' => array(
+                'en' => 'Hello, we remind you that your order at %shop_name% is waiting for MB.
+
+%mb_table%
+                
+Thank you',
+                'es' => 'Hola, recordamos que su pedido en %shop_name% está esperando el pago MB.
+
+%mb_table%
+                
+Gracias',
+                'pt' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB.
+
+%mb_table%
+                
+Obrigado',
+                'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB.
+                
+%mb_table% 
+                
+Obrigado'
+            )
+        ),
+        'payshop' => array(
+            'reminder' => array(
+                'en' => 'Hello, we remind you that your order at %shop_name% is waiting for MB.
+
+%mb_table% 
+                
+Thank you',
+                'es' => 'Hola, recordamos que su pedido en %shop_name% está esperando el pago MB.
+
+%mb_table%
+                
+Gracias',
+                'pt' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB.
+
+%mb_table%
+                
+Obrigado',
+                'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB.
+                
+%mb_table%
+                
+Obrigado'
+            )
+        ),
+        'billet' => array(
+                'reminder' => array('pt_BR' => 'Olá %billing_name%, relembramos o link para pagamento %billet_url%')
+        )
+    );
+
 	public $sms_text_new_status = array (
         'pt' => array (
             'egoi_sms_order_text_customer_pending' => 'Olá, %billing_name% a sua encomenda em %shop_name% encontra-se pendente de pagamento. Obrigado',
@@ -207,7 +261,24 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
         "billet_URL"        => '%billet_url%',
         "tracking_name"     => '%tracking_name%',
         "tracking_code"     => '%tracking_code%',
-        "tracking_url"      => '%tracking_url%'
+        "tracking_url"      => '%tracking_url%',
+    );
+
+    public $email_text_tags = array(
+        "order_id"          => '%order_id%',
+        "order_status"      => '%order_status%',
+        "total"             => '%total%',
+        "currency"          => '%currency%',
+        "payment_method"    => '%payment_method%',
+        "reference"         => '%ref%',
+        "entity"            => '%ent%',
+        "shop_name"         => '%shop_name%',
+        "billing_name"      => '%billing_name%',
+        "billet_URL"        => '%billet_url%',
+        "tracking_name"     => '%tracking_name%',
+        "tracking_code"     => '%tracking_code%',
+        "tracking_url"      => '%tracking_url%',
+        "mb_table"          => '%mb_table%'
     );
 
     /**
@@ -316,14 +387,14 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 *
 	 * @return mixed
 	 */
-	public function smsonw_get_not_paid_orders() {
+	public function smsonw_get_not_paid_orders($time) {
 
 		$recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
         $limit_time = 3600 * 96;
 		$seconds = 172800;
 
-		if(!empty($recipients['egoi_reminders_time'])){
-			$seconds = 3600 * (int) $recipients['egoi_reminders_time'];
+		if(!empty($recipients[$time])){
+			$seconds = 3600 * (int) $recipients[$time];
         }
 
 		$args = array(
@@ -476,6 +547,12 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
         $codes = $this->smsonw_get_tracking_codes($order['id']);
         $carriers = $this->smsonw_get_tracking_carriers(true);
         $carriers_url = $this->smsonw_get_tracking_carriers_urls(true);
+
+        $entity = $this->smsonw_get_payment_data($order, 'ent');
+        $reference = $this->smsonw_get_payment_data($order, 'ref');
+        $lang = $this->smsonw_get_lang($order['billing']['country']);
+        $mb_image = plugin_dir_url( __FILE__ ) . "../admin/img/multibanco-logo.png";
+        
         $tags = array(
             '%order_id%'        => $order['id'],
             '%order_status%'    => $order['status'],
@@ -497,7 +574,13 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 
             '%tracking_url%'    => (isset($carriers_url[$codes[0]['carrier']]))
                 ?$carriers_url[$codes[0]['carrier']]
-                :''
+                :'',
+            '%mb_table%'         => $this->smsonw_get_mb_table_html(
+                $entity, 
+                $reference,
+                $order['total'].$order['currency'], 
+                $mb_image,
+                $lang)
         );
 
 
@@ -526,6 +609,52 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 
 
         return $message;
+    }
+
+    public function smsonw_get_mb_table_html($entity, $reference, $total, $img_src, $lang){
+        $img = '';
+        $ins = 'Payment instructions';
+        $ent = 'Entity: ';
+        $ref = 'Reference: ';
+        $val = 'Value: ';
+
+        if($lang == 'es'){
+            $ins = 'Instrucciones de pago';
+            $ent = 'Entidad: ';
+            $ref = 'Referencia: ';
+            $val = 'valor: ';
+        }else if($lang == 'pt' || $lang == 'pt-BR'){
+            $ins = 'Instruções de pagamento';
+            $ent = 'Entidade: ';
+            $ref = 'Referência: ';
+            $val = 'Valor: ';
+        }
+
+        $img ='<img src="'.$img_src.'" style="width:70%;display:block;margin-left: auto; margin-right: auto; padding:10px 0 10px 0">';
+       
+
+        $content = '<table style="width:50%;margin-left: auto !important; margin-right: auto !important;" >
+        <tbody>
+        <tr>
+          <th colspan="2" style="width:100%;padding:10px 10px 10px 10px">'.$ins.' '.$img.'</th>
+        </tr>
+        <tr >
+          <td style="padding:20px 0px 10px 0px">
+            '.$ent.'</td>
+            <td style="text-align:right;">'.$entity.'</td>
+        </tr>
+        <tr>
+        <td style="padding:10px 0px 10px 0px">'.$ref.'</td>
+        <td style="text-align:right;">'.$reference.'</td>
+        </tr>
+        <tr>
+        <td style="padding:10px 0px 20px 0px">'.$val.'</td>
+        <td style="text-align:right;">'.$total.'</td>
+        </tr>
+        </tbody>
+      </table>';
+
+      return $content;
     }
 
 	/**
@@ -569,6 +698,42 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
         } else {
 		    return false;
         }
+
+		return $result;
+    }
+    
+    /**
+	 * Method to send SMS
+	 *
+	 * @param $recipient
+	 * @param $message
+	 * @param $type
+	 * @param $order_id
+	 * @param bool $gsm
+	 *
+	 * @return mixed
+	 */
+	public function smsonw_send_email($email, $message, $order) {
+        
+        $subject = '['.get_bloginfo( 'name' ).']:'.  __( 'Order', 'smart-marketing-addon-sms-order' ).' #'.$order.' - '.__( 'Payment reminder', 'smart-marketing-addon-sms-order' );
+        $content = str_replace(array('\n'), '<br>', $message);
+
+        $title = get_bloginfo('name');
+        $thumbnail = '';
+        $blog_info = array(
+            'description' => get_bloginfo('description'),
+        );       
+        
+        $template_file = apply_filters('egoi_email_remider', plugin_dir_path( __DIR__ ).'../smart-marketing-for-wp/admin/partials/emailcampaignwidget/email_campaign.php', $title, $content, $thumbnail, $blog_info);
+
+        ob_start();
+        include $template_file;
+        $template = ob_get_contents();
+        ob_end_clean();
+
+        $headers = array('Content-Type: text/html; charset=UTF-8');
+
+        $result = wp_mail( $email, $subject, '<td><tr>'.$template.'</tr></td>', $headers);
 
 		return $result;
 	}

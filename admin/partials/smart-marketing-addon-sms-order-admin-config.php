@@ -22,8 +22,10 @@ $sender_option = json_decode(get_option('egoi_sms_order_sender'), true);
 $recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
 $texts = json_decode(get_option('egoi_sms_order_texts'), true);
 $payment_texts = json_decode(get_option('egoi_sms_order_payment_texts'), true);
+$payment_email_texts = json_decode(get_option('egoi_email_order_payment_texts'), true);
 $follow_price = json_decode(get_option('egoi_sms_follow_price'), true);
 $abandoned_cart_obj = json_decode(get_option('egoi_sms_abandoned_cart'), true);
+$transactional_email = get_option('egoi_transactional_email');
 
 if (empty($abandoned_cart_obj)) {
 	$abandoned_cart_obj = [
@@ -91,6 +93,10 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
 
     <a class="nav-tab nav-tab-addon" id="nav-tab-sms-payment-texts">
         <?php _e('Payments SMS', 'smart-marketing-addon-sms-order'); ?>
+    </a>
+
+    <a class="nav-tab nav-tab-addon" id="nav-tab-sms-emailpayment-texts">
+        <?php _e('Payments Email', 'smart-marketing-addon-sms-order'); ?>
     </a>
 
     <a class="nav-tab nav-tab-addon" id="nav-tab-sms-tracking-texts">
@@ -247,7 +253,7 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
 
                                 <hr>
 
-                                <p class="label_text"><?php _e('SMS Multibanco (Portuguese payment method)', 'smart-marketing-addon-sms-order');?></p>
+                                <p class="label_text"><?php _e('Configurations Multibanco (Portuguese payment method)', 'smart-marketing-addon-sms-order');?></p>
 
                                 <p class="label_text_mini">
                                     <input type="checkbox" name="egoi_payment_info" id="egoi_payment_info" value="1"
@@ -255,7 +261,7 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
                                     />
                                     <label for="egoi_payment_info"><?php _e('Send SMS to your customers with Multibanco payment information', 'smart-marketing-addon-sms-order');?></label>
                                 </p>
-                                <p class="label_text_mini"  style="margin-bottom: 20px;">
+                                <p class="label_text_mini" >
 
                                 <?php if (constant("ALTERNATE_WP_CRON") !== false) { ?>
                                     <input type="checkbox" name="egoi_reminders" id="egoi_reminders" value="1"
@@ -263,9 +269,37 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
                                     />
                                     <label for="egoi_reminders"><?php _e('Send SMS to remind the information for payment Multibanco', 'smart-marketing-addon-sms-order');?></label>
 
+                                    <?php if ( $transactional_email['check_transactional_email'] !== 0) { ?>
+                                        <p>
+                                        <input type="checkbox" name="egoi_email_reminders" id="egoi_email_reminders" value="1"
+                                            <?php checked($recipients['egoi_email_reminders'], 1);?>
+                                        />
+                                        <label for="egoi_email_reminders"><?php _e('Send Email to remind the information for payment Multibanco', 'smart-marketing-addon-sms-order');?></label>
+                                        </p>
+                                    <?php } else { ?>
+                                        <p>
+                                        <input type="checkbox" disabled />
+                                        <?php _e('Send Email to remind the information for payment Multibanco', 'smart-marketing-addon-sms-order');?>
+                                        </p>
+                                        <div style="width: 100%; background-color: white; text-align: center; border: 1px solid #dddddd; margin-top: 10px;">
+                                            <p class="label_text_mini"><?php _e('You need to enable Egoi Transacional Email.', 'smart-marketing-addon-sms-order');?>
+                                            <a href="<?php echo admin_url() . '/admin.php?page=egoi-4-wp-transactional-email' ?>">
+                                                <?php _e('Enable here.', 'smart-marketing-addon-sms-order');?>
+                                            </a>
+                                            </p>
+                                        </div>
+                                    <?php } ?>
+
+
                                 <?php } else { ?>
+                                    <p>
                                     <input type="checkbox" disabled />
                                     <?php _e('Send SMS to remind the information for payment Multibanco', 'smart-marketing-addon-sms-order');?>
+                                    </p>
+                                    <p>
+                                    <input type="checkbox" disabled />
+                                    <?php _e('Send Email to remind the information for payment Multibanco', 'smart-marketing-addon-sms-order');?>
+                                    </p>
                                     <div style="width: 100%; background-color: white; text-align: center; border: 1px solid #dddddd; margin-top: 10px;">
                                         <p class="label_text_mini"><?php _e('You need to enable wp_cron in wp-config, use:', 'smart-marketing-addon-sms-order');?></p>
                                         <pre>define ('ALTERNATE_WP_CRON', true);</pre>
@@ -276,7 +310,7 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
 
                                 <hr>
 
-                                <p class="label_text"><?php _e('SMS Pagseguro (Brazilian Gateway)', 'smart-marketing-addon-sms-order');?></p>
+                                <p class="label_text"><?php _e('Configurations Pagseguro (Brazilian Gateway)', 'smart-marketing-addon-sms-order');?></p>
 
                                 <p class="label_text_mini">
                                     <input type="checkbox" name="egoi_payment_info_billet" id="egoi_payment_info_billet" value="1"
@@ -291,9 +325,36 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
                                     />
                                     <label for="egoi_reminders_billet"><?php _e('Send SMS to remind the payment information of the PagSeguro', 'smart-marketing-addon-sms-order');?></label>
 
+                                    <?php if ( $transactional_email['check_transactional_email'] !== 0) { ?>
+                                        <p>
+                                        <input type="checkbox" name="egoi_email_reminders_billet" id="egoi_email_reminders_billet" value="1"
+                                            <?php checked($recipients['egoi_email_reminders_billet'], 1);?>
+                                        />
+                                        <label for="egoi_email_reminders_billet"><?php _e('Send Email to remind the payment information of the PagSeguro', 'smart-marketing-addon-sms-order');?></label>
+                                        </p>
+                                    <?php } else { ?>
+                                        <p>
+                                        <input type="checkbox" disabled />
+                                        <?php _e('Send Email to remind the payment information of the PagSeguro', 'smart-marketing-addon-sms-order');?>
+                                        </p>
+                                        <div style="width: 100%; background-color: white; text-align: center; border: 1px solid #dddddd; margin-top: 10px;">
+                                            <p class="label_text_mini"><?php _e('You need to enable Egoi Transacional Email.', 'smart-marketing-addon-sms-order');?>
+                                            <a href="<?php echo admin_url() . '/admin.php?page=egoi-4-wp-transactional-email' ?>">
+                                                <?php _e('Enable here.', 'smart-marketing-addon-sms-order');?>
+                                            </a>
+                                            </p>
+                                        </div>
+                                    <?php } ?>
+
                                 <?php } else { ?>
+                                    <p>
                                     <input type="checkbox" disabled />
                                     <?php _e('Send SMS to remind the information for PagSeguro payment', 'smart-marketing-addon-sms-order');?>
+                                    </p>
+                                    <p>
+                                    <input type="checkbox" disabled />
+                                    <?php _e('Send Email to remind the information for PagSeguro payment', 'smart-marketing-addon-sms-order');?>
+                                    </p>
                                     <div style="width: 100%; background-color: white; text-align: center; border: 1px solid #dddddd; margin-top: 10px;">
                                         <p class="label_text_mini"><?php _e('You need to enable wp_cron in wp-config, use:', 'smart-marketing-addon-sms-order');?></p>
                                         <pre>define ('ALTERNATE_WP_CRON', true);</pre>
@@ -310,6 +371,17 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
                                         <option value="<?=$value?>" <?php selected($value, $recipients['egoi_reminders_time']);?>><?=$value?>h</option>
                                     <?php } ?>
                                 </select>
+
+                                <hr>
+                                <p class="label_text"><?php _e('Choose the amount of time to send the email reminder.', 'smart-marketing-addon-sms-order');?></p>
+
+                                <select name="egoi_email_reminders_time" id="egoi_email_reminders_time" class="e-goi-option-select-admin-forms" style="width: 49%;">
+                                    <?php $recipients['egoi_reminders_time'] = empty($recipients['egoi_email_reminders_time']) ? 48 : $recipients['egoi_email_reminders_time']; ?>
+                                    <?php foreach ($reminder_times as $value) { ?>
+                                        <option value="<?=$value?>" <?php selected($value, $recipients['egoi_email_reminders_time']);?>><?=$value?>h</option>
+                                    <?php } ?>
+                                </select>
+
 
                                 <?php submit_button(); ?>
                             </form>
@@ -563,6 +635,97 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
 
                 </form>
             </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- wrap Email Payment Info Texts -->
+<div class="wrap tab wrap-addon" id="tab-sms-emailpayment-texts">
+    <div class="wrap egoi4wp-settings">
+        <div class="row">
+            <?php
+                if (isset($_POST['form_id']) && $_POST['form_id'] == 'form-email-order-payment-texts') {
+                    if ($result) {
+                        $this->helper->smsonw_admin_notice_success();
+                    } else {
+                        $this->helper->smsonw_admin_notice_error();
+                    }
+                }
+            ?>
+            <div class="main-content col col-12" style="margin:0 0 20px;">
+
+                <p class="label_text"><?php _e('This plugin is integrated with Multibanco (euPago, Ifthenpay, easypay, Hipay Compra Facil, Sibs, LusoPay), Payshop (euPago), WooCommerce PagSeguro', 'smart-marketing-addon-sms-order');?></p>
+
+                <p class="label_text"><?php _e('Select payment method', 'smart-marketing-addon-sms-order');?></p>
+
+                <form action="#" method="post" class="form-sms-order-config" id="form-email-order-payment-texts">
+                    <?php wp_nonce_field( 'form-email-order-payment-texts' ); ?>
+                    <input name="form_id" type="hidden" value="form-email-order-payment-texts" />
+                    <div id="sms_select_payment_method">
+                        <select class="e-goi-option-select-admin-forms" style="width: 400px;" name="email_payment_method" id="email_payment_method">
+                            <option value="" disabled selected>
+                                <?php _e('Seclect payment method', 'smart-marketing-addon-sms-order');?>
+                            </option>
+                            <?php foreach ($this->helper->smsonw_get_payment_methods() as $code => $method_email) { ?>
+                                <option value="<?=$code?>" <?php selected($_POST['sms_payment_method'], $code);?>>
+                                    <?=$method_email?>
+                                </option>
+                            <?php } ?>
+                        </select>
+                    </div>
+
+                    <div id="email_payment_texts_tags" >
+                        <p class="label_text" style="margin-bottom: 20px;">
+                            <?php _e('You can edit the Email message sent by each payment method', 'smart-marketing-addon-sms-order');?>
+                            <br>
+                            <span style="font-size: 13px;"><?php _e('If you want to include custom information in your Email, use the following tags', 'smart-marketing-addon-sms-order');?></span>
+                        </p>
+                        <?php foreach ($this->helper->email_text_tags as $tag_name_email => $tag_cod) { ?>
+                            <button type="button" class="button button-default sms_texts_tags_button" data-text-cod="<?=$tag_cod?>">
+                                <?php echo ucwords(str_replace('_', ' ', $tag_name_email)); ?>
+                            </button>
+                        <?php } ?>
+                    </div>
+                    <br>
+
+                    <?php foreach ($this->helper->smsonw_get_payment_methods() as $method_code_email => $method_email) { ?>
+                    <div id="email_order_payment_texts_<?=$method_code_email?>">
+                        <table border="0" class="widefat striped" style="max-width: 900px;">
+                            <thead>
+                            <tr>
+                                <th><?php _e('Language', 'smart-marketing-addon-sms-order');?></th>
+                                <th><?php _e('Reminder', 'smart-marketing-addon-sms-order');?></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <?php foreach ($this->helper->smsonw_get_languages() as $lang_code_email => $lang) { ?>
+                                <tr>
+                                    <td><?php _e($lang, 'smart-marketing-addon-sms-order');?></td>
+                                    <td>
+                                        <?php
+                                        $text = '';
+                                        if (isset($payment_email_texts[$method_code_email]["egoi_sms_order_reminder_email_text_".$lang_code_email]) && trim($payment_email_texts[$method_code_email]["egoi_sms_order_reminder_email_text_".$lang_code_email]) != '') {
+                                            $text = $payment_email_texts[$method_code_email]["egoi_sms_order_reminder_email_text_".$lang_code_email];
+                                        } else {
+                                            $text = $this->helper->email_payment_info[$method_code_email]['reminder'][$lang_code_email];
+                                        }
+                                        ?>
+                                        <textarea name="egoi_sms_order_reminder_email_text_<?=$lang_code_email?>" cols="40" rows="8" id="egoi_sms_order_reminder_email_text_<?=$lang_code_email?>" style="width: 720px;"><?=$text?></textarea>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                            </tbody>
+                        </table>
+                        <?php submit_button(); ?>
+                    </div>
+                    <?php } ?>
+
+                </form>
+
+            </div>
+        
         </div>
     </div>
 </div>

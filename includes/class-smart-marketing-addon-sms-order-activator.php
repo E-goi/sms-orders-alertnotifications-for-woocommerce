@@ -37,9 +37,44 @@ class Smart_Marketing_Addon_Sms_Order_Activator {
 
         self::create_sms_follow_price_table();
 		self::create_sms_abandoned_cart_table();
+		self::create_email_order_reminders_table();
 		self::create_sms_order_reminders_table();
 
         self::checkApiKey();
+	}
+
+	public static function create_email_order_reminders_table() {
+		global $wpdb;
+
+		$table_name = $wpdb->prefix. 'egoi_email_order_reminders';
+		$charset_collate = $wpdb->get_charset_collate();
+
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+
+		$sqla = "CREATE TABLE IF NOT EXISTS $table_name (
+		  id mediumint(9) NOT NULL AUTO_INCREMENT,
+		  time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		  order_id int NOT NULL,
+		  PRIMARY KEY  (id)
+		) $charset_collate;";
+
+
+		dbDelta( $sqla );
+
+        $table_name = $wpdb->prefix. 'egoi_email_order_billets';
+
+        $sqlb = "CREATE TABLE IF NOT EXISTS $table_name (
+		  id mediumint(9) NOT NULL AUTO_INCREMENT,
+		  time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		  order_id int NOT NULL,
+		  link VARCHAR(255) NOT NULL,
+		  code VARCHAR(16) NOT NULL,
+		  PRIMARY KEY  (id)
+		) $charset_collate;";
+
+
+		dbDelta( $sqlb );
 	}
 
 	public static function create_sms_order_reminders_table() {
