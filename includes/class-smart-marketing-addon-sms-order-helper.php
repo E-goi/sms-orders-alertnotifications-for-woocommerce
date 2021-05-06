@@ -77,7 +77,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 
 	public $payment_foreign_table = array(
         'easypay_mb'        => array(
-            'table'     => 'easypay_notifications',
+            'table'     => 'easypay_notifications_2',
             'order_id'  => 't_key',
             'ref'       => 'ep_reference',
             'ent'       => 'ep_entity',
