@@ -135,6 +135,7 @@ Or [WooCommerce PagSeguro](https://wordpress.org/plugins/woocommerce-pagseguro/ 
 
 = 1.5.1 =
 * Email payments reminder
+* Fix MB sms for EasyPay
 
 = 1.5.0 =
 * Abandoned Cart Sms Reminder notification
