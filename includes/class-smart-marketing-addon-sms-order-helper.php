@@ -669,12 +669,11 @@ Obrigado'
 	 * @return mixed
 	 */
 	public function smsonw_send_sms($recipient, $message, $type, $order_id, $gsm = false, $max_count = 3) {
-		$url = 'http://dev-web-agency.e-team.biz/smaddonsms/sms';
+		$url = 'https://dev-goidini.e-goi.com/smaddonsms/sms'; 
 
 		$sender = json_decode(get_option('egoi_sms_order_sender'), true);
 
 		$sms_params = array(
-			"apikey" => $this->apikey,
 			"sender_hash" => $sender['sender_hash'],
 			"message" => $message,
 			"recipient" => $recipient,
@@ -691,7 +690,7 @@ Obrigado'
 
 		$result = json_encode($response['body']);
 
-		if (!isset($result->errorCode)) {
+		if ($response['response']['code'] == 200) {
             $sms_counter = get_option('egoi_sms_counter');
             $counter = $sms_counter ? $sms_counter+1 : 1;
             update_option('egoi_sms_counter', $counter);

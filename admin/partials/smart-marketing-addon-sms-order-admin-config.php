@@ -394,6 +394,7 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
                                 <p class="label_text_mini">
                                     <?php echo __('Current balance of your E-goi account', 'smart-marketing-addon-sms-order').': ';?>
                                     <span style="background-color: #00aeda; color: white; padding: 5px; border-radius: 2px; margin-left: 5px; font-size: 14px;"><?=$balance?></span>
+                                    <?php echo PLUGIN_NAME_VERSION;?>
                                 </p>
                             </div>
                             <div id="test-sms">
