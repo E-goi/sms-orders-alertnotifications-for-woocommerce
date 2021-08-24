@@ -15,7 +15,7 @@
  * Plugin Name:       SMS Orders Alert/Notifications for WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/sms-orders-alertnotifications-for-woocommerce/
  * Description:       Send SMS notifications to your buyers and admins for each change to the order status in your WooCommerce store. Increase your conversions and better communicate with your customers.
- * Version:           1.5.4
+ * Version:           1.5.5
  * Author:            E-goi
  * Author URI:        https://www.e-goi.com
  * License:           GPL-2.0+
@@ -23,8 +23,7 @@
  * Text Domain:       smart-marketing-addon-sms-order
  * Domain Path:       /languages
  * WC requires at least: 3.2
- * WC tested up to: 4.6.1
- * WC tested up to: 5.0.0
+ * WC tested up to: 5.8
  */
 
 // If this file is called directly, abort.
@@ -91,7 +90,7 @@ function smsonw_child_plugin_notice() {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'PLUGIN_NAME_VERSION', '1.5.4' );
+define( 'PLUGIN_NAME_VERSION', '1.5.5' );
 
 /**
  * The code that runs during plugin activation.
