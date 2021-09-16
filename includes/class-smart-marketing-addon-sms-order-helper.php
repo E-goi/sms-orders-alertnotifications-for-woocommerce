@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Helper class
  *
@@ -20,25 +19,32 @@
  */
 class Smart_Marketing_Addon_Sms_Order_Helper {
 
+	/**
+	 * E-goi apikey.
+	 *
+	 * @var string $apikey e-goi apikey.
+	 */
 	private $apikey;
 
 	/**
-	 * @var array
+	 * Payments descriptions.
+	 *
+	 * @var array $payment_map all payments descriptions.
 	 */
 	public $payment_map = array(
-		'eupago_multibanco' => array(
+		'eupago_multibanco'                 => array(
 			'ent' => '_eupago_multibanco_entidade',
 			'ref' => '_eupago_multibanco_referencia',
-			'val' => '_order_total'
+			'val' => '_order_total',
 		),
-		'eupago_payshop' => array(
+		'eupago_payshop'                    => array(
 			'ref' => '_eupago_payshop_referencia',
-			'val' => '_order_total'
+			'val' => '_order_total',
 		),
-		'easypay_mb' => array(
+		'easypay_mb'                        => array(
 			'ent' => '',
 			'ref' => '',
-			'val' => '_order_total'
+			'val' => '_order_total',
 		),
         'easypay_mb_2' => array(
 			'ent' => '',
@@ -65,21 +71,18 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 			'ref' => '_eupago_mbway_referencia',
 			'val' => '_order_total'
 		),
-		*/
 		'multibanco_ifthen_for_woocommerce' => array(
 			'ent' => '_multibanco_ifthen_for_woocommerce_ent',
 			'ref' => '_multibanco_ifthen_for_woocommerce_ref',
-			'val' => '_multibanco_ifthen_for_woocommerce_val'
-		),
-		/*
-		// TODO - confirm fields for ifThenPay MBWay
-		'mbway_ifthen_for_woocommerce' => array(
-			'ref' => '_mbway_ifthen_for_woocommerce_ref',
-			'val' => '_mbway_ifthen_for_woocommerce_val'
-		)
-		*/
+			'val' => '_multibanco_ifthen_for_woocommerce_val',
+		),*/
 	);
 
+	/**
+	 * Payment foreign table.
+	 *
+	 * @var array $payment_foreign_table payment foreign table.
+	 */
 	public $payment_foreign_table = array(
         'easypay_mb'        => array(
             'table'     => 'easypay_notifications',
@@ -113,52 +116,88 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
         ),
     );
 
-	public $multibanco_bypass = ['lusopaygateway','hipaymultibanco','easypay_mb', 'easypay_mb_2'];
+	/**
+	 * Multibanco options.
+	 *
+	 * @var array $multibanco_bypass multibanco options.
+	 */
+	public $multibanco_bypass = ['lusopaygateway','hipaymultibanco','easypay_mb','easypay_mb_2'];
 
-    /**
-     * @var array
-     */
+	/**
+	 * Sms information messages.
+	 *
+	 * @var array $sms_payment_info sms information messages.
+	 */
 	public $sms_payment_info = array(
-        'multibanco' => array(
-            'first' => array(
-                'en' => 'Hello, your order at %shop_name% is waiting for MB payment. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
-                'es' => 'Hola, su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
-                'pt' => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
-                'pt_BR' => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado'
-            ),
-            'reminder' => array(
-                'en' => 'Hello, we remind you that your order at %shop_name% is waiting for MB. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
-                'es' => 'Hola, recordamos que su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
-                'pt' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
-                'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado'
-            ),
-        ),
-        'payshop' => array(
-            'first' => array(
-                'en' => 'Hello, your order at %shop_name% is waiting for MB payment. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
-                'es' => 'Hola, su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
-                'pt' => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
-                'pt_BR' => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado'
-            ),
-            'reminder' => array(
-                'en' => 'Hello, we remind you that your order at %shop_name% is waiting for MB. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
-                'es' => 'Hola, recordamos que su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
-                'pt' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
-                'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado'
-            ),
-        ),
-        'billet' => array(
-                'first' => array ('pt_BR' => 'Obrigado pela sua encomenda! Pague por %payment_method% usando este Link %billet_url%'),
-                'reminder' => array('pt_BR' => 'Olá %billing_name%, relembramos o link para pagamento %billet_url%')
-        )
-    );
+		'multibanco' => array(
+			'first'    => array(
+				'en'    => 'Hello, your order at %shop_name% is waiting for MB payment. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
+				'es'    => 'Hola, su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
+				'pt'    => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
+				'pt_BR' => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
+			),
+			'reminder' => array(
+				'en'    => 'Hello, we remind you that your order at %shop_name% is waiting for MB. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
+				'es'    => 'Hola, recordamos que su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
+				'pt'    => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
+				'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
+			),
+		),
+		'payshop'    => array(
+			'first'    => array(
+				'en'    => 'Hello, your order at %shop_name% is waiting for MB payment. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
+				'es'    => 'Hola, su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
+				'pt'    => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
+				'pt_BR' => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
+			),
+			'reminder' => array(
+				'en'    => 'Hello, we remind you that your order at %shop_name% is waiting for MB. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
+				'es'    => 'Hola, recordamos que su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
+				'pt'    => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
+				'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
+			),
+		),
+		'billet'     => array(
+			'first'    => array( 'pt_BR' => 'Obrigado pela sua encomenda! Pague por %payment_method% usando este Link %billet_url%' ),
+			'reminder' => array( 'pt_BR' => 'Olá %billing_name%, relembramos o link para pagamento %billet_url%' ),
+		),
+	);
 
-    public $email_payment_info = array(
-        'multibanco' => array(
-            'reminder' => array(
-                'en' => 'Hello, we remind you that your order at %shop_name% is waiting for MB.
+	/**
+	 * Email information messages.
+	 *
+	 * @var array $email_payment_info email information messages.
+	 */
+	public $email_payment_info = array(
+		'multibanco' => array(
+			'reminder' => array(
+				'en'    => 'Hello, we remind you that your order at %shop_name% is waiting for MB.
 
 %mb_table%
+                
+Thank you',
+				'es'    => 'Hola, recordamos que su pedido en %shop_name% está esperando el pago MB.
+
+%mb_table%
+                
+Gracias',
+				'pt'    => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB.
+
+%mb_table%
+                
+Obrigado',
+				'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB.
+                
+%mb_table% 
+                
+Obrigado',
+			),
+		),
+		'payshop'    => array(
+			'reminder' => array(
+				'en'    => 'Hello, we remind you that your order at %shop_name% is waiting for MB.
+
+%mb_table% 
                 
 Thank you',
                 'es' => 'Hola, recordamos que su pedido en %shop_name% está esperando el pago MB.
@@ -166,136 +205,128 @@ Thank you',
 %mb_table%
                 
 Gracias',
-                'pt' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB.
+				'pt'    => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB.
 
 %mb_table%
                 
 Obrigado',
-                'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB.
+				'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB.
                 
-%mb_table% 
-                
-Obrigado'
-            )
-        ),
-        'payshop' => array(
-            'reminder' => array(
-                'en' => 'Hello, we remind you that your order at %shop_name% is waiting for MB.
-
-%mb_table% 
-                
-Thank you',
-                'es' => 'Hola, recordamos que su pedido en %shop_name% está esperando el pago MB.
-
-%mb_table%
-                
-Gracias',
-                'pt' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB.
-
 %mb_table%
                 
 Obrigado',
-                'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB.
-                
-%mb_table%
-                
-Obrigado'
-            )
-        ),
-        'billet' => array(
-                'reminder' => array('pt_BR' => 'Olá %billing_name%, relembramos o link para pagamento %billet_url%')
-        )
-    );
+			),
+		),
+		'billet'     => array(
+			'reminder' => array( 'pt_BR' => 'Olá %billing_name%, relembramos o link para pagamento %billet_url%' ),
+		),
+	);
 
-	public $sms_text_new_status = array (
-        'pt' => array (
-            'egoi_sms_order_text_customer_pending' => 'Olá, %billing_name% a sua encomenda em %shop_name% encontra-se pendente de pagamento. Obrigado',
-            'egoi_sms_order_text_customer_processing' => 'Olá, %billing_name% a sua encomenda em %shop_name% encontra-se em processamento. Obrigado',
-            'egoi_sms_order_text_customer_on-hold' => 'Olá, %billing_name% a sua encomenda em %shop_name% encontra-se aguardar confirmação de pagamento. Obrigado',
-            'egoi_sms_order_text_customer_completed' => 'Olá, %billing_name% a sua encomenda em %shop_name% está concluída. Obrigado',
-            'egoi_sms_order_text_customer_cancelled' => 'Olá, %billing_name% a sua encomenda em %shop_name% está cancelada. Obrigado',
-            'egoi_sms_order_text_customer_refunded' => 'Olá, %billing_name% a sua encomenda em %shop_name% foi reembolsada. Obrigado',
-            'egoi_sms_order_text_customer_failed' => 'Olá, %billing_name% a sua encomenda em %shop_name% falhou. Obrigado',
-        ),
-        'en' => array (
-            'egoi_sms_order_text_customer_pending' => 'Hello, %billing_name% Your order at %shop_name% is pending payment. Thank you',
-            'egoi_sms_order_text_customer_processing' => 'Hi, %billing_name% Your order at %shop_name% is currently processing. Thank you',
-            'egoi_sms_order_text_customer_on-hold' => 'Hi, %billing_name% Your order at %shop_name% is waiting for payment confirmation. Thank you',
-            'egoi_sms_order_text_customer_completed' => 'Hi, %billing_name% Your order at %shop_name% is now complete. Thank you',
-            'egoi_sms_order_text_customer_cancelled' => 'Hello, %billing_name% Your order at %shop_name% is canceled. Thank you',
-            'egoi_sms_order_text_customer_refunded' => 'Hi, %billing_name% Your order at %shop_name% was refunded. Thank you',
-            'egoi_sms_order_text_customer_failed' => 'Hello, %billing_name% Your order at %shop_name% failed. Thank you',
-        ),
-        'es' => array (
-            'egoi_sms_order_text_customer_pending' => 'Hola, %billing_name% su pedido en %shop_name% se encuentra pendiente de pago. Gracias',
-            'egoi_sms_order_text_customer_processing' => 'Hola, %billing_name% su pedido en %shop_name% se encuentra en proceso. Gracias',
-            'egoi_sms_order_text_customer_on-hold' => 'Hola, %billing_name% su pedido en %shop_name% está esperando la confirmación de pago. Gracias',
-            'egoi_sms_order_text_customer_completed' => 'Hola, %billing_name% su pedido en %shop_name% ha finalizado. Gracias',
-            'egoi_sms_order_text_customer_cancelled' => 'Hola, %billing_name% su pedido en %shop_name% está cancelada. Gracias',
-            'egoi_sms_order_text_customer_refunded' => 'Hola, %billing_name% su pedido en %shop_name% se ha reembolsado. Gracias',
-            'egoi_sms_order_text_customer_failed' => 'Hola, %billing_name% su pedido en %shop_name% à fracasado. Gracias',
-        ),
-        'pt_BR' => array (
-            'egoi_sms_order_text_customer_pending' => 'Olá, %billing_name% a sua encomenda em %shop_name% encontra-se pendente de pagamento. Obrigado',
-            'egoi_sms_order_text_customer_processing' => 'Olá, %billing_name% a sua encomenda em %shop_name% encontra-se em processamento. Obrigado',
-            'egoi_sms_order_text_customer_on-hold' => 'Olá, %billing_name% a sua encomenda em %shop_name% encontra-se aguardar confirmação de pagamento. Obrigado',
-            'egoi_sms_order_text_customer_completed' => 'Olá, %billing_name% a sua encomenda em %shop_name% está concluída. Obrigado',
-            'egoi_sms_order_text_customer_cancelled' => 'Olá, %billing_name% a sua encomenda em %shop_name% está cancelada. Obrigado',
-            'egoi_sms_order_text_customer_refunded' => 'Olá, %billing_name% a sua encomenda em %shop_name% foi reembolsada. Obrigado',
-            'egoi_sms_order_text_customer_failed' => 'Olá, %billing_name% a sua encomenda em %shop_name% falhou. Obrigado',
-        ),
-    );
+	/**
+	 * Sms new status information messages.
+	 *
+	 * @var array $sms_text_new_status Sms new status information messages..
+	 */
+	public $sms_text_new_status = array(
+		'pt'    => array(
+			'egoi_sms_order_text_customer_pending'    => 'Olá, %billing_name% a sua encomenda em %shop_name% encontra-se pendente de pagamento. Obrigado',
+			'egoi_sms_order_text_customer_processing' => 'Olá, %billing_name% a sua encomenda em %shop_name% encontra-se em processamento. Obrigado',
+			'egoi_sms_order_text_customer_on-hold'    => 'Olá, %billing_name% a sua encomenda em %shop_name% encontra-se aguardar confirmação de pagamento. Obrigado',
+			'egoi_sms_order_text_customer_completed'  => 'Olá, %billing_name% a sua encomenda em %shop_name% está concluída. Obrigado',
+			'egoi_sms_order_text_customer_cancelled'  => 'Olá, %billing_name% a sua encomenda em %shop_name% está cancelada. Obrigado',
+			'egoi_sms_order_text_customer_refunded'   => 'Olá, %billing_name% a sua encomenda em %shop_name% foi reembolsada. Obrigado',
+			'egoi_sms_order_text_customer_failed'     => 'Olá, %billing_name% a sua encomenda em %shop_name% falhou. Obrigado',
+		),
+		'en'    => array(
+			'egoi_sms_order_text_customer_pending'    => 'Hello, %billing_name% Your order at %shop_name% is pending payment. Thank you',
+			'egoi_sms_order_text_customer_processing' => 'Hi, %billing_name% Your order at %shop_name% is currently processing. Thank you',
+			'egoi_sms_order_text_customer_on-hold'    => 'Hi, %billing_name% Your order at %shop_name% is waiting for payment confirmation. Thank you',
+			'egoi_sms_order_text_customer_completed'  => 'Hi, %billing_name% Your order at %shop_name% is now complete. Thank you',
+			'egoi_sms_order_text_customer_cancelled'  => 'Hello, %billing_name% Your order at %shop_name% is canceled. Thank you',
+			'egoi_sms_order_text_customer_refunded'   => 'Hi, %billing_name% Your order at %shop_name% was refunded. Thank you',
+			'egoi_sms_order_text_customer_failed'     => 'Hello, %billing_name% Your order at %shop_name% failed. Thank you',
+		),
+		'es'    => array(
+			'egoi_sms_order_text_customer_pending'    => 'Hola, %billing_name% su pedido en %shop_name% se encuentra pendiente de pago. Gracias',
+			'egoi_sms_order_text_customer_processing' => 'Hola, %billing_name% su pedido en %shop_name% se encuentra en proceso. Gracias',
+			'egoi_sms_order_text_customer_on-hold'    => 'Hola, %billing_name% su pedido en %shop_name% está esperando la confirmación de pago. Gracias',
+			'egoi_sms_order_text_customer_completed'  => 'Hola, %billing_name% su pedido en %shop_name% ha finalizado. Gracias',
+			'egoi_sms_order_text_customer_cancelled'  => 'Hola, %billing_name% su pedido en %shop_name% está cancelada. Gracias',
+			'egoi_sms_order_text_customer_refunded'   => 'Hola, %billing_name% su pedido en %shop_name% se ha reembolsado. Gracias',
+			'egoi_sms_order_text_customer_failed'     => 'Hola, %billing_name% su pedido en %shop_name% à fracasado. Gracias',
+		),
+		'pt_BR' => array(
+			'egoi_sms_order_text_customer_pending'    => 'Olá, %billing_name% a sua encomenda em %shop_name% encontra-se pendente de pagamento. Obrigado',
+			'egoi_sms_order_text_customer_processing' => 'Olá, %billing_name% a sua encomenda em %shop_name% encontra-se em processamento. Obrigado',
+			'egoi_sms_order_text_customer_on-hold'    => 'Olá, %billing_name% a sua encomenda em %shop_name% encontra-se aguardar confirmação de pagamento. Obrigado',
+			'egoi_sms_order_text_customer_completed'  => 'Olá, %billing_name% a sua encomenda em %shop_name% está concluída. Obrigado',
+			'egoi_sms_order_text_customer_cancelled'  => 'Olá, %billing_name% a sua encomenda em %shop_name% está cancelada. Obrigado',
+			'egoi_sms_order_text_customer_refunded'   => 'Olá, %billing_name% a sua encomenda em %shop_name% foi reembolsada. Obrigado',
+			'egoi_sms_order_text_customer_failed'     => 'Olá, %billing_name% a sua encomenda em %shop_name% falhou. Obrigado',
+		),
+	);
 
-    /**
-     * @var array
-     */
-    public $currency = array(
-        'EUR' => '€',
-        'USD' => '$',
-        'GBP' => '£',
-        'BRL' => 'R$'
-    );
+	/**
+	 * Currencies.
+	 *
+	 * @var array $currency currencies.
+	 */
+	public $currency = array(
+		'EUR' => '€',
+		'USD' => '$',
+		'GBP' => '£',
+		'BRL' => 'R$',
+	);
 
-    /**
-     * @var array List of SMS text tags
-     */
-    public $sms_text_tags = array(
-        "order_id"          => '%order_id%',
-        "order_status"      => '%order_status%',
-        "total"             => '%total%',
-        "currency"          => '%currency%',
-        "payment_method"    => '%payment_method%',
-        "reference"         => '%ref%',
-        "entity"            => '%ent%',
-        "shop_name"         => '%shop_name%',
-        "billing_name"      => '%billing_name%',
-        "billet_URL"        => '%billet_url%',
-        "tracking_name"     => '%tracking_name%',
-        "tracking_code"     => '%tracking_code%',
-        "tracking_url"      => '%tracking_url%',
-    );
+	/**
+	 * List of SMS text tags.
+	 *
+	 * @var array $sms_text_tags List of SMS text tags.
+	 */
+	public $sms_text_tags = array(
+		'order_id'       => '%order_id%',
+		'order_status'   => '%order_status%',
+		'total'          => '%total%',
+		'currency'       => '%currency%',
+		'payment_method' => '%payment_method%',
+		'reference'      => '%ref%',
+		'entity'         => '%ent%',
+		'shop_name'      => '%shop_name%',
+		'billing_name'   => '%billing_name%',
+		'billet_URL'     => '%billet_url%',
+		'tracking_name'  => '%tracking_name%',
+		'tracking_code'  => '%tracking_code%',
+		'tracking_url'   => '%tracking_url%',
+	);
 
-    public $email_text_tags = array(
-        "order_id"          => '%order_id%',
-        "order_status"      => '%order_status%',
-        "total"             => '%total%',
-        "currency"          => '%currency%',
-        "payment_method"    => '%payment_method%',
-        "reference"         => '%ref%',
-        "entity"            => '%ent%',
-        "shop_name"         => '%shop_name%',
-        "billing_name"      => '%billing_name%',
-        "billet_URL"        => '%billet_url%',
-        "tracking_name"     => '%tracking_name%',
-        "tracking_code"     => '%tracking_code%',
-        "tracking_url"      => '%tracking_url%',
-        "mb_table"          => '%mb_table%'
-    );
+	/**
+	 * List of email text tags.
+	 *
+	 * @var array email_text_tags List of email text tags.
+	 */
+	public $email_text_tags = array(
+		'order_id'       => '%order_id%',
+		'order_status'   => '%order_status%',
+		'total'          => '%total%',
+		'currency'       => '%currency%',
+		'payment_method' => '%payment_method%',
+		'reference'      => '%ref%',
+		'entity'         => '%ent%',
+		'shop_name'      => '%shop_name%',
+		'billing_name'   => '%billing_name%',
+		'billet_URL'     => '%billet_url%',
+		'tracking_name'  => '%tracking_name%',
+		'tracking_code'  => '%tracking_code%',
+		'tracking_url'   => '%tracking_url%',
+		'mb_table'       => '%mb_table%',
+	);
 
-    /**
-     * @var SoapClient
-     */
-    protected $egoi_api_client;
+	/**
+	 * E-goi API Client.
+	 *
+	 * @var SoapClient
+	 */
+	protected $egoi_api_client;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -303,65 +334,74 @@ Obrigado'
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-	    try{
-            $this->egoi_api_client = new SoapClient('http://api.e-goi.com/v2/soap.php?wsdl');
-        }catch (Exception $e){
+		try {
+			$this->egoi_api_client = new SoapClient( 'http://api.e-goi.com/v2/soap.php?wsdl' );
+		} catch ( Exception $e ) {
+			// Exception.
+		}
 
-	    }
-
-		$apikey = get_option('egoi_api_key');
+		$apikey       = get_option( 'egoi_api_key' );
 		$this->apikey = $apikey['api_key'];
-		//check if api is on
+		// check if api is on.
 		$this->ping();
 	}
 
-    /**
-     * @return bool
-     */
-    public function smsonw_get_soap_error() {
-        if(empty($this->egoi_api_client))
-            return true;
-        return false;
-    }
+	/**
+	 * Get soap error.
+	 *
+	 * @return bool
+	 */
+	public function smsonw_get_soap_error() {
+		if ( empty( $this->egoi_api_client ) ) {
+			return true;
+		}
+		return false;
+	}
 
 
-    /**
-     * @return array
-     */
-    public function smsonw_get_order_statuses() {
-        return array(
-            'pending' => __('Pending payment', 'smart-marketing-addon-sms-order'),
-            'processing' => __('Processing', 'smart-marketing-addon-sms-order'),
-            'on-hold' => __('On Hold', 'smart-marketing-addon-sms-order'),
-            'completed' => __('Completed', 'smart-marketing-addon-sms-order'),
-            'cancelled' => __('Cancelled', 'smart-marketing-addon-sms-order'),
-            'refunded' => __('Refunded', 'smart-marketing-addon-sms-order'),
-            'failed' => __('Failed', 'smart-marketing-addon-sms-order'),
-        );
-    }
+	/**
+	 * Get order status.
+	 *
+	 * @return array
+	 */
+	public function smsonw_get_order_statuses() {
+		return array(
+			'pending'    => __( 'Pending payment', 'smart-marketing-addon-sms-order' ),
+			'processing' => __( 'Processing', 'smart-marketing-addon-sms-order' ),
+			'on-hold'    => __( 'On Hold', 'smart-marketing-addon-sms-order' ),
+			'completed'  => __( 'Completed', 'smart-marketing-addon-sms-order' ),
+			'cancelled'  => __( 'Cancelled', 'smart-marketing-addon-sms-order' ),
+			'refunded'   => __( 'Refunded', 'smart-marketing-addon-sms-order' ),
+			'failed'     => __( 'Failed', 'smart-marketing-addon-sms-order' ),
+		);
+	}
 
-    /**
-     * @return array
-     */
-    public function smsonw_get_languages() {
-        return array(
-            'en' =>  __('English', 'smart-marketing-addon-sms-order'),
-            'es' =>  __('Spanish', 'smart-marketing-addon-sms-order'),
-            'pt' =>  __('Portuguese', 'smart-marketing-addon-sms-order'),
-            'pt_BR' =>  __('Brazilian Portuguese', 'smart-marketing-addon-sms-order'),
-        );
-    }
+	/**
+	 * Get languages.
+	 *
+	 * @return array
+	 */
+	public function smsonw_get_languages() {
+		return array(
+			'en'    => __( 'English', 'smart-marketing-addon-sms-order' ),
+			'es'    => __( 'Spanish', 'smart-marketing-addon-sms-order' ),
+			'pt'    => __( 'Portuguese', 'smart-marketing-addon-sms-order' ),
+			'pt_BR' => __( 'Brazilian Portuguese', 'smart-marketing-addon-sms-order' ),
+		);
+	}
 
-    /**
-     * @return array
-     */
-    public function smsonw_get_payment_methods() {
-        return array(
-            'multibanco' =>  __('Multibanco (euPago, IfthenPay, easypay, hipaymultibanco, sibs, lusopay)', 'smart-marketing-addon-sms-order'),
-            'payshop' =>  __('Payshop (euPago)', 'smart-marketing-addon-sms-order'),
-            'billet' =>  __('PagSeguro', 'smart-marketing-addon-sms-order'),
-        );
-    }
+	/**
+	 * Get payment methods.
+	 *
+	 * @return array
+	 */
+	public function smsonw_get_payment_methods() {
+		return array(
+			'multibanco' => __( 'Multibanco (euPago, IfthenPay, easypay, hipaymultibanco, sibs, lusopay)', 'smart-marketing-addon-sms-order' ),
+			'payshop'    => __( 'Payshop (euPago)', 'smart-marketing-addon-sms-order' ),
+			'billet'     => __( 'PagSeguro', 'smart-marketing-addon-sms-order' ),
+		);
+	}
 
 	/**
 	 * Function to get cellphone senders from E-goi account
@@ -370,43 +410,51 @@ Obrigado'
 	 */
 	public function smsonw_get_senders() {
 
-	    if(empty($this->egoi_api_client))
-	        return [];
-        $result = $this->egoi_api_client->getSenders(array(
-            'apikey' 		=> $this->apikey,
-            'channel' 		=> 'telemovel'
-        ));
+		if ( empty( $this->egoi_api_client ) ) {
+			return array();
+		}
+		$result = $this->egoi_api_client->getSenders(
+			array(
+				'apikey'  => $this->apikey,
+				'channel' => 'telemovel',
+			)
+		);
 
 		return $result;
 	}
 
-    /**
-     * @return string
-     */
+	/**
+	 * Get Balance.
+	 *
+	 * @return string
+	 */
 	public function smsonw_get_balance() {
 
-        if(empty($this->egoi_api_client))
-            return '0.00$';
+		if ( empty( $this->egoi_api_client ) ) {
+			return '0.00$';
+		}
 
-        $credits = explode(' ',$this->egoi_api_client->getClientData(array('apikey' => $this->apikey))['CREDITS']);
-        return $credits[1].$this->currency[$credits[0]];
+		$credits = explode( ' ', $this->egoi_api_client->getClientData( array( 'apikey' => $this->apikey ) )['CREDITS'] );
+		return $credits[1] . $this->currency[ $credits[0] ];
 
-    }
+	}
 
 	/**
-	 * Get not paid orders over 48 hours
+	 * Get not paid orders over 48 hours.
+	 *
+	 * @param double $time Time duration.
 	 *
 	 * @return mixed
 	 */
-	public function smsonw_get_not_paid_orders($time) {
+	public function smsonw_get_not_paid_orders( $time ) {
 
-		$recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
-        $limit_time = 3600 * 96;
-		$seconds = 172800;
+		$recipients = json_decode( get_option( 'egoi_sms_order_recipients' ), true );
+		$limit_time = 3600 * 96;
+		$seconds    = 172800;
 
-		if(!empty($recipients[$time])){
-			$seconds = 3600 * (int) $recipients[$time];
-        }
+		if ( ! empty( $recipients[ $time ] ) ) {
+			$seconds = 3600 * (int) $recipients[ $time ];
+		}
 
 		$args = array(
 			"status" => array(
@@ -415,151 +463,162 @@ Obrigado'
                 "wc-on-hold",
                 "wc-pending",
 			),
-			"date_created" => (time() - $limit_time) . '...' . (time() - $seconds),
-			'limit' => -1
+			'date_created' => ( time() - $limit_time ) . '...' . ( time() - $seconds ),
+			'limit'        => -1,
 		);
-		return wc_get_orders($args);
+		return wc_get_orders( $args );
 	}
 
 	/**
 	 * Get SMS text from configs
 	 *
-	 * @param $recipient_type
-	 * @param $order
+	 * @param string $recipient_type Recipient type.
+	 * @param array  $order order information.
 	 *
 	 * @return bool|mixed
 	 */
-	public function smsonw_get_sms_order_message($recipient_type, $order) {
-		$recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
-		$texts = json_decode(get_option('egoi_sms_order_texts'), true);
-		$lang = $this->smsonw_get_lang($order['billing']['country']);
+	public function smsonw_get_sms_order_message( $recipient_type, $order ) {
+		$recipients = json_decode( get_option( 'egoi_sms_order_recipients' ), true );
+		$texts      = json_decode( get_option( 'egoi_sms_order_texts' ), true );
+		$lang       = $this->smsonw_get_lang( $order['billing']['country'] );
 
-        if (isset($texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']])
-            && isset($recipients['egoi_sms_order_' . $recipient_type . '_' . $order['status']])
-            && $recipients['egoi_sms_order_' . $recipient_type . '_' . $order['status']] == 1
-        ) {
-            return $this->smsonw_get_tags_content($order, $texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']]);
-		} else if (isset($this->sms_text_new_status[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']])
-            && isset($recipients['egoi_sms_order_' . $recipient_type . '_' . $order['status']])
-            && $recipients['egoi_sms_order_' . $recipient_type . '_' . $order['status']] == 1
-        ) {
-            return $this->smsonw_get_tags_content($order, $this->sms_text_new_status[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']]);
-        }
+		if ( isset( $texts[ $lang ][ 'egoi_sms_order_text_' . $recipient_type . '_' . $order['status'] ] )
+			&& isset( $recipients[ 'egoi_sms_order_' . $recipient_type . '_' . $order['status'] ] )
+			&& 1 === $recipients[ 'egoi_sms_order_' . $recipient_type . '_' . $order['status'] ]
+		) {
+			return $this->smsonw_get_tags_content( $order, $texts[ $lang ][ 'egoi_sms_order_text_' . $recipient_type . '_' . $order['status'] ] );
+		} elseif ( isset( $this->sms_text_new_status[ $lang ][ 'egoi_sms_order_text_' . $recipient_type . '_' . $order['status'] ] )
+			&& isset( $recipients[ 'egoi_sms_order_' . $recipient_type . '_' . $order['status'] ] )
+			&& 1 === $recipients[ 'egoi_sms_order_' . $recipient_type . '_' . $order['status'] ]
+		) {
+			return $this->smsonw_get_tags_content( $order, $this->sms_text_new_status[ $lang ][ 'egoi_sms_order_text_' . $recipient_type . '_' . $order['status'] ] );
+		}
 		return false;
 	}
 
 	/**
-	 * @param $country
+	 * Get language.
+	 *
+	 * @param string $country Country code.
 	 *
 	 * @return bool|string
 	 */
-	public function smsonw_get_lang($country) {
-		$country_codes = unserialize(COUNTRY_CODES);
-		$lang = $country_codes[$country]['language'];
-		$lang_allowed = array('en', 'pt', 'es');
-		if ($lang == 'pt-BR') {
+	public function smsonw_get_lang( $country ) {
+		$country_codes = unserialize( COUNTRY_CODES );
+		$lang          = $country_codes[ $country ]['language'];
+		$lang_allowed  = array( 'en', 'pt', 'es' );
+		if ( 'pt-BR' === $lang ) {
 			return 'pt_BR';
-		} else if (in_array(substr($lang, 0, 2), $lang_allowed)) {
-			return substr($lang, 0, 2);
+		} elseif ( in_array( substr( $lang, 0, 2 ), $lang_allowed ) ) {
+			return substr( $lang, 0, 2 );
 		}
 		return 'en';
     }
 
-    private function priv_get_data_table($method,$action, $order_id){
-        global $wpdb;
+	/**
+	 * Get data table.
+	 *
+	 * @param string $method Method.
+	 * @param string $action Action.
+	 * @param string $order_id Order id.
+	 */
+	private function priv_get_data_table( $method, $action, $order_id ) {
+		global $wpdb;
 
-        $easyPayQuery = sprintf(
-                "SELECT %s as %s FROM %s%s WHERE %s = '%s'",
-                $this->payment_foreign_table[$method][$action], //$method=easy_pay $action=ref|ent result = ep_reference|ep_entity
-                $action,
-                $wpdb->prefix,
-                $this->payment_foreign_table[$method]['table'],
-                $this->payment_foreign_table[$method]['order_id'],
-                $order_id
-        );
+		$easy_pay_query = sprintf(
+			"SELECT %s as %s FROM %s%s WHERE %s = '%s'",
+			$this->payment_foreign_table[ $method ][ $action ], // $method=easy_pay $action=ref|ent result = ep_reference|ep_entity.
+			$action,
+			$wpdb->prefix,
+			$this->payment_foreign_table[ $method ]['table'],
+			$this->payment_foreign_table[ $method ]['order_id'],
+			$order_id
+		);
 
+		$result = $wpdb->get_results( $easy_pay_query, ARRAY_A );
+		if ( 'sibs_multibanco' === $method ) {
+			$ent_eref = explode( '|', $result[0][ $action ] );
+			if ( 'ref' === $action ) {
+				return $ent_eref[1];
+			} else {
+				return $ent_eref[0];
+			}
+		}
 
-        $result = $wpdb->get_results($easyPayQuery, ARRAY_A);
-        if($method == 'sibs_multibanco'){
-            $entEref = explode('|',$result[0][$action]);
-            if($action == 'ref')
-                return $entEref[1];
-            else
-                return $entEref[0];
-        }
-
-        if (!empty($result[0][$action])) {
-            return $result[0][$action];
-        }
-    }
+		if ( ! empty( $result[0][ $action ] ) ) {
+			return $result[0][ $action ];
+		}
+	}
 
 	/**
-	 * Get order payment instructions
+	 * Get order payment instructions.
 	 *
-	 * @param $order
-	 * @param $field
+	 * @param string $order Order.
+	 * @param string $field Field.
 	 *
 	 * @return bool
 	 */
-	public function smsonw_get_payment_data($order, $field) {
-		$order_meta = get_post_meta($order['id']);
+	public function smsonw_get_payment_data( $order, $field ) {
+		$order_meta = get_post_meta( $order['id'] );
 
-		//fix
-        if(key_exists($order['payment_method'], $this->payment_foreign_table)){
-            return $this->priv_get_data_table($order['payment_method'], $field, $order['id']);
-        }
+		if ( key_exists( $order['payment_method'], $this->payment_foreign_table ) ) {
+			return $this->priv_get_data_table( $order['payment_method'], $field, $order['id'] );
+		}
 
-		if (isset($this->payment_map[$order['payment_method']][$field])) {
-			$payment_field = $this->payment_map[$order['payment_method']][ $field ];
-			return $order_meta[$payment_field][0];
+		if ( isset( $this->payment_map[ $order['payment_method'] ][ $field ] ) ) {
+			$payment_field = $this->payment_map[ $order['payment_method'] ][ $field ];
+			return $order_meta[ $payment_field ][0];
 		}
 		return false;
 	}
 
 	/**
-	 * Prepare recipient to E-goi
+	 * Prepare recipient to E-goi.
+	 *
+	 * @param string $phone Phone.
+	 * @param string $country CountryCode.
+	 * @param string $prefix Prefix.
 	 */
-	public function smsonw_get_valid_recipient($phone, $country, $prefix = null) {
-		$prefix = preg_replace('/[^0-9]/', '', $prefix);
-		$recipient = preg_replace('/[^0-9]/', '', $phone);
+	public function smsonw_get_valid_recipient( $phone, $country, $prefix = null ) {
+		$prefix    = preg_replace( '/[^0-9]/', '', $prefix );
+		$recipient = preg_replace( '/[^0-9]/', '', $phone );
 
-		if ($prefix) {
-			return $prefix.'-'.$recipient;
-		} else if ($country) {
+		if ( $prefix ) {
+			return $prefix . '-' . $recipient;
+		} elseif ( $country ) {
 
 			$prefixes = unserialize( COUNTRY_CODES );
-			$len = strlen($prefixes[$country]['prefix']);
-		    if ($prefixes[$country]['prefix'] != substr($recipient, 0, $len)) {
-			    return $prefixes[ $country ]['prefix'] . '-' . $recipient;
-		    } else {
-		        return substr($recipient, 0, $len) . '-' . substr($recipient, $len);
-            }
-
+			$len      = strlen( $prefixes[ $country ]['prefix'] );
+			if ( substr( $recipient, 0, $len ) !== $prefixes[ $country ]['prefix'] ) {
+				return $prefixes[ $country ]['prefix'] . '-' . $recipient;
+			} else {
+				return substr( $recipient, 0, $len ) . '-' . substr( $recipient, $len );
+			}
 		} else {
-            if(!file_exists(plugin_dir_path( __DIR__ ).'../smart-marketing-for-wp/includes/class-egoi-for-wp.php')){
-                return $phone;
-            }
-            require_once plugin_dir_path( __DIR__ ).'../smart-marketing-for-wp/includes/class-egoi-for-wp.php';
-            if(!class_exists('Egoi_For_Wp') || !method_exists('Egoi_For_Wp','smsnf_get_valid_phone')){ return $phone; }
-            $phone = Egoi_For_Wp::smsnf_get_valid_phone($phone);
-        }
+			if ( ! file_exists( plugin_dir_path( __DIR__ ) . '../smart-marketing-for-wp/includes/class-egoi-for-wp.php' ) ) {
+				return $phone;
+			}
+			require_once plugin_dir_path( __DIR__ ) . '../smart-marketing-for-wp/includes/class-egoi-for-wp.php';
+			if ( ! class_exists( 'Egoi_For_Wp' ) || ! method_exists( 'Egoi_For_Wp', 'smsnf_get_valid_phone' ) ) {
+				return $phone; }
+			$phone = Egoi_For_Wp::smsnf_get_valid_phone( $phone );
+		}
 
 		return $phone;
 	}
 
-    /**
-     * replace tags with order data
-     *
-     * @param $order
-     * @param $message
-     * @param $billet_code
-     * @return string
-     */
-    public function smsonw_get_tags_content($order, $message, $billet_code = false)
-    {
-        $codes = $this->smsonw_get_tracking_codes($order['id']);
-        $carriers = $this->smsonw_get_tracking_carriers(true);
-        $carriers_url = $this->smsonw_get_tracking_carriers_urls(true);
+	/**
+	 * Replace tags with order data.
+	 *
+	 * @param string $order Order.
+	 * @param string $message Message.
+	 * @param mixed  $billet_code Code.
+	 * @return string
+	 */
+	public function smsonw_get_tags_content( $order, $message, $billet_code = false ) {
+		$codes        = $this->smsonw_get_tracking_codes( $order['id'] );
+		$carriers     = $this->smsonw_get_tracking_carriers( true );
+		$carriers_url = $this->smsonw_get_tracking_carriers_urls( true );
 
         $entity = $this->smsonw_get_payment_data($order, 'ent');
         $reference = $this->smsonw_get_payment_data($order, 'ref');
@@ -577,13 +636,13 @@ Obrigado'
             '%shop_name%'       => get_bloginfo('name'),
             '%billing_name%'    => $order['billing']['first_name'] . ' ' . $order['billing']['last_name'],
 
-            '%tracking_name%'   => (isset($codes[0]['carrier']) &&isset($carriers[$codes[0]['carrier']]))
-                ?$carriers[$codes[0]['carrier']]
-                :'',
+			'%tracking_name%'  => ( isset( $codes[0]['carrier'] ) && isset( $carriers[ $codes[0]['carrier'] ] ) )
+				? $carriers[ $codes[0]['carrier'] ]
+				: '',
 
-            '%tracking_code%'   => (isset($codes[0]['tracking_code']))
-                ?$codes[0]['tracking_code']
-                :'',
+			'%tracking_code%'  => ( isset( $codes[0]['tracking_code'] ) )
+				? $codes[0]['tracking_code']
+				: '',
 
             '%tracking_url%'    => (isset($carriers_url[$codes[0]['carrier']]))
                 ?$carriers_url[$codes[0]['carrier']]
@@ -597,120 +656,132 @@ Obrigado'
         );
 
 
-        if ($billet_code) {
-            $tags['%billet_url%'] = get_site_url(null, '/wp-json/smsonw/v1/billet?c=' . $billet_code);
-            $order_data = wc_get_order( $order['id'] );
-            $data = $order_data->get_meta( '_wc_pagseguro_payment_data' );
-            if (strpos($data['method'], 'Billet') !== false) {
-                $tags['%payment_method%'] = 'Boleto';
-            } else if (strpos($data['method'], 'Bank Transfer') !== false) {
-                $tags['%payment_method%'] = 'Transferência Bancária';
-            }
-        }
+		if ( $billet_code ) {
+			$tags['%billet_url%'] = get_site_url( null, '/wp-json/smsonw/v1/billet?c=' . $billet_code );
+			$order_data           = wc_get_order( $order['id'] );
+			$data                 = $order_data->get_meta( '_wc_pagseguro_payment_data' );
+			if ( strpos( $data['method'], 'Billet' ) !== false ) {
+				$tags['%payment_method%'] = 'Boleto';
+			} elseif ( strpos( $data['method'], 'Bank Transfer' ) !== false ) {
+				$tags['%payment_method%'] = 'Transferência Bancária';
+			}
+		}
 
-        foreach ($tags as $tag => $content) {
-            if ($tag == '%ref%' && $this->smsonw_get_payment_data($order, 'ref') == false) {
-                $message = str_replace('Ref. %ref%', '', $message);
-                continue;
-            }
-            if ($tag == '%ent%' && $this->smsonw_get_payment_data($order, 'ent') == false) {
-                $message = str_replace('Ent. %ent%', '', $message);
-                continue;
-            }
-            $message = str_replace($tag, $content, $message);
-        }
+		foreach ( $tags as $tag => $content ) {
+			if ( '%ref%' === $tag && $this->smsonw_get_payment_data( $order, 'ref' ) === false ) {
+				$message = str_replace( 'Ref. %ref%', '', $message );
+				continue;
+			}
+			if ( '%ent%' === $tag && $this->smsonw_get_payment_data( $order, 'ent' ) === false ) {
+				$message = str_replace( 'Ent. %ent%', '', $message );
+				continue;
+			}
+			$message = str_replace( $tag, $content, $message );
+		}
 
+		return $message;
+	}
 
-        return $message;
-    }
+	/**
+	 * Get Multibanco html table.
+	 *
+	 * @param string $entity Entity number.
+	 * @param string $reference Reference number.
+	 * @param double $total Value.
+	 * @param string $img_src MB image source.
+	 * @param string $lang Language.
+	 */
+	public function smsonw_get_mb_table_html( $entity, $reference, $total, $img_src, $lang ) {
+		$img = '';
+		$ins = 'Payment instructions';
+		$ent = 'Entity: ';
+		$ref = 'Reference: ';
+		$val = 'Value: ';
 
-    public function smsonw_get_mb_table_html($entity, $reference, $total, $img_src, $lang){
-        $img = '';
-        $ins = 'Payment instructions';
-        $ent = 'Entity: ';
-        $ref = 'Reference: ';
-        $val = 'Value: ';
-
-        if($lang == 'es'){
-            $ins = 'Instrucciones de pago';
-            $ent = 'Entidad: ';
-            $ref = 'Referencia: ';
-            $val = 'valor: ';
-        }else if($lang == 'pt' || $lang == 'pt-BR'){
-            $ins = 'Instruções de pagamento';
-            $ent = 'Entidade: ';
-            $ref = 'Referência: ';
-            $val = 'Valor: ';
-        }
+		if ( 'es' === $lang ) {
+			$ins = 'Instrucciones de pago';
+			$ent = 'Entidad: ';
+			$ref = 'Referencia: ';
+			$val = 'valor: ';
+		} elseif ( 'pt' === $lang || 'pt-BR' === $lang ) {
+			$ins = 'Instruções de pagamento';
+			$ent = 'Entidade: ';
+			$ref = 'Referência: ';
+			$val = 'Valor: ';
+		}
 
         $img ='<img src="'.$img_src.'" style="width:70%;display:block;margin-left: auto; margin-right: auto; padding:10px 0 10px 0">';
 
 
-        $content = '<table style="width:50%;margin-left: auto !important; margin-right: auto !important;" >
+		$content = '<table style="width:50%;margin-left: auto !important; margin-right: auto !important;" >
         <tbody>
         <tr>
-          <th colspan="2" style="width:100%;padding:10px 10px 10px 10px">'.$ins.' '.$img.'</th>
+          <th colspan="2" style="width:100%;padding:10px 10px 10px 10px">' . $ins . ' ' . $img . '</th>
         </tr>
         <tr >
           <td style="padding:20px 0px 10px 0px">
-            '.$ent.'</td>
-            <td style="text-align:right;">'.$entity.'</td>
+            ' . $ent . '</td>
+            <td style="text-align:right;">' . $entity . '</td>
         </tr>
         <tr>
-        <td style="padding:10px 0px 10px 0px">'.$ref.'</td>
-        <td style="text-align:right;">'.$reference.'</td>
+        <td style="padding:10px 0px 10px 0px">' . $ref . '</td>
+        <td style="text-align:right;">' . $reference . '</td>
         </tr>
         <tr>
-        <td style="padding:10px 0px 20px 0px">'.$val.'</td>
-        <td style="text-align:right;">'.$total.'</td>
+        <td style="padding:10px 0px 20px 0px">' . $val . '</td>
+        <td style="text-align:right;">' . $total . '</td>
         </tr>
         </tbody>
       </table>';
 
-      return $content;
-    }
+		return $content;
+	}
 
 	/**
 	 * Method to send SMS
 	 *
-	 * @param $recipient
-	 * @param $message
-	 * @param $type
-	 * @param $order_id
-	 * @param bool $gsm
+	 * @param string $recipient Recipient.
+	 * @param string $message Message to deliver.
+	 * @param string $type Message type.
+	 * @param string $order_id Order id.
+	 * @param bool   $gsm If the sending message is sent with gsm format.
+	 * @param int    $max_count Max sms sent.
 	 *
 	 * @return mixed
 	 */
 	public function smsonw_send_sms($recipient, $message, $type, $order_id, $gsm = false, $max_count = 3) {
 		$url = 'http://dev-web-agency.e-team.biz/smaddonsms/sms';
 
-		$sender = json_decode(get_option('egoi_sms_order_sender'), true);
+		$sender = json_decode( get_option( 'egoi_sms_order_sender' ), true );
 
 		$sms_params = array(
-            "apikey" => $this->apikey,
-			"sender_hash" => $sender['sender_hash'],
-			"message" => $message,
-			"recipient" => $recipient,
-			"type" => $type,
-			"order_id" => $order_id,
-			"gsm" => $gsm,
-            "max_count" => $max_count
+			'apikey'      => $this->apikey,
+			'sender_hash' => $sender['sender_hash'],
+			'message'     => $message,
+			'recipient'   => $recipient,
+			'type'        => $type,
+			'order_id'    => $order_id,
+			'gsm'         => $gsm,
+			'max_count'   => $max_count,
 		);
 
-		$response = wp_remote_post($url, array(
-            'timeout' => 60,
-            'body' => $sms_params
-        ));
+		$response = wp_remote_post(
+			$url,
+			array(
+				'timeout' => 60,
+				'body'    => $sms_params,
+			)
+		);
 
-		$result = json_encode($response['body']);
+		$result = json_encode( $response['body'] );
 
-		if ($response['response']['code'] == 200) {
-            $sms_counter = get_option('egoi_sms_counter');
-            $counter = $sms_counter ? $sms_counter+1 : 1;
-            update_option('egoi_sms_counter', $counter);
-        } else {
-		    return false;
-        }
+		if ( 200 === $response['response']['code'] ) {
+			$sms_counter = get_option( 'egoi_sms_counter' );
+			$counter     = $sms_counter ? $sms_counter + 1 : 1;
+			update_option( 'egoi_sms_counter', $counter );
+		} else {
+			return false;
+		}
 
 		return $result;
     }
@@ -718,11 +789,9 @@ Obrigado'
     /**
 	 * Method to send SMS
 	 *
-	 * @param $recipient
-	 * @param $message
-	 * @param $type
-	 * @param $order_id
-	 * @param bool $gsm
+	 * @param string $email Email to send information.
+	 * @param string $message Message to be sent.
+	 * @param string $order Order.
 	 *
 	 * @return mixed
 	 */
@@ -739,14 +808,14 @@ Obrigado'
 
         $template_file = apply_filters('egoi_email_remider', plugin_dir_path( __DIR__ ).'../smart-marketing-for-wp/admin/partials/emailcampaignwidget/email_campaign.php', $title, $content, $thumbnail, $blog_info);
 
-        ob_start();
-        include $template_file;
-        $template = ob_get_contents();
-        ob_end_clean();
+		ob_start();
+		include $template_file;
+		$template = ob_get_contents();
+		ob_end_clean();
 
-        $headers = array('Content-Type: text/html; charset=UTF-8');
+		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
-        $result = wp_mail( $email, $subject, '<td><tr>'.$template.'</tr></td>', $headers);
+		$result = wp_mail( $email, $subject, '<td><tr>' . $template . '</tr></td>', $headers );
 
 		return $result;
 	}
@@ -754,18 +823,18 @@ Obrigado'
 	/**
 	 * Save logs in /logs/smart-marketing-addon-sms-order.log
 	 *
-	 * @param $log
+	 * @param string $log Logs.
 	 */
-	public function smsonw_save_logs($log) {
-		$path = dirname(__FILE__).'/logs/';
+	public function smsonw_save_logs( $log ) {
+		$path = dirname( __FILE__ ) . '/logs/';
 
-		$file = fopen($path.'smart-marketing-addon-sms-order.log', 'a+');
-		fwrite($file, $log."\xA");
-		fclose($file);
+		$file = fopen( $path . 'smart-marketing-addon-sms-order.log', 'a+' );
+		fwrite( $file, $log . "\xA" );
+		fclose( $file );
 	}
 
 	/**
-	 * Div to success notices
+	 * Div to success notices.
 	 */
 	public function smsonw_admin_notice_success() {
 		?>
@@ -776,7 +845,7 @@ Obrigado'
 	}
 
 	/**
-	 * Div to error notices
+	 * Div to error notices.
 	 */
 	public function smsonw_admin_notice_error() {
 		?>
@@ -786,199 +855,237 @@ Obrigado'
 		<?php
 	}
 
-    /**
-     * Return all (not all) possible positions for price drop button
-     * @return array|string
-     */
-    public function smsonw_admin_follow_price_positions() {
-	    return array(
-		    'woocommerce_before_single_product'         => 'Before Single Product',
-		    'woocommerce_before_single_product_summary' => 'Before Single Product Summary',
-		    'woocommerce_after_single_product_summary'  => 'After Single Product Summary',
-		    'woocommerce_product_thumbnails'            => 'Before Single Product Thumbnails',
-		    'woocommerce_single_product_summary'        => 'Single Product Summary',
-		    'woocommerce_simple_add_to_cart'            => 'Before add to cart Button',
-		    'woocommerce_after_add_to_cart_button'      => 'After add to cart Button',
-		    'woocommerce_after_add_to_cart_form'        => 'After add to cart form',
-		    'woocommerce_grouped_add_to_cart'           => 'Before add to cart Button in grouped products',
-	    );
-    }
-
-	public function smsonw_sanitize_boolean_field($field) {
-        if (isset($_POST[$field]) && filter_var($_POST[$field], FILTER_VALIDATE_BOOLEAN)) {
-            return filter_var($_POST[$field], FILTER_SANITIZE_NUMBER_INT);
-        } else {
-            return 0;
-        }
-    }
-
-    /**
-     * @param $order_id
-     * @return bool|int
-     */
-    public function smsonw_check_notification_option($order_id) {
-        $recipient_options = json_decode(get_option('egoi_sms_order_recipients'), true);
-
-        if ($recipient_options['notification_option']) {
-            return (bool) get_post_meta($order_id, 'egoi_notification_option')[0];
-        } else {
-            return 1;
-        }
-    }
-
-    public function smsonw_get_option_payment_method($order_payment_method) {
-        if (strpos($order_payment_method, 'multibanco') !== false || in_array($order_payment_method,$this->multibanco_bypass) ) {
-            return 'multibanco';
-        } else if (strpos($order_payment_method, 'payshop') !== false) {
-            return 'payshop';
-        } else if  (strpos($order_payment_method, 'pagseguro') !== false) {
-            return 'billet';
-        }
-
-        return $order_payment_method;
-    }
+	/**
+	 * Return all (not all) possible positions for price drop button.
+	 *
+	 * @return array|string
+	 */
+	public function smsonw_admin_follow_price_positions() {
+		return array(
+			'woocommerce_before_single_product'         => 'Before Single Product',
+			'woocommerce_before_single_product_summary' => 'Before Single Product Summary',
+			'woocommerce_after_single_product_summary'  => 'After Single Product Summary',
+			'woocommerce_product_thumbnails'            => 'Before Single Product Thumbnails',
+			'woocommerce_single_product_summary'        => 'Single Product Summary',
+			'woocommerce_simple_add_to_cart'            => 'Before add to cart Button',
+			'woocommerce_after_add_to_cart_button'      => 'After add to cart Button',
+			'woocommerce_after_add_to_cart_form'        => 'After add to cart form',
+			'woocommerce_grouped_add_to_cart'           => 'Before add to cart Button in grouped products',
+		);
+	}
 
 	/**
+	 * Sanitize field.
+	 *
+	 * @param string $field Field.
+	 */
+	public function smsonw_sanitize_boolean_field( $field ) {
+		if ( isset( $_POST[ $field ] ) && filter_var( $_POST[ $field ], FILTER_VALIDATE_BOOLEAN ) ) {
+			return filter_var( $_POST[ $field ], FILTER_SANITIZE_NUMBER_INT );
+		} else {
+			return 0;
+		}
+	}
+
+	/**
+	 * Check notification option.
+	 *
+	 * @param string $order_id Order id.
+	 * @return bool|int
+	 */
+	public function smsonw_check_notification_option( $order_id ) {
+		$recipient_options = json_decode( get_option( 'egoi_sms_order_recipients' ), true );
+
+		if ( $recipient_options['notification_option'] ) {
+			return (bool) get_post_meta( $order_id, 'egoi_notification_option' )[0];
+		} else {
+			return 1;
+		}
+	}
+
+	/**
+	 * Get payment method option.
+	 *
+	 * @param string $order_payment_method Order payment method.
+	 */
+	public function smsonw_get_option_payment_method( $order_payment_method ) {
+		if ( strpos( $order_payment_method, 'multibanco' ) !== false || in_array( $order_payment_method, $this->multibanco_bypass ) ) {
+			return 'multibanco';
+		} elseif ( strpos( $order_payment_method, 'payshop' ) !== false ) {
+			return 'payshop';
+		} elseif ( strpos( $order_payment_method, 'pagseguro' ) !== false ) {
+			return 'billet';
+		}
+
+		return $order_payment_method;
+	}
+
+	/**
+	 * Ping method.
+	 *
 	 * @return array|mixed
 	 */
-	protected function ping ()
-	{
-		$egoiV3    = 'https://api.egoiapp.com';
+	protected function ping() {
+		$egoi_v3   = 'https://api.egoiapp.com';
 		$pluginkey = '2f711c62b1eda65bfed5665fbd2cdfc9';
 
 		try {
 			$curl = curl_init();
 
-			curl_setopt_array($curl, array(
-				CURLOPT_URL            => $egoiV3 . "/ping",
-				CURLOPT_RETURNTRANSFER => true,
-				CURLOPT_ENCODING       => "",
-				CURLOPT_MAXREDIRS      => 10,
-				CURLOPT_TIMEOUT        => 10,
-				CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-				CURLOPT_CUSTOMREQUEST  => 'POST',
-				CURLOPT_HTTPHEADER     => array(
-					"cache-control: no-cache",
-					"Apikey: " . $this->apikey,
-					"Pluginkey: " . $pluginkey
-				),
-			));
+			curl_setopt_array(
+				$curl,
+				array(
+					CURLOPT_URL            => $egoi_v3 . '/ping',
+					CURLOPT_RETURNTRANSFER => true,
+					CURLOPT_ENCODING       => '',
+					CURLOPT_MAXREDIRS      => 10,
+					CURLOPT_TIMEOUT        => 10,
+					CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+					CURLOPT_CUSTOMREQUEST  => 'POST',
+					CURLOPT_HTTPHEADER     => array(
+						'cache-control: no-cache',
+						'Apikey: ' . $this->apikey,
+						'Pluginkey: ' . $pluginkey,
+					),
+				)
+			);
 
-			curl_exec($curl);
-			curl_close($curl);
+			curl_exec( $curl );
+			curl_close( $curl );
 			return true;
 
-		} catch (Exception $e) {
+		} catch ( Exception $e ) {
 			return true;
 		}
 	}
 
-    /**
-     * Short a link using transacional.
-     *
-     * @param  link|string.
-     * @param  name|string.
-     *
-     * @return array
-     */
-	public function shortener($link, $name = ""){
-        $slingshot    = 'https://www51.e-goi.com';
+	/**
+	 * Short a link using transacional.
+	 *
+	 * @param string $link Original link.
+	 * @param string $name Name.
+	 *
+	 * @return array
+	 */
+	public function shortener( $link, $name = '' ) {
+		$slingshot = 'https://www51.e-goi.com';
 
-        $data = array(
-            "apikey" => $this->apikey,
-            "name" => ($name == "")? $link : $name,
-            "originalLink" => $link
-        );
+		$data = array(
+			'apikey'       => $this->apikey,
+			'name'         => ( '' === $name ) ? $link : $name,
+			'originalLink' => $link,
+		);
 
-        try {
-            // API URL
-            $ch = curl_init($slingshot . "/api/public/shortener");
-            $payload = json_encode($data);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $result = curl_exec($ch);
-            curl_close($ch);
-            return json_decode($result, true);
-        } catch (Exception $e) {
-            die;
-        }
-    }
+		try {
+			// API URL.
+			$ch      = curl_init( $slingshot . '/api/public/shortener' );
+			$payload = json_encode( $data );
+			curl_setopt( $ch, CURLOPT_POSTFIELDS, $payload );
+			curl_setopt( $ch, CURLOPT_HTTPHEADER, array( 'Content-Type:application/json' ) );
+			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+			$result = curl_exec( $ch );
+			curl_close( $ch );
+			return json_decode( $result, true );
+		} catch ( Exception $e ) {
+			die;
+		}
+	}
 
-    /**
-     * Get tracking codes from order.
-     *
-     * @param  WC_Order|int $order Order ID or order data.
-     *
-     * @return array
-     */
-    function smsonw_get_tracking_codes( $order ) {
+	/**
+	 * Get tracking codes from order.
+	 *
+	 * @param  WC_Order|int $order Order ID or order data.
+	 *
+	 * @return array
+	 */
+	public function smsonw_get_tracking_codes( $order ) {
 
-        if (is_numeric($order))
-            $order = wc_get_order($order);
+		if ( is_numeric( $order ) ) {
+			$order = wc_get_order( $order );
+		}
 
-        if(! $order instanceof WC_Order)//order not found
-            return[];
+		if ( ! $order instanceof WC_Order ) { // order not found.
+			return array();
+		}
 
-        if ( method_exists( $order, 'get_meta' ) ) {
-            $codes = $order->get_meta( '_tracking_code_egoi' );
-        } else {
-            $codes = isset($order->_tracking_code_egoi)?isset($order->_tracking_code_egoi):'[]';
-        }
+		if ( method_exists( $order, 'get_meta' ) ) {
+			$codes = $order->get_meta( '_tracking_code_egoi' );
+		} else {
+			$codes = isset( $order->_tracking_code_egoi ) ? isset( $order->_tracking_code_egoi ) : '[]';
+		}
 
-        return json_decode($codes, true);
-    }
+		return json_decode( $codes, true );
+	}
 
-    function smsonw_get_tracking_carriers($flag = false){
-        $methods = WC()->shipping->get_shipping_methods();
-        $output = [];
-        foreach ($methods as $key => $value){
 
-            if(empty( (is_array($value)?$value['method_title']:$value->method_title) ))
-                continue;
+	/**
+	 * Get tracking carriers.
+	 *
+	 * @param boolean $flag Boolean.
+	 */
+	public function smsonw_get_tracking_carriers( $flag = false ) {
+		$methods = WC()->shipping->get_shipping_methods();
+		$output  = array();
+		foreach ( $methods as $key => $value ) {
 
-            $output[$key] = is_array($value)?$value['method_title']:$value->method_title;
-        }
+			if ( empty( ( is_array( $value ) ? $value['method_title'] : $value->method_title ) ) ) {
+				continue;
+			}
 
-        if($flag == false)
-            return $output;
+			$output[ $key ] = is_array( $value ) ? $value['method_title'] : $value->method_title;
+		}
 
-        $customs = $this->smsonw_get_custom_tracking_carriers();
-        foreach ($customs as $custom){
-            $output[$custom['carrier']] = $custom['carrier'];
-        }
-        return $output;
-    }
+		if ( false === $flag ) {
+			return $output;
+		}
 
-    function smsonw_get_tracking_carriers_urls($flag = false){
-        $objs = get_option('egoi_tracking_carriers_urls');
+		$customs = $this->smsonw_get_custom_tracking_carriers();
+		foreach ( $customs as $custom ) {
+			$output[ $custom['carrier'] ] = $custom['carrier'];
+		}
+		return $output;
+	}
 
-        $objs_costum = ($flag === true)?$this->smsonw_get_custom_tracking_carriers():[];
+	/**
+	 * Get tracking carriers urls.
+	 *
+	 * @param boolean $flag Boolean.
+	 */
+	public function smsonw_get_tracking_carriers_urls( $flag = false ) {
+		$objs = get_option( 'egoi_tracking_carriers_urls' );
 
-        if(empty($objs))
-            $objs = [];
-        else
-            $objs = json_decode($objs,true);
+		$objs_costum = ( true === $flag ) ? $this->smsonw_get_custom_tracking_carriers() : array();
 
-        if(empty($objs_costum))
-            $objs_costum = [];
-        else
-            $objs_costum = json_decode($objs_costum,true);
+		if ( empty( $objs ) ) {
+			$objs = array();
+		} else {
+			$objs = json_decode( $objs, true );
+		}
 
-        foreach ($objs_costum as $costum){
-            $objs[$costum['carrier']] = $costum['url'];
-        }
+		if ( empty( $objs_costum ) ) {
+			$objs_costum = array();
+		} else {
+			$objs_costum = json_decode( $objs_costum, true );
+		}
 
-        return $objs;
-    }
+		foreach ( $objs_costum as $costum ) {
+			$objs[ $costum['carrier'] ] = $costum['url'];
+		}
 
-    function smsonw_get_custom_tracking_carriers(){
-        $objs = get_option('egoi_custom_carriers');
-        if(empty($objs))
-            return [];
-        $objs = json_decode($objs,true);
-        return (json_last_error() !== JSON_ERROR_NONE)?[]:$objs;
-    }
+		return $objs;
+	}
+
+	/**
+	 * Get custom tracking carriers.
+	 */
+	public function smsonw_get_custom_tracking_carriers() {
+		$objs = get_option( 'egoi_custom_carriers' );
+		if ( empty( $objs ) ) {
+			return array();
+		}
+		$objs = json_decode( $objs, true );
+		return ( json_last_error() !== JSON_ERROR_NONE ) ? array() : $objs;
+	}
 
 
 

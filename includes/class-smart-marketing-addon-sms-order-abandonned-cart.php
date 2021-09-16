@@ -33,7 +33,7 @@ class Smart_Marketing_Addon_Sms_Order_Abandoned_Cart {
 	        if (empty($cellPhone)) {
                 require_once plugin_dir_path( dirname( __FILE__ ) ).'includes/class-smart-marketing-addon-sms-order-cellphone-popup.php';
                 $popUp = new Smart_Marketing_Addon_Sms_Order_Cellphone_Popup();
-                $popUp->printPopup();
+                $popUp->print_popup();
             } else {
 
                 if (!empty($wooSessionKey)) {
