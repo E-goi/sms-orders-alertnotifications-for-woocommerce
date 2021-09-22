@@ -72,6 +72,8 @@ $balance = $this->helper->smsonw_get_balance();
 $reminder_times = array('1','12', '24', '36', '48', '72');
 
 ?>
+<br>
+<br>
 <span id="form_info" data-form-id="<?php esc_html_e($_POST['form_id']);?>" data-form-lang="<?php esc_html_e($_POST['sms_text_language']);?>" data-form-method="<?php esc_html_e($_POST['sms_payment_method']);?>"></span>
 <!-- head -->
 <h1 class="logo">Smart Marketing - <?php _e( 'SMS Notifications', 'smart-marketing-addon-sms-order' ); ?></h1>
@@ -190,7 +192,7 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
 
                                 <select name="admin_prefix" class="e-goi-option-select-admin-forms" style="width: 49%; float: left;" required >
                                     <?php
-                                    foreach (unserialize(COUNTRY_CODES) as $key => $value) {
+                                    foreach (unserialize(EFWP_COUNTRY_CODES) as $key => $value) {
                                         $string = ucwords(strtolower($value['country_pt']))." (+".$value['prefix'].")";
                                         ?>
                                         <option value="<?=$value['prefix']?>" <?php selected($value['prefix'], $sender_option['admin_prefix']);?> ><?=$string?></option>
@@ -417,7 +419,7 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
 
                                     <select name="recipient_prefix" class="e-goi-option-select-admin-forms" style="width: 49%; float: left;" required <?php echo $disabled ? 'disabled' : null;?> >
                                         <?php
-                                        foreach (unserialize(COUNTRY_CODES) as $key => $value) {
+                                        foreach (unserialize(EFWP_COUNTRY_CODES) as $key => $value) {
                                             $string = ucwords(strtolower($value['country_pt']))." (+".$value['prefix'].")";
                                             ?>
                                             <option value="<?=$value['prefix']?>" ><?=$string?></option>
