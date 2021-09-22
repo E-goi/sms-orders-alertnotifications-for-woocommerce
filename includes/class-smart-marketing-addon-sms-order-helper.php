@@ -910,34 +910,29 @@ Obrigado',
 		$egoi_v3   = 'https://api.egoiapp.com';
 		$pluginkey = '2f711c62b1eda65bfed5665fbd2cdfc9';
 
-		try {
-			$curl = curl_init();
+		$egoi_info = get_transient( 'egoi_ping_cache' );
 
-			curl_setopt_array(
-				$curl,
-				array(
-					CURLOPT_URL            => $egoi_v3 . '/ping',
-					CURLOPT_RETURNTRANSFER => true,
-					CURLOPT_ENCODING       => '',
-					CURLOPT_MAXREDIRS      => 10,
-					CURLOPT_TIMEOUT        => 10,
-					CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-					CURLOPT_CUSTOMREQUEST  => 'POST',
-					CURLOPT_HTTPHEADER     => array(
-						'cache-control: no-cache',
-						'Apikey: ' . $this->apikey,
-						'Pluginkey: ' . $pluginkey,
-					),
-				)
-			);
+        if( false === $egoi_info ) {
+            // Transient expired, refresh the data
 
-			curl_exec( $curl );
-			curl_close( $curl );
-			return true;
+            $egoi_info = wp_remote_request( $egoi_v3 . "/ping",
+                array(
+                    'method'     => 'POST',
+                    'timeout'    => 30,
+                    'body'       => '',
+                    'headers'    => [
+                        "cache-control: no-cache",
+                        "Apikey: " . $this->apikey,
+                        "Pluginkey: " . $pluginkey
+                    ]
+                )
+            );
+            $egoi_info = is_wp_error($egoi_info)?'{}':$egoi_info['body'];
 
-		} catch ( Exception $e ) {
-			return true;
-		}
+            set_transient( 'egoi_ping_cache', $egoi_info, 60*60 );
+        }
+
+        return true;
 	}
 
 	/**
@@ -949,27 +944,29 @@ Obrigado',
 	 * @return array
 	 */
 	public function shortener( $link, $name = '' ) {
-		$slingshot = 'https://www51.e-goi.com';
+		$slingshot = 'https://slingshot.egoiapp.com';
 
 		$data = array(
-			'apikey'       => $this->apikey,
 			'name'         => ( '' === $name ) ? $link : $name,
 			'originalLink' => $link,
 		);
 
-		try {
-			// API URL.
-			$ch      = curl_init( $slingshot . '/api/public/shortener' );
-			$payload = json_encode( $data );
-			curl_setopt( $ch, CURLOPT_POSTFIELDS, $payload );
-			curl_setopt( $ch, CURLOPT_HTTPHEADER, array( 'Content-Type:application/json' ) );
-			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-			$result = curl_exec( $ch );
-			curl_close( $ch );
-			return json_decode( $result, true );
-		} catch ( Exception $e ) {
-			die;
-		}
+		$payload = wp_json_encode( $data );
+		
+		$egoi_info = wp_remote_request( $slingshot . "/api/v2/shortener",
+						array(
+							'method'     => 'POST',
+							'timeout'    => 30,
+							'body'       => $payload,
+							'headers'    => [
+								"Apikey" => $this->apikey,
+								"Content-Type" => "application/json"
+							]
+						)
+					);
+		$egoi_info = is_wp_error($egoi_info)?'{}':$egoi_info['body'];
+
+		return $egoi_info;
 	}
 
 	/**
