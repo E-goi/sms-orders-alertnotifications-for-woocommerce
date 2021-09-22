@@ -504,7 +504,7 @@ Obrigado',
 	 * @return bool|string
 	 */
 	public function smsonw_get_lang( $country ) {
-		$country_codes = unserialize( COUNTRY_CODES );
+		$country_codes = unserialize( EFWP_COUNTRY_CODES );
 		$lang          = $country_codes[ $country ]['language'];
 		$lang_allowed  = array( 'en', 'pt', 'es' );
 		if ( 'pt-BR' === $lang ) {
@@ -587,7 +587,7 @@ Obrigado',
 			return $prefix . '-' . $recipient;
 		} elseif ( $country ) {
 
-			$prefixes = unserialize( COUNTRY_CODES );
+			$prefixes = unserialize( EFWP_COUNTRY_CODES );
 			$len      = strlen( $prefixes[ $country ]['prefix'] );
 			if ( substr( $recipient, 0, $len ) !== $prefixes[ $country ]['prefix'] ) {
 				return $prefixes[ $country ]['prefix'] . '-' . $recipient;
