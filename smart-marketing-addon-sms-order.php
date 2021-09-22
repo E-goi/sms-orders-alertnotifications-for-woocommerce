@@ -264,5 +264,17 @@ function filter_upgrader_pre_install( $response, $hook_extra ) {
 	}
 }
 
+add_action('in_admin_header', function () {
+
+    if(strpos(get_current_screen()->id, 'smart-marketing-addon-sms-order') == false){
+        return false;
+    }
+
+    remove_all_actions('admin_notices');
+    remove_all_actions('all_admin_notices');
+
+}, 1000);
+
+
 
 run_smart_marketing_addon_sms_order();
