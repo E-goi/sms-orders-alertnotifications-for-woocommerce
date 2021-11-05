@@ -40,6 +40,11 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 			'ref' => '',
 			'val' => '_order_total'
 		),
+        'easypay_mb_2' => array(
+			'ent' => '',
+			'ref' => '',
+			'val' => '_order_total'
+		),
         'sibs_multibanco' => array(
             'ent' => '',
             'ref' => '',
@@ -77,6 +82,12 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 
 	public $payment_foreign_table = array(
         'easypay_mb'        => array(
+            'table'     => 'easypay_notifications',
+            'order_id'  => 't_key',
+            'ref'       => 'ep_reference',
+            'ent'       => 'ep_entity',
+        ),
+        'easypay_mb_2'        => array(
             'table'     => 'easypay_notifications_2',
             'order_id'  => 't_key',
             'ref'       => 'ep_reference',
@@ -102,7 +113,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
         ),
     );
 
-	public $multibanco_bypass = ['lusopaygateway','hipaymultibanco','easypay_mb'];
+	public $multibanco_bypass = ['lusopaygateway','hipaymultibanco','easypay_mb', 'easypay_mb_2'];
 
     /**
      * @var array
