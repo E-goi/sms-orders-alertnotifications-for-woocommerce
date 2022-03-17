@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Fired during plugin activation
  *
@@ -30,16 +31,16 @@ class Smart_Marketing_Addon_Sms_Order_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
-		if ( ! wp_next_scheduled( 'egoi_sms_order_event' ) ) {
-			wp_schedule_event( time(), 'every_fifteen_minutes', 'egoi_sms_order_event' );
+		if (! wp_next_scheduled ( 'egoi_sms_order_event' )) {
+			wp_schedule_event(time(), 'every_fifteen_minutes', 'egoi_sms_order_event');
 		}
 
-		self::create_sms_follow_price_table();
+        self::create_sms_follow_price_table();
 		self::create_sms_abandoned_cart_table();
 		self::create_email_order_reminders_table();
 		self::create_sms_order_reminders_table();
 
-		self::check_api_key();
+        self::check_api_key();
 	}
 
 	/**
@@ -165,16 +166,16 @@ class Smart_Marketing_Addon_Sms_Order_Activator {
 	 * @throws SoapFault Soap Exception.
 	 */
 	public static function check_api_key() {
-		$apikey = get_option( 'egoi_api_key' );
-		$params = array(
-			'plugin_key' => '2f711c62b1eda65bfed5665fbd2cdfc9',
-			'apikey'     => $apikey['api_key'],
-		);
-		$client = new SoapClient( 'http://api.e-goi.com/v2/soap.php?wsdl' );
-		$client->checklogin( $params );
-		self::ping( $apikey['api_key'] );
-		self::activate_transactional( $apikey['api_key'] );
-	}
+        $apikey = get_option('egoi_api_key');
+        $params = [
+            'plugin_key' => '2f711c62b1eda65bfed5665fbd2cdfc9',
+            'apikey' 		=> $apikey['api_key']
+        ];
+        $client = new SoapClient('http://api.e-goi.com/v2/soap.php?wsdl');
+        $client->checklogin($params);
+        Smart_Marketing_Addon_Sms_Order_Helper::ping($apikey['api_key']);
+        self::activate_transactional($apikey['api_key']);
+    }
 
 	/**
 	 * Active transactional api.
@@ -193,39 +194,4 @@ class Smart_Marketing_Addon_Sms_Order_Activator {
 		);
 	}
 
-	/**
-	 * Ping method.
-	 *
-	 * @param string $apikey e-goi apikey.
-	 *
-	 * @return array|mixed
-	 */
-	public function ping( $apikey ) {
-		$egoi_v3   = 'https://api.egoiapp.com';
-		$pluginkey = '2f711c62b1eda65bfed5665fbd2cdfc9';
-
-        $egoi_info = get_transient( 'egoi_ping_cache' );
-
-        if( false === $egoi_info ) {
-            // Transient expired, refresh the data
-
-            $egoi_info = wp_remote_request( $egoi_v3 . "/ping",
-                array(
-                    'method'     => 'POST',
-                    'timeout'    => 30,
-                    'body'       => '',
-                    'headers'    => [
-                        "cache-control: no-cache",
-                        "Apikey: " . $apikey,
-                        "Pluginkey: " . $pluginkey
-                    ]
-                )
-            );
-            $egoi_info = is_wp_error($egoi_info)?'{}':$egoi_info['body'];
-
-            set_transient( 'egoi_ping_cache', $egoi_info, 60*60 );
-        }
-
-        return true;
-	}
 }

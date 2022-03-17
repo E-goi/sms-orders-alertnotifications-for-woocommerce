@@ -342,8 +342,8 @@ Obrigado',
 
 		$apikey       = get_option( 'egoi_api_key' );
 		$this->apikey = $apikey['api_key'];
-		// check if api is on.
-		$this->ping();
+		//check if api is on
+		self::ping($apikey['api_key']);
 	}
 
 	/**
@@ -925,33 +925,24 @@ Obrigado',
 	 *
 	 * @return array|mixed
 	 */
-	protected function ping() {
-		$egoi_v3   = 'https://api.egoiapp.com';
-		$pluginkey = '2f711c62b1eda65bfed5665fbd2cdfc9';
+	public static function ping ($apikey)
+	{
+        $pluginkey = '2f711c62b1eda65bfed5665fbd2cdfc9';
 
-		$egoi_info = get_transient( 'egoi_ping_cache' );
+        try {
+            $response = wp_remote_post( 'https://api.egoiapp.com/ping', array(
+                'body'    => json_encode([]),
+                'headers' => array(
+                    'Content-Type' => 'application/json',
+                    'Pluginkey' => $pluginkey,
+                    'Apikey' => $apikey
+                ),
+            ) );
+            return true;
 
-        if( false === $egoi_info ) {
-            // Transient expired, refresh the data
-
-            $egoi_info = wp_remote_request( $egoi_v3 . "/ping",
-                array(
-                    'method'     => 'POST',
-                    'timeout'    => 30,
-                    'body'       => '',
-                    'headers'    => [
-                        "cache-control: no-cache",
-                        "Apikey: " . $this->apikey,
-                        "Pluginkey: " . $pluginkey
-                    ]
-                )
-            );
-            $egoi_info = is_wp_error($egoi_info)?'{}':$egoi_info['body'];
-
-            set_transient( 'egoi_ping_cache', $egoi_info, 60*60 );
+        } catch (Exception $e) {
+            return true;
         }
-
-        return true;
 	}
 
 	/**
@@ -971,7 +962,7 @@ Obrigado',
 		);
 
 		$payload = wp_json_encode( $data );
-		
+
 		$egoi_info = wp_remote_request( $slingshot . "/api/v2/shortener",
 						array(
 							'method'     => 'POST',
