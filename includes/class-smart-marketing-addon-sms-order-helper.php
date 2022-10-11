@@ -32,40 +32,40 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 * @var array $payment_map all payments descriptions.
 	 */
 	public $payment_map = array(
-		'eupago_multibanco'                 => array(
+		'eupago_multibanco' => array(
 			'ent' => '_eupago_multibanco_entidade',
 			'ref' => '_eupago_multibanco_referencia',
 			'val' => '_order_total',
 		),
-		'eupago_payshop'                    => array(
+		'eupago_payshop'    => array(
 			'ref' => '_eupago_payshop_referencia',
 			'val' => '_order_total',
 		),
-		'easypay_mb'                        => array(
+		'easypay_mb'        => array(
 			'ent' => '',
 			'ref' => '',
 			'val' => '_order_total',
 		),
-        'easypay_mb_2' => array(
+		'easypay_mb_2'      => array(
 			'ent' => '',
 			'ref' => '',
-			'val' => '_order_total'
+			'val' => '_order_total',
 		),
-        'sibs_multibanco' => array(
-            'ent' => '',
-            'ref' => '',
-            'val' => '_order_total'
-        ),
-        'hipaymultibanco' => array(
-            'ent' => '',
-            'ref' => '',
-            'val' => '_order_total'
-        ),
-        'lusopaygateway' => array(//todo:validate name
-            'ent' => '',
-            'ref' => '',
-            'val' => '_order_total'
-        ),
+		'sibs_multibanco'   => array(
+			'ent' => '',
+			'ref' => '',
+			'val' => '_order_total',
+		),
+		'hipaymultibanco'   => array(
+			'ent' => '',
+			'ref' => '',
+			'val' => '_order_total',
+		),
+		'lusopaygateway'    => array(// todo:validate name
+			'ent' => '',
+			'ref' => '',
+			'val' => '_order_total',
+		),
 		/*
 		'eupago_mbway' => array(
 			'ref' => '_eupago_mbway_referencia',
@@ -84,44 +84,44 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 * @var array $payment_foreign_table payment foreign table.
 	 */
 	public $payment_foreign_table = array(
-        'easypay_mb'        => array(
-            'table'     => 'easypay_notifications',
-            'order_id'  => 't_key',
-            'ref'       => 'ep_reference',
-            'ent'       => 'ep_entity',
-        ),
-        'easypay_mb_2'        => array(
-            'table'     => 'easypay_notifications_2',
-            'order_id'  => 't_key',
-            'ref'       => 'ep_reference',
-            'ent'       => 'ep_entity',
-        ),
-        'sibs_multibanco'        => array(
-            'table'     => 'sibs_transaction',
-            'order_id'  => 'order_no',
-            'ref'       => 'additional_information',
-            'ent'       => 'additional_information',
-        ),
-        'hipaymultibanco'   => array(
-            'table'     => 'woocommerce_hipay_mb',
-            'order_id'  => 'order_id',
-            'ref'       => 'reference',
-            'ent'       => 'entity',
-        ),
-        'lusopaygateway'   => array(
-            'table'     => 'magnimeiosreferences',
-            'order_id'  => 'id_order',
-            'ref'       => 'refMB',
-            'ent'       => 'entidade',
-        ),
-    );
+		'easypay_mb'      => array(
+			'table'    => 'easypay_notifications',
+			'order_id' => 't_key',
+			'ref'      => 'ep_reference',
+			'ent'      => 'ep_entity',
+		),
+		'easypay_mb_2'    => array(
+			'table'    => 'easypay_notifications_2',
+			'order_id' => 't_key',
+			'ref'      => 'ep_reference',
+			'ent'      => 'ep_entity',
+		),
+		'sibs_multibanco' => array(
+			'table'    => 'sibs_transaction',
+			'order_id' => 'order_no',
+			'ref'      => 'additional_information',
+			'ent'      => 'additional_information',
+		),
+		'hipaymultibanco' => array(
+			'table'    => 'woocommerce_hipay_mb',
+			'order_id' => 'order_id',
+			'ref'      => 'reference',
+			'ent'      => 'entity',
+		),
+		'lusopaygateway'  => array(
+			'table'    => 'magnimeiosreferences',
+			'order_id' => 'id_order',
+			'ref'      => 'refMB',
+			'ent'      => 'entidade',
+		),
+	);
 
 	/**
 	 * Multibanco options.
 	 *
 	 * @var array $multibanco_bypass multibanco options.
 	 */
-	public $multibanco_bypass = ['lusopaygateway','hipaymultibanco','easypay_mb','easypay_mb_2'];
+	public $multibanco_bypass = array( 'lusopaygateway', 'hipaymultibanco', 'easypay_mb', 'easypay_mb_2' );
 
 	/**
 	 * Sms information messages.
@@ -200,7 +200,7 @@ Obrigado',
 %mb_table% 
                 
 Thank you',
-                'es' => 'Hola, recordamos que su pedido en %shop_name% está esperando el pago MB.
+				'es'    => 'Hola, recordamos que su pedido en %shop_name% está esperando el pago MB.
 
 %mb_table%
                 
@@ -342,8 +342,8 @@ Obrigado',
 
 		$apikey       = get_option( 'egoi_api_key' );
 		$this->apikey = $apikey['api_key'];
-		//check if api is on
-		self::ping($apikey['api_key']);
+		// check if api is on
+		self::ping( $apikey['api_key'] );
 	}
 
 	/**
@@ -457,11 +457,11 @@ Obrigado',
 		}
 
 		$args = array(
-			"status" => array(
-				"pending",
-				"on-hold",
-                "wc-on-hold",
-                "wc-pending",
+			'status'       => array(
+				'pending',
+				'on-hold',
+				'wc-on-hold',
+				'wc-pending',
 			),
 			'date_created' => ( time() - $limit_time ) . '...' . ( time() - $seconds ),
 			'limit'        => -1,
@@ -513,7 +513,7 @@ Obrigado',
 			return substr( $lang, 0, 2 );
 		}
 		return 'en';
-    }
+	}
 
 	/**
 	 * Get data table.
@@ -620,21 +620,21 @@ Obrigado',
 		$carriers     = $this->smsonw_get_tracking_carriers( true );
 		$carriers_url = $this->smsonw_get_tracking_carriers_urls( true );
 
-        $entity = $this->smsonw_get_payment_data($order, 'ent');
-        $reference = $this->smsonw_get_payment_data($order, 'ref');
-        $lang = $this->smsonw_get_lang($order['billing']['country']);
-        $mb_image = plugin_dir_url( __FILE__ ) . "../admin/img/multibanco-logo.png";
+		$entity    = $this->smsonw_get_payment_data( $order, 'ent' );
+		$reference = $this->smsonw_get_payment_data( $order, 'ref' );
+		$lang      = $this->smsonw_get_lang( $order['billing']['country'] );
+		$mb_image  = plugin_dir_url( __FILE__ ) . '../admin/img/multibanco-logo.png';
 
-        $tags = array(
-            '%order_id%'        => $order['id'],
-            '%order_status%'    => $order['status'],
-            '%total%'           => $order['total'],
-            '%currency%'        => $order['currency'],
-            '%payment_method%'  => $order['payment_method'],
-            '%ref%'             => $this->smsonw_get_payment_data($order, 'ref'),
-            '%ent%'             => $this->smsonw_get_payment_data($order, 'ent'),
-            '%shop_name%'       => get_bloginfo('name'),
-            '%billing_name%'    => $order['billing']['first_name'] . ' ' . $order['billing']['last_name'],
+		$tags = array(
+			'%order_id%'       => $order['id'],
+			'%order_status%'   => $order['status'],
+			'%total%'          => $order['total'],
+			'%currency%'       => $order['currency'],
+			'%payment_method%' => $order['payment_method'],
+			'%ref%'            => $this->smsonw_get_payment_data( $order, 'ref' ),
+			'%ent%'            => $this->smsonw_get_payment_data( $order, 'ent' ),
+			'%shop_name%'      => get_bloginfo( 'name' ),
+			'%billing_name%'   => $order['billing']['first_name'] . ' ' . $order['billing']['last_name'],
 
 			'%tracking_name%'  => ( isset( $codes[0]['carrier'] ) && isset( $carriers[ $codes[0]['carrier'] ] ) )
 				? $carriers[ $codes[0]['carrier'] ]
@@ -644,17 +644,17 @@ Obrigado',
 				? $codes[0]['tracking_code']
 				: '',
 
-            '%tracking_url%'    => (isset($carriers_url[$codes[0]['carrier']]))
-                ?$carriers_url[$codes[0]['carrier']]
-                :'',
-            '%mb_table%'         => $this->smsonw_get_mb_table_html(
-                $entity,
-                $reference,
-                $order['total'].$order['currency'],
-                $mb_image,
-                $lang)
-        );
-
+			'%tracking_url%'   => ( isset( $carriers_url[ $codes[0]['carrier'] ] ) )
+				? $carriers_url[ $codes[0]['carrier'] ]
+				: '',
+			'%mb_table%'       => $this->smsonw_get_mb_table_html(
+				$entity,
+				$reference,
+				$order['total'] . $order['currency'],
+				$mb_image,
+				$lang
+			),
+		);
 
 		if ( $billet_code ) {
 			$tags['%billet_url%'] = get_site_url( null, '/wp-json/smsonw/v1/billet?c=' . $billet_code );
@@ -710,8 +710,7 @@ Obrigado',
 			$val = 'Valor: ';
 		}
 
-        $img ='<img src="'.$img_src.'" style="width:70%;display:block;margin-left: auto; margin-right: auto; padding:10px 0 10px 0">';
-
+		$img = '<img src="' . $img_src . '" style="width:70%;display:block;margin-left: auto; margin-right: auto; padding:10px 0 10px 0">';
 
 		$content = '<table style="width:50%;margin-left: auto !important; margin-right: auto !important;" >
         <tbody>
@@ -749,7 +748,7 @@ Obrigado',
 	 *
 	 * @return mixed
 	 */
-	public function smsonw_send_sms($recipient, $message, $type, $order_id, $gsm = false, $max_count = 3) {
+	public function smsonw_send_sms( $recipient, $message, $type, $order_id, $gsm = false, $max_count = 3 ) {
 		$url = 'http://dev-web-agency.e-team.biz/smaddonsms/sms';
 
 		$sender = json_decode( get_option( 'egoi_sms_order_sender' ), true );
@@ -784,9 +783,9 @@ Obrigado',
 		}
 
 		return $result;
-    }
+	}
 
-    /**
+	/**
 	 * Method to send SMS
 	 *
 	 * @param string $email Email to send information.
@@ -795,18 +794,18 @@ Obrigado',
 	 *
 	 * @return mixed
 	 */
-	public function smsonw_send_email($email, $message, $order) {
+	public function smsonw_send_email( $email, $message, $order ) {
 
-        $subject = '['.get_bloginfo( 'name' ).']:'.  __( 'Order', 'smart-marketing-addon-sms-order' ).' #'.$order.' - '.__( 'Payment reminder', 'smart-marketing-addon-sms-order' );
-        $content = str_replace(array('\n'), '<br>', $message);
+		$subject = '[' . get_bloginfo( 'name' ) . ']:' . __( 'Order', 'smart-marketing-addon-sms-order' ) . ' #' . $order . ' - ' . __( 'Payment reminder', 'smart-marketing-addon-sms-order' );
+		$content = str_replace( array( '\n' ), '<br>', $message );
 
-        $title = get_bloginfo('name');
-        $thumbnail = '';
-        $blog_info = array(
-            'description' => get_bloginfo('description'),
-        );
+		$title     = get_bloginfo( 'name' );
+		$thumbnail = '';
+		$blog_info = array(
+			'description' => get_bloginfo( 'description' ),
+		);
 
-        $template_file = apply_filters('egoi_email_remider', plugin_dir_path( __DIR__ ).'../smart-marketing-for-wp/admin/partials/emailcampaignwidget/email_campaign.php', $title, $content, $thumbnail, $blog_info);
+		$template_file = apply_filters( 'egoi_email_remider', plugin_dir_path( __DIR__ ) . '../smart-marketing-for-wp/admin/partials/emailcampaignwidget/email_campaign.php', $title, $content, $thumbnail, $blog_info );
 
 		ob_start();
 		include $template_file;
@@ -925,24 +924,26 @@ Obrigado',
 	 *
 	 * @return array|mixed
 	 */
-	public static function ping ($apikey)
-	{
-        $pluginkey = '2f711c62b1eda65bfed5665fbd2cdfc9';
+	public static function ping( $apikey ) {
+		$pluginkey = '2f711c62b1eda65bfed5665fbd2cdfc9';
 
-        try {
-            $response = wp_remote_post( 'https://api.egoiapp.com/ping', array(
-                'body'    => json_encode([]),
-                'headers' => array(
-                    'Content-Type' => 'application/json',
-                    'Pluginkey' => $pluginkey,
-                    'Apikey' => $apikey
-                ),
-            ) );
-            return true;
+		try {
+			$response = wp_remote_post(
+				'https://api.egoiapp.com/ping',
+				array(
+					'body'    => json_encode( array() ),
+					'headers' => array(
+						'Content-Type' => 'application/json',
+						'Pluginkey'    => $pluginkey,
+						'Apikey'       => $apikey,
+					),
+				)
+			);
+			return true;
 
-        } catch (Exception $e) {
-            return true;
-        }
+		} catch ( Exception $e ) {
+			return true;
+		}
 	}
 
 	/**
@@ -963,18 +964,19 @@ Obrigado',
 
 		$payload = wp_json_encode( $data );
 
-		$egoi_info = wp_remote_request( $slingshot . "/api/v2/shortener",
-						array(
-							'method'     => 'POST',
-							'timeout'    => 30,
-							'body'       => $payload,
-							'headers'    => [
-								"Apikey" => $this->apikey,
-								"Content-Type" => "application/json"
-							]
-						)
-					);
-		$egoi_info = is_wp_error($egoi_info)?'{}':$egoi_info['body'];
+		$egoi_info = wp_remote_request(
+			$slingshot . '/api/v2/shortener',
+			array(
+				'method'  => 'POST',
+				'timeout' => 30,
+				'body'    => $payload,
+				'headers' => array(
+					'Apikey'       => $this->apikey,
+					'Content-Type' => 'application/json',
+				),
+			)
+		);
+		$egoi_info = is_wp_error( $egoi_info ) ? '{}' : $egoi_info['body'];
 
 		return $egoi_info;
 	}

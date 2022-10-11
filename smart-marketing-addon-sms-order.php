@@ -255,24 +255,29 @@ add_filter( 'upgrader_pre_install', 'filter_upgrader_pre_install', 10, 2 );
  */
 function filter_upgrader_pre_install( $response, $hook_extra ) {
 
-    $path = 'sms-orders-alertnotifications-for-woocommerce/smart-marketing-addon-sms-order.php';
+	$path = 'sms-orders-alertnotifications-for-woocommerce/smart-marketing-addon-sms-order.php';
 
-    if ($hook_extra['plugin'] == $path){
-        if(version_compare(PLUGIN_NAME_VERSION, '1.5.2', '<'))
-            update_option('egoi_sms_counter', 0);
-    }
+	if ( $hook_extra['plugin'] == $path ) {
+		if ( version_compare( PLUGIN_NAME_VERSION, '1.5.2', '<' ) ) {
+			update_option( 'egoi_sms_counter', 0 );
+		}
+	}
 }
 
-add_action('in_admin_header', function () {
+add_action(
+	'in_admin_header',
+	function () {
 
-    if(strpos(get_current_screen()->id, 'smart-marketing-addon-sms-order') == false){
-        return false;
-    }
+		if ( strpos( get_current_screen()->id, 'smart-marketing-addon-sms-order' ) == false ) {
+			return false;
+		}
 
-    remove_all_actions('admin_notices');
-    remove_all_actions('all_admin_notices');
+		remove_all_actions( 'admin_notices' );
+		remove_all_actions( 'all_admin_notices' );
 
-}, 1000);
+	},
+	1000
+);
 
 
 
