@@ -67,7 +67,7 @@ function smsonw_child_plugin_has_parent_plugin() {
 function smsonw_parent_plugin_notice() {
 	?><div class="notice notice-error is-dismissible">
 	<p>
-		<?php _e( 'To use this plugin, you first need to install', 'smart-marketing-addon-sms-order' ); ?>
+		<?php esc_html_e( 'To use this plugin, you first need to install', 'smart-marketing-addon-sms-order' ); ?>
 		<a href="https://wordpress.org/plugins/smart-marketing-for-wp/" target="_blank">Smart Marketing SMS and Newsletters Forms by E-goi</a>
 	</p>
 	</div>
@@ -80,7 +80,7 @@ function smsonw_parent_plugin_notice() {
 function smsonw_child_plugin_notice() {
 	?>
 	<div class="notice notice-error is-dismissible">
-	<p><?php _e( 'By removing this plugin, you will no longer be able to use the SMS plugin', 'smart-marketing-addon-sms-order' ); ?></p>
+	<p><?php esc_html_e( 'By removing this plugin, you will no longer be able to use the SMS plugin', 'smart-marketing-addon-sms-order' ); ?></p>
 	</div>
 	<?php
 }
@@ -154,7 +154,7 @@ function run_smart_marketing_addon_sms_order_action( $action ) {
  */
 function egoi_add_multiple_products_to_cart( $url = false ) {
 
-	if ( ! class_exists( 'WC_Form_Handler' ) || empty( $_REQUEST['create-cart'] ) || false === strpos( $_REQUEST['create-cart'], ',' ) ) {
+	if ( ! class_exists( 'WC_Form_Handler' ) || empty( $_REQUEST['create-cart'] ) || false === strpos( sanitize_text_field( wp_unslash( $_REQUEST['create-cart'] ) ), ',' ) ) {
 		return false;
 	}
 	add_filter( 'wc_add_to_cart_message_html', '__return_false' );
@@ -162,7 +162,7 @@ function egoi_add_multiple_products_to_cart( $url = false ) {
 
 	if ( ! empty( $_REQUEST['sid_eg'] ) ) {
 		global $wpdb;
-		$_SESSION['sid_eg'] = filter_var( $_REQUEST['sid_eg'], FILTER_SANITIZE_STRING );
+		$_SESSION['sid_eg'] = sanitize_text_field( wp_unslash( $_REQUEST['sid_eg'] ) );
 		$wpdb->update( $wpdb->prefix . 'egoi_sms_abandoned_carts', array( 'status' => 'clicked' ), array( 'php_session_key' => $_SESSION['sid_eg'] ) );
 	} else {
 		return false;

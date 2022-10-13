@@ -111,7 +111,7 @@ class Smart_Marketing_Addon_Sms_Order_Public {
 	 */
 	public function smsonw_notification_checkout_field_update_order_meta( $order_id ) {
 		if ( isset( $_POST['egoi_notification_option'] ) && ! empty( $_POST['egoi_notification_option'] ) ) {
-			$option = filter_var( $_POST['egoi_notification_option'], FILTER_SANITIZE_NUMBER_INT );
+			$option = sanitize_text_field( wp_unslash( $_POST['egoi_notification_option'] ) );
 		}
 
 		if ( isset( $option ) && filter_var( $option, FILTER_VALIDATE_BOOLEAN ) ) {
@@ -179,9 +179,9 @@ class Smart_Marketing_Addon_Sms_Order_Public {
 				margin: 0 auto;
 				right: 0px;
 				z-index: 999999;
-				background: <?php echo esc_html( $follow_price['follow_background_color'] ); ?>;
+				background: <?php echo ! empty( $follow_price['follow_background_color'] ) ? esc_attr( $follow_price['follow_background_color'] ) : ''; ?>;
 				padding: 2em;
-				border: 2px solid <?php echo esc_html( $follow_price['follow_background_color'] ); ?>;
+				border: 2px solid <?php echo ! empty( $follow_price['follow_background_color'] ) ? esc_attr( $follow_price['follow_background_color'] ) : ''; ?>;
 				border-radius: 5px;
 			}
 			#printFollowPriceForm input[type=text] {
@@ -209,8 +209,8 @@ class Smart_Marketing_Addon_Sms_Order_Public {
 				font-weight: 700;
 				border-radius: 3px;
 				left: auto;
-				color: <?php echo esc_html( $follow_price['follow_button_text_color'] ); ?>;
-				background-color: <?php echo esc_html( $follow_price['follow_button_color'] ); ?>;
+				color: <?php echo ! empty( $follow_price['follow_button_text_color'] ) ? esc_attr( $follow_price['follow_button_text_color'] ) : ''; ?>;
+				background-color: <?php echo ! empty( $follow_price['follow_button_color'] ) ? esc_attr( $follow_price['follow_button_color'] ) : ''; ?>;
 				border: 0;
 				display: inline-block;
 				background-image: none;
@@ -223,13 +223,13 @@ class Smart_Marketing_Addon_Sms_Order_Public {
 			<form method="POST" action="#" id="saveFollowPriceEgoi" >
 				<input type="hidden" name="egoi_action" value="saveFollowPrice" />
 				<input type="hidden" name="action" value="egoi_cellphone_actions" />
-				<input type="hidden" name="productId" value="<?php echo esc_html( wc_get_product()->get_id() ); ?>" />
+				<input type="hidden" name="productId" value="<?php echo esc_attr( wc_get_product()->get_id() ); ?>" />
 				<p style="color: <?php echo esc_html( $follow_price['follow_text_color'] ); ?>;"><?php echo esc_html( $follow_price['follow_title_pop'] ); ?> </p>
-				<p>  + <input name="prefixMphone" placeholder="351" style="width: 35px;" value="" /> <input name="mphone" placeholder="917789988" value="<?php echo esc_html( $this->get_customer_mobile_phone()[1] ); ?>" /> </p>
+				<p>  + <input name="prefixMphone" placeholder="351" style="width: 35px;" value="" /> <input name="mphone" placeholder="917789988" value="<?php echo esc_attr( $this->get_customer_mobile_phone()[1] ); ?>" /> </p>
 				<p> <input type="submit" value="OK" /> </p>
 			</form>
 			<div id="followPriceMessage" style="display: none; color: <?php echo esc_html( $follow_price['follow_text_color'] ); ?>;">
-				<span><?php _e( 'An error has occurred! Please try later.', 'smart-marketing-addon-sms-order' ); ?></span>
+				<span><?php esc_html_e( 'An error has occurred! Please try later.', 'smart-marketing-addon-sms-order' ); ?></span>
 			</div>
 		</div>
 		<script>
@@ -320,7 +320,9 @@ class Smart_Marketing_Addon_Sms_Order_Public {
 	 */
 	private function get_follow_price( $product_id, $mobile ) {
 		global $wpdb;
-		$result = $wpdb->get_results( "SELECT count(1) as exist From {$wpdb->prefix}egoi_sms_follow_price where mobile = '" . $mobile . "' and product_id = '" . $product_id . "'", ARRAY_A );
+		$mobile     = sanitize_text_field( $mobile );
+		$product_id = sanitize_text_field( $product_id );
+		$result     = $wpdb->get_results( $wpdb->prepare( "SELECT count(1) AS exist FROM {$wpdb->prefix}egoi_sms_follow_price where mobile = %s and product_id = %s", array( $mobile, $product_id ) ), ARRAY_A );
 		return $result[0]['exist'];
 	}
 

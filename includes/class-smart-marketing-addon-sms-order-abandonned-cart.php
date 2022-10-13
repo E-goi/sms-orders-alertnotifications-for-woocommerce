@@ -24,8 +24,8 @@ class Smart_Marketing_Addon_Sms_Order_Abandoned_Cart {
 
 			$wooSessionKey = $this->getCartSession();
 
-			if ( ( ! empty( $_POST['action'] ) && $_POST['action'] == 'egoiSaveCellphone' ) && ! empty( $_POST['prefixEgoiphone'] ) && ! empty( $_POST['egoiPhone'] ) && ! empty( $wooSessionKey ) ) {
-				$_SESSION[ self::SESSION_TAG_UID ] = (int) $_POST['prefixEgoiphone'] . '-' . (int) str_replace( ' ', '', $_POST['egoiPhone'] );
+			if ( ( ! empty( $_POST['action'] ) && 'egoiSaveCellphone' == sanitize_text_field( wp_unslash( $_POST['action'] ) ) ) && ! empty( $_POST['prefixEgoiphone'] ) && ! empty( $_POST['egoiPhone'] ) && ! empty( $wooSessionKey ) ) {
+				$_SESSION[ self::SESSION_TAG_UID ] = (int) sanitize_key( wp_unslash( $_POST['prefixEgoiphone'] ) ) . '-' . (int) str_replace( ' ', '', sanitize_key( wp_unslash( $_POST['egoiPhone'] ) ) );
 			}
 
 			$cellPhone = $this->isKnowNumber();
@@ -90,18 +90,8 @@ class Smart_Marketing_Addon_Sms_Order_Abandoned_Cart {
 	 */
 	public static function cartArrayToUrlParam( $cartArray, $wc_session ) {
 		global $wpdb;
-		$query = sprintf(
-			"SELECT %s FROM %s%s WHERE %s = '%s' AND %s = '%s'",
-			'php_session_key',
-			$wpdb->prefix,
-			'egoi_sms_abandoned_carts',
-			'woo_session_key',
-			$wc_session,
-			'status',
-			'waiting'
-		);
 
-		$result = $wpdb->get_var( $query );
+		$result = $wpdb->get_var( $wpdb->prepare( 'SELECT php_session_key FROM ' . $wpdb->prefix . "egoi_sms_abandoned_carts WHERE woo_session_key = %s AND status = 'waiting'", array( $wc_session ) ) );
 
 		$output = '?create-cart=';
 		foreach ( $cartArray as $product_id => $quantity ) {
@@ -129,13 +119,6 @@ class Smart_Marketing_Addon_Sms_Order_Abandoned_Cart {
 	}
 
 	/**
-	 *
-	 */
-	public function saveAbandonedCart() {
-
-	}
-
-	/**
 	 * @return @return string[]|false
 	 */
 	private function getCartSession() {
@@ -154,31 +137,17 @@ class Smart_Marketing_Addon_Sms_Order_Abandoned_Cart {
 	}
 
 	/**
-	 *
-	 */
-	private function isSavedCart() {
-
-	}
-
-	/**
 	 * @param $wc_session
 	 * @return array|false
 	 */
 	private static function getCartBySessionId( $wc_session ) {
 
 		global $wpdb;
-		$query = sprintf(
-			"SELECT %s FROM %s%s WHERE %s = '%s'",
-			'session_value',
-			$wpdb->prefix,
-			'woocommerce_sessions',
-			'session_key',
-			$wc_session
-		);
 
-		$result = $wpdb->get_var( $query );
+		$result = $wpdb->get_var( $wpdb->prepare( 'SELECT session_value FROM ' . $wpdb->prefix . 'woocommerce_sessions WHERE session_key = %s', array( $wc_session ) ) );
 		if ( empty( $result ) ) {
-			return false;}
+			return false;
+		}
 		$cart = unserialize( unserialize( $result )['cart'] );
 
 		$output = array();
@@ -202,7 +171,7 @@ class Smart_Marketing_Addon_Sms_Order_Abandoned_Cart {
 	private function manageEgoiAbandonedCart( $wooSessionKey, $cellPhone ) {
 		global $wpdb;
 
-		$phpSessionKey = ! empty( $_COOKIE['PHPSESSID'] ) ? $_COOKIE['PHPSESSID'] : null;
+		$phpSessionKey = ! empty( $_COOKIE['PHPSESSID'] ) ? sanitize_key( $_COOKIE['PHPSESSID'] ) : null;
 
 		if ( ! empty( $_SESSION['sid_eg'] ) ) {// came from sms url so is recovering the cart
 			return false;

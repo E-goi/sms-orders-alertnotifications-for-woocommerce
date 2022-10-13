@@ -186,7 +186,7 @@ class Smart_Marketing_Addon_Sms_Order_Activator {
 		$response = wp_remote_post(
 			'https://www51.e-goi.com/api/public/client',
 			array(
-				'body'    => json_encode( array( 'apikey' => $apikey ) ),
+				'body'    => wp_json_encode( array( 'apikey' => $apikey ) ),
 				'headers' => array(
 					'Content-Type' => 'application/json',
 				),

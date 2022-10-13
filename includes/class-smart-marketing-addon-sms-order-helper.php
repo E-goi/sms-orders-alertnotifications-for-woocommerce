@@ -484,12 +484,12 @@ Obrigado',
 
 		if ( isset( $texts[ $lang ][ 'egoi_sms_order_text_' . $recipient_type . '_' . $order['status'] ] )
 			&& isset( $recipients[ 'egoi_sms_order_' . $recipient_type . '_' . $order['status'] ] )
-			&& 1 === $recipients[ 'egoi_sms_order_' . $recipient_type . '_' . $order['status'] ]
+			&& 1 == $recipients[ 'egoi_sms_order_' . $recipient_type . '_' . $order['status'] ]
 		) {
 			return $this->smsonw_get_tags_content( $order, $texts[ $lang ][ 'egoi_sms_order_text_' . $recipient_type . '_' . $order['status'] ] );
 		} elseif ( isset( $this->sms_text_new_status[ $lang ][ 'egoi_sms_order_text_' . $recipient_type . '_' . $order['status'] ] )
 			&& isset( $recipients[ 'egoi_sms_order_' . $recipient_type . '_' . $order['status'] ] )
-			&& 1 === $recipients[ 'egoi_sms_order_' . $recipient_type . '_' . $order['status'] ]
+			&& 1 == $recipients[ 'egoi_sms_order_' . $recipient_type . '_' . $order['status'] ]
 		) {
 			return $this->smsonw_get_tags_content( $order, $this->sms_text_new_status[ $lang ][ 'egoi_sms_order_text_' . $recipient_type . '_' . $order['status'] ] );
 		}
@@ -535,7 +535,7 @@ Obrigado',
 			$order_id
 		);
 
-		$result = $wpdb->get_results( $easy_pay_query, ARRAY_A );
+		$result = $wpdb->get_results( $wpdb->prepare( $easy_pay_query ), ARRAY_A );
 		if ( 'sibs_multibanco' === $method ) {
 			$ent_eref = explode( '|', $result[0][ $action ] );
 			if ( 'ref' === $action ) {
@@ -772,7 +772,7 @@ Obrigado',
 			)
 		);
 
-		$result = json_encode( $response['body'] );
+		$result = wp_json_encode( $response['body'] );
 
 		if ( 200 === $response['response']['code'] ) {
 			$sms_counter = get_option( 'egoi_sms_counter' );
@@ -838,7 +838,7 @@ Obrigado',
 	public function smsonw_admin_notice_success() {
 		?>
 		<div class="notice notice-success is-dismissible">
-			<p><?php _e( 'Changes saved successfully', 'smart-marketing-addon-sms-order' ); ?></p>
+			<p><?php esc_html_e( 'Changes saved successfully', 'smart-marketing-addon-sms-order' ); ?></p>
 		</div>
 		<?php
 	}
@@ -849,7 +849,7 @@ Obrigado',
 	public function smsonw_admin_notice_error() {
 		?>
 		<div class="notice notice-error is-dismissible">
-			<p><?php _e( 'Irks! An error has occurred.', 'smart-marketing-addon-sms-order' ); ?></p>
+			<p><?php esc_html_e( 'Irks! An error has occurred.', 'smart-marketing-addon-sms-order' ); ?></p>
 		</div>
 		<?php
 	}
@@ -879,8 +879,8 @@ Obrigado',
 	 * @param string $field Field.
 	 */
 	public function smsonw_sanitize_boolean_field( $field ) {
-		if ( isset( $_POST[ $field ] ) && filter_var( $_POST[ $field ], FILTER_VALIDATE_BOOLEAN ) ) {
-			return filter_var( $_POST[ $field ], FILTER_SANITIZE_NUMBER_INT );
+		if ( isset( $_POST[ $field ] ) && filter_var( sanitize_text_field( wp_unslash( $_POST[ $field ] ) ), FILTER_VALIDATE_BOOLEAN ) ) {
+			return filter_var( sanitize_text_field( wp_unslash( $_POST[ $field ] ) ), FILTER_SANITIZE_NUMBER_INT );
 		} else {
 			return 0;
 		}
@@ -931,7 +931,7 @@ Obrigado',
 			$response = wp_remote_post(
 				'https://api.egoiapp.com/ping',
 				array(
-					'body'    => json_encode( array() ),
+					'body'    => wp_json_encode( array() ),
 					'headers' => array(
 						'Content-Type' => 'application/json',
 						'Pluginkey'    => $pluginkey,

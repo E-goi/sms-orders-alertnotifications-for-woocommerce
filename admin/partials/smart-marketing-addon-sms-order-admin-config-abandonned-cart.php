@@ -16,7 +16,7 @@
 
 			<div class="main-content col col-12" style="margin:0 0 20px;">
 
-				<p class="label_text"><?php _e( 'Use this to add a lost cart sms trigger.', 'smart-marketing-addon-sms-order' ); ?></p>
+				<p class="label_text"><?php esc_html_e( 'Use this to add a lost cart sms trigger.', 'smart-marketing-addon-sms-order' ); ?></p>
 
 				<form action="#" method="post" class="form-sms-order-config" id="form-sms-order-abandoned-cart">
 					<?php wp_nonce_field( 'form-sms-order-abandoned-cart' ); ?>
@@ -25,35 +25,35 @@
 						<table border="0" class="widefat striped" style="max-width: 900px;">
 							<thead>
 							<tr>
-								<th><?php _e( 'Configurations', 'smart-marketing-addon-sms-order' ); ?></th>
+								<th><?php esc_html_e( 'Configurations', 'smart-marketing-addon-sms-order' ); ?></th>
 								<th></th>
 							</tr>
 							</thead>
 							<tbody>
 							<tr>
-								<td><span><?php _e( 'Message', 'smart-marketing-addon-sms-order' ); ?></span></td>
+								<td><span><?php esc_html_e( 'Message', 'smart-marketing-addon-sms-order' ); ?></span></td>
 								<td>
 									<textarea name="message" id="message" style="min-width: 400px;width: 100%;">
 									<?php
-										echo ( isset( $abandoned_cart_obj['message'] ) && trim( $abandoned_cart_obj['message'] ) != '' ) ? $abandoned_cart_obj['message'] : '';
+										echo ! empty( $abandoned_cart_obj['message'] ) ? esc_attr( $abandoned_cart_obj['message'] ) : '';
 									?>
 										</textarea>
 									<p>
-										<?php _e( 'Use %link% to choose the position of the link otherwise the link will be placed at the end.', 'smart-marketing-addon-sms-order' ); ?><br>
-										<?php _e( 'Use %shop_name% for shop name display.', 'smart-marketing-addon-sms-order' ); ?><br>
+										<?php esc_html_e( 'Use %link% to choose the position of the link otherwise the link will be placed at the end.', 'smart-marketing-addon-sms-order' ); ?><br>
+										<?php esc_html_e( 'Use %shop_name% for shop name display.', 'smart-marketing-addon-sms-order' ); ?><br>
 									</p>
 								</td>
 							</tr>
 
 
 							<tr>
-								<td><span><?php _e( 'Title Pop', 'smart-marketing-addon-sms-order' ); ?></span></td>
+								<td><span><?php esc_html_e( 'Title Pop', 'smart-marketing-addon-sms-order' ); ?></span></td>
 								<td>
 									<div>
 										<input type="text" id="title_pop" name="title_pop" style="width: 100%;"
 											   value="
 											   <?php
-												echo ( isset( $abandoned_cart_obj['title_pop'] ) ) ? $abandoned_cart_obj['title_pop'] : '';
+												echo ( isset( $abandoned_cart_obj['title_pop'] ) ) ? esc_attr( $abandoned_cart_obj['title_pop'] ) : '';
 												?>
 											   "
 										>
@@ -62,13 +62,13 @@
 							</tr>
 
 							<tr>
-								<td><span><?php _e( 'Text on send button', 'smart-marketing-addon-sms-order' ); ?></span></td>
+								<td><span><?php esc_html_e( 'Text on send button', 'smart-marketing-addon-sms-order' ); ?></span></td>
 								<td>
 									<div>
 										<input type="text" id="button_name" name="button_name" style="width: 100%;"
 											   value="
 											   <?php
-												echo ( isset( $abandoned_cart_obj['button_name'] ) ) ? $abandoned_cart_obj['button_name'] : '';
+												echo ( isset( $abandoned_cart_obj['button_name'] ) ) ? esc_attr( $abandoned_cart_obj['button_name'] ) : '';
 												?>
 											   "
 										>
@@ -77,13 +77,13 @@
 							</tr>
 
 							<tr>
-								<td><span><?php _e( 'Text on cancel button', 'smart-marketing-addon-sms-order' ); ?></span></td>
+								<td><span><?php esc_html_e( 'Text on cancel button', 'smart-marketing-addon-sms-order' ); ?></span></td>
 								<td>
 									<div>
 										<input type="text" id="button_cancel_name" name="button_cancel_name" style="width: 100%;"
 											   value="
 											   <?php
-												echo ( isset( $abandoned_cart_obj['button_cancel_name'] ) ) ? $abandoned_cart_obj['button_cancel_name'] : '';
+												echo ( isset( $abandoned_cart_obj['button_cancel_name'] ) ) ? esc_attr( $abandoned_cart_obj['button_cancel_name'] ) : '';
 												?>
 											   "
 										>
@@ -92,12 +92,12 @@
 							</tr>
 
 							<tr>
-								<td><span><?php _e( 'Enabled', 'smart-marketing-addon-sms-order' ); ?></span></td>
+								<td><span><?php esc_html_e( 'Enabled', 'smart-marketing-addon-sms-order' ); ?></span></td>
 								<td>
 									<div>
 										<input type="checkbox" id="enable" name="enable"
 											<?php
-											echo ( isset( $abandoned_cart_obj['enable'] ) && $abandoned_cart_obj['enable'] == 'on' ) ? 'checked' : '';
+											! empty( $abandoned_cart_obj['enable'] ) ? checked( $abandoned_cart_obj['enable'], 'on' ) : '';
 											?>
 										>
 									</div>
@@ -105,12 +105,12 @@
 							</tr>
 
 							<tr>
-								<td><span><?php _e( 'Shortener', 'egoi_sms_follow_price_enable_title' ); ?></span></td>
+								<td><span><?php esc_html_e( 'Shortener', 'egoi_sms_follow_price_enable_title' ); ?></span></td>
 								<td>
 									<div>
 										<input type="checkbox" id="shortener" name="shortener"
 											<?php
-											echo ( isset( $abandoned_cart_obj['shortener'] ) && $abandoned_cart_obj['shortener'] == 'on' ) ? 'checked' : '';
+											! empty( $abandoned_cart_obj['shortener'] ) ? checked( $abandoned_cart_obj['shortener'], 'on' ) : '';
 											?>
 										>
 									</div>
@@ -119,19 +119,19 @@
 
 							<tr>
 								<td colspan="2">
-									<b><?php _e( 'Styles for dialog', 'egoi_sms_follow_price_enable_title' ); ?></b>
+									<b><?php esc_html_e( 'Styles for dialog', 'egoi_sms_follow_price_enable_title' ); ?></b>
 								</td>
 							</tr>
 							<tr>
 								<td colspan="2">
 									<div>
 										<div class="smsnf-input-group">
-											<label for="bar-text-color" style="font-size: 13px;"><?php _e( 'Background Color', 'egoi_sms_follow_price_enable_title' ); ?></label>
+											<label for="bar-text-color" style="font-size: 13px;"><?php esc_html_e( 'Background Color', 'egoi_sms_follow_price_enable_title' ); ?></label>
 
 											<div class="colorpicker-wrapper">
 												<div style="background-color:<?php echo esc_attr( $abandoned_cart_obj['background_color'] ); ?>" class="view" ></div>
 												<input id="background_color" type="text" name="background_color" value="<?php echo esc_attr( $abandoned_cart_obj['background_color'] ); ?>"  autocomplete="off" />
-												<p><?php echo _e( 'Select Color', 'egoi_sms_follow_price_enable_title' ); ?></p>
+												<p><?php esc_html_e( 'Select Color', 'egoi_sms_follow_price_enable_title' ); ?></p>
 											</div>
 										</div>
 									</div>
@@ -141,12 +141,12 @@
 								<td colspan="2">
 									<div>
 										<div class="smsnf-input-group">
-											<label for="bar-text-color" style="font-size: 13px;"><?php _e( 'Text Color', 'egoi_sms_follow_price_enable_title' ); ?></label>
+											<label for="bar-text-color" style="font-size: 13px;"><?php esc_html_e( 'Text Color', 'egoi_sms_follow_price_enable_title' ); ?></label>
 
 											<div class="colorpicker-wrapper">
 												<div style="background-color:<?php echo esc_attr( $abandoned_cart_obj['text_color'] ); ?>" class="view" ></div>
 												<input id="text_color" type="text" name="text_color" value="<?php echo esc_attr( $abandoned_cart_obj['text_color'] ); ?>"  autocomplete="off" />
-												<p><?php echo _e( 'Select Color', 'egoi_sms_follow_price_enable_title' ); ?></p>
+												<p><?php esc_html_e( 'Select Color', 'egoi_sms_follow_price_enable_title' ); ?></p>
 											</div>
 										</div>
 									</div>
@@ -157,12 +157,12 @@
 								<td colspan="2">
 									<div>
 										<div class="smsnf-input-group">
-											<label for="bar-text-color" style="font-size: 13px;"><?php _e( 'Button Color', 'egoi_sms_follow_price_enable_title' ); ?></label>
+											<label for="bar-text-color" style="font-size: 13px;"><?php esc_html_e( 'Button Color', 'egoi_sms_follow_price_enable_title' ); ?></label>
 
 											<div class="colorpicker-wrapper">
 												<div style="background-color:<?php echo esc_attr( $abandoned_cart_obj['button_color'] ); ?>" class="view" ></div>
 												<input id="button_color" type="text" name="button_color" value="<?php echo esc_attr( $abandoned_cart_obj['button_color'] ); ?>"  autocomplete="off" />
-												<p><?php echo _e( 'Select Color', 'egoi_sms_follow_price_enable_title' ); ?></p>
+												<p><?php esc_html_e( 'Select Color', 'egoi_sms_follow_price_enable_title' ); ?></p>
 											</div>
 										</div>
 									</div>
@@ -173,12 +173,12 @@
 								<td colspan="2">
 									<div>
 										<div class="smsnf-input-group">
-											<label for="bar-text-color" style="font-size: 13px;"><?php _e( 'Button Text Color', 'egoi_sms_follow_price_enable_title' ); ?></label>
+											<label for="bar-text-color" style="font-size: 13px;"><?php esc_html_e( 'Button Text Color', 'egoi_sms_follow_price_enable_title' ); ?></label>
 
 											<div class="colorpicker-wrapper">
 												<div style="background-color:<?php echo esc_attr( $abandoned_cart_obj['button_text_color'] ); ?>" class="view" ></div>
 												<input id="button_text_color" type="text" name="button_text_color" value="<?php echo esc_attr( $abandoned_cart_obj['button_text_color'] ); ?>"  autocomplete="off" />
-												<p><?php echo _e( 'Select Color', 'egoi_sms_follow_price_enable_title' ); ?></p>
+												<p><?php esc_html_e( 'Select Color', 'egoi_sms_follow_price_enable_title' ); ?></p>
 											</div>
 										</div>
 									</div>

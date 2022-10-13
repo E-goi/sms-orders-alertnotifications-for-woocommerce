@@ -93,7 +93,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	public function smsonw_enqueue_scripts( $hook ) {
 
 		if ( strpos( $hook, 'post.php' ) !== false || strpos( $hook, 'smart-marketing-addon-sms-order-config' ) !== false ) {
-			wp_enqueue_script( 'smsonw-meta-box-ajax-script', plugin_dir_url( __FILE__ ) . 'js/smsonw_order_action_sms_meta_box.js', array( 'jquery' ) );
+			wp_enqueue_script( 'smsonw-meta-box-ajax-script', plugin_dir_url( __FILE__ ) . 'js/smsonw_order_action_sms_meta_box.js', array( 'jquery' ), $this->version );
 			wp_localize_script(
 				'smsonw-meta-box-ajax-script',
 				'smsonw_meta_box_ajax_object',
@@ -142,21 +142,21 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	/**
 	 * Save sms order configs in WordPress options
 	 *
-	 * @param $post
+	 * @param $post array
 	 *
 	 * @return bool
 	 */
 	public function smsonw_process_config_form( $post ) {
 
 		try {
-			$form_id = sanitize_text_field( $post['form_id'] );
+			$form_id = sanitize_text_field( wp_unslash( $post['form_id'] ) );
 			check_admin_referer( $form_id );
 
-			if ( isset( $form_id ) && $form_id == 'form-sms-order-senders' ) {
+			if ( isset( $form_id ) && 'form-sms-order-senders' == $form_id ) {
 
 				$sender = array(
 					'sender_hash'  => sanitize_text_field( $post['sender_hash'] ),
-					'admin_prefix' => filter_var( $post['admin_prefix'], FILTER_SANITIZE_NUMBER_INT ),
+					'admin_prefix' => filter_var( sanitize_text_field( $post['admin_prefix'] ), FILTER_SANITIZE_NUMBER_INT ),
 					'admin_phone'  => sanitize_text_field( $post['admin_phone'] ),
 				);
 
@@ -171,8 +171,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 					);
 				}
 
-				$egoi_reminders_time       = (int) filter_var( $post['egoi_reminders_time'], FILTER_SANITIZE_NUMBER_INT );
-				$egoi_email_reminders_time = (int) filter_var( $post['egoi_email_reminders_time'], FILTER_SANITIZE_NUMBER_INT );
+				$egoi_reminders_time       = (int) filter_var( sanitize_text_field( wp_unslash( $post['egoi_reminders_time'] ) ), FILTER_SANITIZE_NUMBER_INT );
+				$egoi_email_reminders_time = (int) filter_var( sanitize_text_field( wp_unslash( $post['egoi_email_reminders_time'] ) ), FILTER_SANITIZE_NUMBER_INT );
 				// $egoi_reminders_billet_time = (int) filter_var($post['egoi_reminders_billet_time'], FILTER_SANITIZE_NUMBER_INT);
 
 				$recipients = array_merge(
@@ -191,13 +191,13 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 					)
 				);
 
-				update_option( 'egoi_sms_order_sender', json_encode( $sender ) );
+				update_option( 'egoi_sms_order_sender', wp_json_encode( $sender ) );
 				if ( $post['sender_hash'] == 'off' ) {
 					delete_option( 'egoi_sms_order_sender' );
 				}
-				update_option( 'egoi_sms_order_recipients', json_encode( $recipients ) );
+				update_option( 'egoi_sms_order_recipients', wp_json_encode( $recipients ) );
 
-			} elseif ( isset( $form_id ) && $form_id == 'form-sms-order-texts' ) {
+			} elseif ( isset( $form_id ) && 'form-sms-order-texts' == $form_id ) {
 
 				$texts = json_decode( get_option( 'egoi_sms_order_texts' ), true );
 				$lang  = sanitize_text_field( $post['sms_text_language'] );
@@ -214,9 +214,9 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 				$texts[ $lang ] = $messages;
 
-				update_option( 'egoi_sms_order_texts', json_encode( $texts ) );
+				update_option( 'egoi_sms_order_texts', wp_json_encode( $texts ) );
 
-			} elseif ( isset( $form_id ) && $form_id == 'form-sms-order-payment-texts' ) {
+			} elseif ( isset( $form_id ) && 'form-sms-order-payment-texts' == $form_id ) {
 
 				$texts  = json_decode( get_option( 'egoi_sms_order_payment_texts' ), true );
 				$method = sanitize_text_field( $post['sms_payment_method'] );
@@ -232,9 +232,9 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 				$texts[ $method ] = $messages;
 
-				update_option( 'egoi_sms_order_payment_texts', json_encode( $texts ) );
+				update_option( 'egoi_sms_order_payment_texts', wp_json_encode( $texts ) );
 
-			} elseif ( isset( $form_id ) && $form_id == 'form-email-order-payment-texts' ) {
+			} elseif ( isset( $form_id ) && 'form-email-order-payment-texts' == $form_id ) {
 
 				$texts  = json_decode( get_option( 'egoi_email_order_payment_texts' ), true );
 				$method = sanitize_text_field( $post['email_payment_method'] );
@@ -247,7 +247,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 				$texts[ $method ] = $messages;
 
-				update_option( 'egoi_email_order_payment_texts', json_encode( $texts ) );
+				update_option( 'egoi_email_order_payment_texts', wp_json_encode( $texts ) );
 
 			} elseif ( isset( $form_id ) && $form_id == 'form-sms-order-tests' ) {
 
@@ -268,7 +268,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 					$post['form_id']
 				);
 
-				update_option( 'egoi_tracking_carriers_urls', json_encode( $post ) );
+				update_option( 'egoi_tracking_carriers_urls', wp_json_encode( $post ) );
 
 			} elseif ( isset( $form_id ) && $form_id == 'form-sms-follow-price' ) {
 				unset(
@@ -277,7 +277,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 					$post['form_id']
 				);
 
-				update_option( 'egoi_sms_follow_price', json_encode( $post ) );
+				update_option( 'egoi_sms_follow_price', wp_json_encode( $post ) );
 			} elseif ( isset( $form_id ) && $form_id == 'form-sms-order-abandoned-cart' ) {
 				unset(
 					$post['_wpnonce'],
@@ -285,7 +285,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 					$post['form_id']
 				);
 
-				update_option( 'egoi_sms_abandoned_cart', json_encode( $post ) );
+				update_option( 'egoi_sms_abandoned_cart', wp_json_encode( $post ) );
 			}
 			return true;
 		} catch ( Exception $e ) {
@@ -306,8 +306,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 				$table_name = $wpdb->prefix . 'egoi_sms_order_reminders';
 
-				$sql       = " SELECT DISTINCT order_id FROM $table_name ";
-				$order_ids = $wpdb->get_col( $sql );
+				$order_ids = $wpdb->get_col( "SELECT DISTINCT order_id FROM {$table_name}" );
 
 				$orders = $this->helper->smsonw_get_not_paid_orders( 'egoi_reminders_time' );
 
@@ -385,8 +384,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 			$table_name = $wpdb->prefix . 'egoi_email_order_reminders';
 
-			$sql       = " SELECT DISTINCT order_id FROM $table_name ";
-			$order_ids = $wpdb->get_col( $sql );
+			$order_ids = $wpdb->get_col( "SELECT DISTINCT order_id FROM {$table_name}" );
 
 			$orders = $this->helper->smsonw_get_not_paid_orders( 'egoi_email_reminders_time' );
 
@@ -419,7 +417,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 						$send_message = $message ? true : false;
 
 					} elseif ( ! $order->is_paid() && ! in_array( $order->get_id(), $order_ids ) &&
-						$recipient_options['egoi_email_reminders_billet'] && $order_data['payment_method'] == 'pagseguro' ) {
+						$recipient_options['egoi_email_reminders_billet'] && 'pagseguro' == $order_data['payment_method'] ) {
 
 						$code = $this->smsonw_get_billet_code( $order->get_id() );
 						if ( $code ) {
@@ -576,18 +574,18 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		?>
 			<div class="wide" id="egoi_tracking_for_sms">
 				<input type="hidden" name="egoi_sms_order_id" id="egoi_send_order_sms_order_id"
-					   value="<?php echo $order['id']; ?>"/>
+					   value="<?php echo esc_attr( $order['id'] ); ?>"/>
 				<input type="hidden" name="egoi_sms_order_country" id="egoi_send_order_sms_order_country"
-					   value="<?php echo $order['billing']['country']; ?>"/>
+					   value="<?php echo esc_attr( $order['billing']['country'] ); ?>"/>
 
 				<div class="smsonw-tracking-code__list">
-					<strong><?php echo esc_html_e( 'Tracking code:', 'smart-marketing-addon-sms-order' ); ?></strong>
+					<strong><?php esc_html_e( 'Tracking code:', 'smart-marketing-addon-sms-order' ); ?></strong>
 					<ul>
 						<?php foreach ( $codes as $val ) { ?>
-							<li id="<?php echo $val['tracking_code']; ?>">
-								<span class="tracking-code-link"><?php echo $carriers[ $val['carrier'] ] . ': '; ?></span>
-								<a href="#" class="tracking-code-link" title="<?php echo $carriers[ $val['carrier'] ]; ?>"><?php echo $val['tracking_code']; ?></a>
-								<a class="egoi_close_x select2-selection__clear" id="tracking-<?php echo $val['tracking_code']; ?>"  href="#" >×</a>
+							<li id="<?php echo esc_attr( $val['tracking_code'] ); ?>">
+								<span class="tracking-code-link"><?php echo esc_html( $carriers[ $val['carrier'] ] . ': ' ); ?></span>
+								<a href="#" class="tracking-code-link" title="<?php echo esc_attr( $carriers[ $val['carrier'] ] ); ?>"><?php echo esc_html( $val['tracking_code'] ); ?></a>
+								<a class="egoi_close_x select2-selection__clear" id="tracking-<?php echo esc_attr( $val['tracking_code'] ); ?>"  href="#" >×</a>
 								</li>
 						<?php } ?>
 					</ul>
@@ -597,12 +595,12 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 					<input type="text" id="egoi-add-tracking-code" value="" style="width: 100%;"/>
 					<div style="display: flex;flex-direction: row;flex-wrap: nowrap;">
 						<select id="egoi_add_tracking_carrier" style="height: 28px !important;width: 100%;box-sizing: border-box;float: left;">
-							<option value=""><?php _e( 'Select an option...', 'smart-marketing-addon-sms-order' ); ?></option>
+							<option value=""><?php esc_html_e( 'Select an option...', 'smart-marketing-addon-sms-order' ); ?></option>
 							<?php foreach ( $carriers as $key => $carrier ) { ?>
-								<option value="<?php echo $key; ?>"><?php echo $carrier; ?></option>
+								<option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $carrier ); ?></option>
 							<?php } ?>
 						</select>
-						<div id="egoi_add_tracking" class="button wc-reload" disabled ><span><?php _e( 'Apply', 'smart-marketing-addon-sms-order' ); ?></span></div>
+						<div id="egoi_add_tracking" class="button wc-reload" disabled ><span><?php esc_html_e( 'Apply', 'smart-marketing-addon-sms-order' ); ?></span></div>
 					</div>
 				</div>
 			</div>
@@ -640,24 +638,24 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 			?>
 			<div id="egoi_send_order_sms">
 				<input type="hidden" name="egoi_sms_order_id" id="egoi_send_order_sms_order_id"
-					   value="<?php echo $order['id']; ?>"/>
+					   value="<?php echo esc_attr( $order['id'] ); ?>"/>
 				<input type="hidden" name="egoi_sms_order_country" id="egoi_send_order_sms_order_country"
-					   value="<?php echo $order['billing']['country']; ?>"/>
+					   value="<?php echo esc_attr( $order['billing']['country'] ); ?>"/>
 				<input type="hidden" name="egoi_sms_recipient" id="egoi_send_order_sms_recipient"
-					   value="<?php echo $recipient; ?>"/>
+					   value="<?php echo esc_attr( $recipient ); ?>"/>
 				<p>
-					<label for="egoi_send_order_sms_message"><?php _e( 'Message', 'smart-marketing-addon-sms-order' ); ?></label><br>
+					<label for="egoi_send_order_sms_message"><?php esc_html_e( 'Message', 'smart-marketing-addon-sms-order' ); ?></label><br>
 					<textarea name="egoi_sms_message" id="egoi_send_order_sms_message" style="width: 100%;"></textarea>
 				</p>
 				<p>
-					<button type="button" class="button" id="egoi_send_order_sms_button"><?php _e( 'Send', 'smart-marketing-addon-sms-order' ); ?></button>
-					<span id="egoi_send_order_sms_error" style="display: none; color: red;"><?php _e( 'You can\'t send a empty SMS', 'smart-marketing-addon-sms-order' ); ?></span>
-					<span id="egoi_send_order_sms_notice" style="display: none;"><?php _e( 'Sending... Wait please', 'smart-marketing-addon-sms-order' ); ?></span>
+					<button type="button" class="button" id="egoi_send_order_sms_button"><?php esc_html_e( 'Send', 'smart-marketing-addon-sms-order' ); ?></button>
+					<span id="egoi_send_order_sms_error" style="display: none; color: red;"><?php esc_html_e( 'You can\'t send a empty SMS', 'smart-marketing-addon-sms-order' ); ?></span>
+					<span id="egoi_send_order_sms_notice" style="display: none;"><?php esc_html_e( 'Sending... Wait please', 'smart-marketing-addon-sms-order' ); ?></span>
 				</p>
 			</div>
 			<?php
 		} else {
-			_e( 'The customer doesn\'t want to receive sms', 'smart-marketing-addon-sms-order' );
+			esc_html_e( 'The customer doesn\'t want to receive sms', 'smart-marketing-addon-sms-order' );
 		}
 	}
 
@@ -667,10 +665,10 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	public function smsonw_order_action_sms_meta_box() {
 		check_ajax_referer( 'egoi_send_order_sms', 'security' );
 
-		$cellphone = sanitize_text_field( $_POST['recipient'] );
-		$country   = sanitize_text_field( $_POST['country'] );
-		$message   = sanitize_textarea_field( $_POST['message'] );
-		$order_id  = filter_var( $_POST['order_id'], FILTER_SANITIZE_NUMBER_INT );
+		$cellphone = isset( $_POST['recipient'] ) ? sanitize_text_field( wp_unslash( $_POST['recipient'] ) ) : '';
+		$country   = isset( $_POST['country'] ) ? sanitize_text_field( wp_unslash( $_POST['country'] ) ) : '';
+		$message   = isset( $_POST['message'] ) ? sanitize_text_field( wp_unslash( $_POST['message'] ) ) : '';
+		$order_id  = isset( $_POST['order_id'] ) ? sanitize_key( $_POST['order_id'] ) : '';
 
 		$recipient = $this->helper->smsonw_get_valid_recipient( $cellphone, $country );
 
@@ -678,15 +676,15 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 		if ( ! isset( $result->errorCode ) ) {
 			$order = wc_get_order( $order_id );
-			$order->add_order_note( 'SMS: ' . $message );
+			$order->add_order_note( 'SMS: ' . esc_html( $message ) );
 
 			$note = array(
-				'message' => 'SMS: ' . $message,
-				'date'    => __( 'added on', 'smart-marketing-addon-sms-order' ) . ' ' . current_time( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ),
+				'message' => 'SMS: ' . esc_html( $message ),
+				'date'    => esc_html( __( 'added on', 'smart-marketing-addon-sms-order' ) . ' ' . current_time( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ) ),
 			);
-			echo json_encode( $note );
+			echo wp_json_encode( $note );
 		} else {
-			echo json_encode( $result );
+			echo wp_json_encode( $result );
 		}
 		wp_die();
 	}
@@ -697,9 +695,9 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	public function smsonw_order_add_tracking_number() {
 		check_ajax_referer( 'egoi_send_order_sms', 'security' );
 
-		$order_id      = filter_var( $_POST['order_id'], FILTER_SANITIZE_NUMBER_INT );
-		$tracking_code = sanitize_text_field( $_POST['code'] );
-		$carrier       = sanitize_text_field( $_POST['carrier'] );
+		$order_id      = ! empty( $_POST['order_id'] ) ? sanitize_key( $_POST['order_id'] ) : '';
+		$tracking_code = ! empty( $_POST['code'] ) ? sanitize_text_field( wp_unslash( $_POST['code'] ) ) : '';
+		$carrier       = ! empty( $_POST['carrier'] ) ? sanitize_text_field( wp_unslash( $_POST['carrier'] ) ) : '';
 		$order         = wc_get_order( $order_id );
 
 		if ( method_exists( $order, 'get_meta' ) ) {
@@ -715,7 +713,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 		foreach ( $obj as $track ) {
 			if ( false !== array_search( $tracking_code, array_column( $track, 'tracking_code' ) ) ) {
-				echo json_encode( array( 'ERROR' => 'ALREADY_EXISTS' ) );
+				echo wp_json_encode( array( 'ERROR' => 'ALREADY_EXISTS' ) );
 				wp_die();
 			}
 		}
@@ -726,14 +724,14 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		);
 
 		if ( method_exists( $order, 'update_meta_data' ) ) {
-			$order->update_meta_data( '_tracking_code_egoi', json_encode( $obj ) );
+			$order->update_meta_data( '_tracking_code_egoi', wp_json_encode( $obj ) );
 			$order->save();
 		} else {
-			update_post_meta( $order->id, '_tracking_code_egoi', json_encode( $obj ) );
+			update_post_meta( $order->id, '_tracking_code_egoi', wp_json_encode( $obj ) );
 		}
 
 		$order->add_order_note( sprintf( __( 'Added a E-goi tracking: %s', 'smart-marketing-addon-sms-order' ), $tracking_code ) );
-		echo json_encode( array( 'RESPONSE' => 'SUCCESS' ) );
+		echo wp_json_encode( array( 'RESPONSE' => 'SUCCESS' ) );
 		wp_die();
 	}
 
@@ -742,8 +740,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 * */
 	public function smsonw_order_delete_tracking_number() {
 		check_ajax_referer( 'egoi_send_order_sms', 'security' );
-		$order_id      = filter_var( $_POST['order_id'], FILTER_SANITIZE_NUMBER_INT );
-		$tracking_code = sanitize_text_field( $_POST['code'] );
+		$order_id      = ! empty( $_POST['order_id'] ) ? sanitize_key( $_POST['order_id'] ) : 0;
+		$tracking_code = ! empty( $_POST['code'] ) ? sanitize_text_field( wp_unslash( $_POST['code'] ) ) : '';
 		$order         = wc_get_order( $order_id );
 
 		if ( method_exists( $order, 'get_meta' ) ) {
@@ -763,27 +761,27 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		}
 
 		if ( method_exists( $order, 'update_meta_data' ) ) {
-			$order->update_meta_data( '_tracking_code_egoi', json_encode( $newObjs ) );
+			$order->update_meta_data( '_tracking_code_egoi', wp_json_encode( $newObjs ) );
 			$order->save();
 		} else {
-			update_post_meta( $order->id, '_tracking_code_egoi', json_encode( $newObjs ) );
+			update_post_meta( $order->id, '_tracking_code_egoi', wp_json_encode( $newObjs ) );
 		}
 
 		$order->add_order_note( sprintf( __( 'Removed a E-goi tracking: %s', 'woocommerce-correios' ), $tracking_code ) );
-		echo json_encode( array( 'RESPONSE' => 'SUCCESS' ) );
+		echo wp_json_encode( array( 'RESPONSE' => 'SUCCESS' ) );
 		wp_die();
 	}
 
 	public function smsonw_add_custom_carrier() {
 		check_ajax_referer( 'egoi_add_custom_carrier', 'security' );
-		$carrier = trim( $_POST['name'] );
-		$url     = trim( $_POST['url'] );
+		$carrier = ! empty( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+		$url     = ! empty( $_POST['url'] ) ? sanitize_text_field( wp_unslash( $_POST['url'] ) ) : '';
 		$obj     = get_option( 'egoi_custom_carriers' );
 
 		$obj = $this->jsonValidOrEmpryArray( $obj );
 
 		if ( false !== array_search( $carrier, array_column( $obj, 'carrier' ) ) ) {
-			echo json_encode( array( 'ERROR' => __( 'One carrier with the same name already exists!', 'smart-marketing-addon-sms-order' ) ) );
+			echo wp_json_encode( array( 'ERROR' => __( 'One carrier with the same name already exists!', 'smart-marketing-addon-sms-order' ) ) );
 			wp_die();
 		}
 
@@ -792,26 +790,26 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 			'url'     => $url,
 		);
 
-		update_option( 'egoi_custom_carriers', json_encode( array_values( $obj ) ) );
+		update_option( 'egoi_custom_carriers', wp_json_encode( array_values( $obj ) ) );
 
-		echo json_encode( array( 'RESPONSE' => 'SUCCESS' ) );
+		echo wp_json_encode( array( 'RESPONSE' => 'SUCCESS' ) );
 		wp_die();
 	}
 
 	public function smsonw_remove_custom_carrier() {
 		check_ajax_referer( 'egoi_add_custom_carrier', 'security' );
-		$carrier = trim( $_POST['name'] );
+		$carrier = ! empty( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
 		$obj     = get_option( 'egoi_custom_carriers' );
 
 		$obj = $this->jsonValidOrEmpryArray( $obj );
 
 		if ( false !== $index = array_search( $carrier, array_column( $obj, 'carrier' ) ) ) {
 			unset( $obj[ $index ] );
-			update_option( 'egoi_custom_carriers', json_encode( array_values( $obj ) ) );
-			echo json_encode( array( 'RESPONSE' => $obj ) );
+			update_option( 'egoi_custom_carriers', wp_json_encode( array_values( $obj ) ) );
+			echo wp_json_encode( array( 'RESPONSE' => $obj ) );
 			wp_die();
 		}
-		echo json_encode( array( 'ERROR' => __( 'The carrier you are trying to delete was not found.', 'smart-marketing-addon-sms-order' ) ) );
+		echo wp_json_encode( array( 'ERROR' => __( 'The carrier you are trying to delete was not found.', 'smart-marketing-addon-sms-order' ) ) );
 		wp_die();
 	}
 
@@ -831,7 +829,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		if ( ! class_exists( 'WooCommerce' ) ) {
 			?>
 			<div class="notice notice-error is-dismissible">
-			<p><?php _e( 'To use this plugin, you first need to install WooCommerce', 'smart-marketing-addon-sms-order' ); ?></p>
+			<p><?php esc_html_e( 'To use this plugin, you first need to install WooCommerce', 'smart-marketing-addon-sms-order' ); ?></p>
 			</div>
 			<?php
 		}
@@ -862,7 +860,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 	function smsonw_get_billet_code( $order_id ) {
 		global $wpdb;
-		return $wpdb->get_var( "SELECT code FROM {$wpdb->prefix}egoi_sms_order_billets WHERE order_id = '$order_id'" );
+		return $wpdb->get_var( $wpdb->prepare( "SELECT code FROM {$wpdb->prefix}egoi_sms_order_billets WHERE order_id = %s", array( $order_id ) ) );
 	}
 
 	function smsonw_billet_endpoint() {
@@ -886,7 +884,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 		global $wpdb;
 
-		$link = $wpdb->get_var( "SELECT link FROM {$wpdb->prefix}egoi_sms_order_billets WHERE code = '$params[c]'" );
+		$link = $wpdb->get_var( $wpdb->prepare( "SELECT link FROM {$wpdb->prefix}egoi_sms_order_billets WHERE code = %s", array( $params['c'] ) ) );
 
 		if ( $link ) {
 			wp_redirect( $link );
@@ -917,11 +915,9 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 				$startTime = date( 'Y-m-d H:i:s', ( time() - $limit_time ) );
 				$endTime   = date( 'Y-m-d H:i:s', ( time() - $seconds ) );
 
-				$betweenStatement = "BETWEEN '" . $startTime . "' AND '" . $endTime . "'";
-
 				$filterStatus = 'standby';
 
-				$abandonedCarts = $wpdb->get_results( "SELECT id, woo_session_key, php_session_key, cellphone FROM $table_name WHERE `time` $betweenStatement AND status='$filterStatus'" );
+				$abandonedCarts = $wpdb->get_results( $wpdb->prepare( "SELECT id, woo_session_key, php_session_key, cellphone FROM {$table_name} WHERE `time` BETWEEN %s AND %s AND status=%s", array( $startTime, $endTime, $filterStatus ) ) );
 
 				if ( ! empty( $abandonedCarts ) ) {
 					$count = 0;
@@ -938,8 +934,6 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 						$cartUrl = self::getCartUrl( $cart['woo_session_key'] );
 
-						file_put_contents( '/home/admin/web/wp.wemakethings.pt/log.txt', __LINE__ . ' - ' . __FUNCTION__ . ": \n" . print_r( $cartUrl, true ) . "\n\n" );
-
 						if ( empty( $cartUrl ) ) {
 							$wpdb->update( $table_name, array( 'status' => 'cart_not_found' ), array( 'id' => $cart['id'] ) );
 						}
@@ -954,7 +948,6 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 							if ( ! empty( $message ) ) {
 
 								$mesageSend = $this->helper->smsonw_send_sms( $cart['cellphone'], $message, 'abandoned_cart', 0 );
-								file_put_contents( '/home/admin/web/wp.wemakethings.pt/log.txt', __LINE__ . ' - ' . __FUNCTION__ . ": \n" . print_r( $mesageSend, true ) . "\n\n" );
 
 								if ( ! empty( $mesageSend ) ) {
 									if ( isset( $mesageSend->errorCode ) ) {
@@ -969,7 +962,6 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 				}
 			}
 		} catch ( Exception $e ) {
-			file_put_contents( '/home/admin/web/wp.wemakethings.pt/log.txt', __LINE__ . ': ' . __FUNCTION__ . " ERROR:\n" . $e->getMessage(), FILE_APPEND );
 			$this->helper->smsonw_save_logs( 'sms_abandoned_cart_process: ' . $e->getMessage() );
 		}
 	}
@@ -993,7 +985,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 	function getAllMobilesToNotify( $product_id ) {
 		global $wpdb;
-		return $wpdb->get_results( "SELECT mobile From {$wpdb->prefix}egoi_sms_follow_price where  product_id = '" . $product_id . "'", ARRAY_A );
+		return $wpdb->get_results( $wpdb->prepare( "SELECT mobile From {$wpdb->prefix}egoi_sms_follow_price where  product_id = %s", array( $product_id ) ), ARRAY_A );
 	}
 
 	function prepareMessage( $message, $product_id, $product_name ) {
@@ -1036,19 +1028,12 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	private static function getCartBySessionId( $wc_session ) {
 
 		global $wpdb;
-		$query = sprintf(
-			"SELECT %s FROM %s%s WHERE %s = '%s'",
-			'session_value',
-			$wpdb->prefix,
-			'woocommerce_sessions',
-			'session_key',
-			$wc_session
-		);
 
-		$result = $wpdb->get_var( $query );
+		$result = $wpdb->get_var( $wpdb->prepare( 'SELECT session_value FROM ' . $wpdb->prefix . 'woocommerce_sessions WHERE session_key = %s', array( $wc_session ) ) );
 
 		if ( empty( $result ) ) {
-			return false;}
+			return false;
+		}
 		$cart = unserialize( unserialize( $result )['cart'] );
 
 		$output = array();
@@ -1070,18 +1055,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 */
 	public static function cartArrayToUrlParam( $cartArray, $wc_session ) {
 		global $wpdb;
-		$query = sprintf(
-			"SELECT %s FROM %s%s WHERE %s = '%s' AND %s = '%s'",
-			'php_session_key',
-			$wpdb->prefix,
-			'egoi_sms_abandoned_carts',
-			'woo_session_key',
-			$wc_session,
-			'status',
-			'standby'
-		);
 
-		$result = $wpdb->get_var( $query );
+		$result = $wpdb->get_var( $wpdb->prepare( 'SELECT php_session_key FROM ' . $wpdb->prefix . "egoi_sms_abandoned_carts WHERE woo_session_key = %s AND status = 'standby'", array( $wc_session ) ) );
 
 		if ( ! empty( $result ) ) {
 			$output = '?sid_eg=' . $result . '&create-cart=';
@@ -1098,12 +1073,12 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		return $output;
 	}
 
-    function smsonw_my_add_every_fifteen_minutes( $schedules ) {
-        $schedules['every_fifteen_minutes'] = array(
-            'interval' => 60 * 15,
-            'display'  => __( 'Every Fifteen Minutes' ),
-        );
-        return $schedules;
-    }
+	function smsonw_my_add_every_fifteen_minutes( $schedules ) {
+		$schedules['every_fifteen_minutes'] = array(
+			'interval' => 60 * 15,
+			'display'  => __( 'Every Fifteen Minutes' ),
+		);
+		return $schedules;
+	}
 
 }
