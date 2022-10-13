@@ -1073,7 +1073,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		return $output;
 	}
 
-	function smsonw_my_add_every_fifteen_minutes( $schedules ) {
+	function egoi_woo_smsonw_my_add_every_fifteen_minutes( $schedules ) {
 		$schedules['every_fifteen_minutes'] = array(
 			'interval' => 60 * 15,
 			'display'  => __( 'Every Fifteen Minutes' ),

@@ -1,9 +1,9 @@
-=== SMS Orders Alert/Notifications for WooCommerce ===
+=== E-goi SMS Orders Alert/Notifications ===
 Contributors: E-goi
 Donate link: https://www.e-goi.com
 Tags: SMS, Orders, WooCommerce, Notifications, Alert, sms, order, Subscribe, E-goi, Marketing Automation, egoi, List, SMS Marketing, Marketing, shipping, tracking number, carrier, transportadora, order notification, Multibanco
 Requires at least: 4.7
-Tested up to: 5.8
+Tested up to: 6.0.2
 Stable tag: 1.5.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html

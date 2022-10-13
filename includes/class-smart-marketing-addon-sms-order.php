@@ -66,8 +66,8 @@ class Smart_Marketing_Addon_Sms_Order {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-		if ( defined( 'PLUGIN_NAME_VERSION' ) ) {
-			$this->version = PLUGIN_NAME_VERSION;
+		if ( defined( 'EGOI_SMART_MARKETING_SMS_WOOCOMMERCE' ) ) {
+			$this->version = EGOI_SMART_MARKETING_SMS_WOOCOMMERCE;
 		} else {
 			$this->version = '1.3.4';
 		}
@@ -167,7 +167,7 @@ class Smart_Marketing_Addon_Sms_Order {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'smsonw_enqueue_scripts' );
 
 		// CRON and payment reminder
-		$this->loader->add_action( 'cron_schedules', $plugin_admin, 'smsonw_my_add_every_fifteen_minutes' );
+		$this->loader->add_action( 'cron_schedules', $plugin_admin, 'egoi_woo_smsonw_my_add_every_fifteen_minutes' );
 		$this->loader->add_filter( 'egoi_sms_order_event', $plugin_admin, 'smsonw_sms_order_reminder' );
 
 		// Box send SMS in admin order page
