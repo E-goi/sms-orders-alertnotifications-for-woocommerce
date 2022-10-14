@@ -163,7 +163,7 @@ function egoi_add_multiple_products_to_cart( $url = false ) {
 	if ( ! empty( $_REQUEST['sid_eg'] ) ) {
 		global $wpdb;
 		$_SESSION['sid_eg'] = sanitize_text_field( wp_unslash( $_REQUEST['sid_eg'] ) );
-		$wpdb->update( $wpdb->prefix . 'egoi_sms_abandoned_carts', array( 'status' => 'clicked' ), array( 'php_session_key' => $_SESSION['sid_eg'] ) );
+		$wpdb->update( $wpdb->prefix . 'egoi_sms_abandoned_carts', array( 'status' => 'clicked' ), array( 'php_session_key' => esc_attr( $_SESSION['sid_eg'] ) ) );
 	} else {
 		return false;
 	}

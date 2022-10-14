@@ -65,7 +65,7 @@ class Smart_Marketing_Addon_Sms_Order_Abandoned_Cart {
 					'status'   => 'sold',
 					'order_id' => $order_id,
 				),
-				array( 'php_session_key' => $_SESSION['sid_eg'] )
+				array( 'php_session_key' => sanitize_key( $_SESSION['sid_eg'] ) )
 			);
 			unset( $_SESSION['sid_eg'] );
 		} catch ( Exception $e ) {
@@ -111,7 +111,7 @@ class Smart_Marketing_Addon_Sms_Order_Abandoned_Cart {
 			if ( empty( $_SESSION[ self::SESSION_TAG_UID ] ) ) {
 				return false;
 			}
-			$cellphone = $_SESSION[ self::SESSION_TAG_UID ];
+			$cellphone = sanitize_text_field( $_SESSION[ self::SESSION_TAG_UID ] );
 		} elseif ( $cellphone === '' ) {// logged but no phone
 			return false;
 		}
@@ -128,8 +128,8 @@ class Smart_Marketing_Addon_Sms_Order_Abandoned_Cart {
 			return false;}
 
 		foreach ( $_COOKIE as $key => $value ) {
-			if ( strpos( $key, 'woocommerce_session_' ) !== false ) {
-				return explode( '||', $value )[0];
+			if ( strpos( $key, 'woocommerce_session_' ) !== false && !empty($value) ) {
+				return explode( '||', sanitize_key( $value ) )[0];
 			}
 		}
 
