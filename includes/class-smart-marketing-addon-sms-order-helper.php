@@ -70,12 +70,12 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 		'eupago_mbway' => array(
 			'ref' => '_eupago_mbway_referencia',
 			'val' => '_order_total'
-		),
+		),*/
 		'multibanco_ifthen_for_woocommerce' => array(
 			'ent' => '_multibanco_ifthen_for_woocommerce_ent',
 			'ref' => '_multibanco_ifthen_for_woocommerce_ref',
 			'val' => '_multibanco_ifthen_for_woocommerce_val',
-		),*/
+		),
 	);
 
 	/**
