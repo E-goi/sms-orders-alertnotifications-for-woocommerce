@@ -559,7 +559,7 @@ $reminder_times = array( '1', '12', '24', '36', '48', '72' );
 
 			<div class="main-content col col-12" style="margin:0 0 20px;">
 
-				<p class="label_text"><?php esc_html_e( 'This plugin is integrated with Multibanco (euPago, Ifthenpay, easypay, Hipay Compra Facil, Sibs, LusoPay), Payshop (euPago), WooCommerce PagSeguro', 'smart-marketing-addon-sms-order' ); ?></p>
+				<p class="label_text"><?php esc_html_e( 'This plugin is integrated with Multibanco (euPago, Ifthenpay, easypay, Hipay Compra Facil, Sibs, LusoPay), WooCommerce PagSeguro', 'smart-marketing-addon-sms-order' ); ?></p>
 
 				<p class="label_text"><?php esc_html_e( 'Select payment method', 'smart-marketing-addon-sms-order' ); ?></p>
 
@@ -659,7 +659,7 @@ $reminder_times = array( '1', '12', '24', '36', '48', '72' );
 			?>
 			<div class="main-content col col-12" style="margin:0 0 20px;">
 
-				<p class="label_text"><?php esc_html_e( 'This plugin is integrated with Multibanco (euPago, Ifthenpay, easypay, Hipay Compra Facil, Sibs, LusoPay), Payshop (euPago), WooCommerce PagSeguro', 'smart-marketing-addon-sms-order' ); ?></p>
+				<p class="label_text"><?php esc_html_e( 'This plugin is integrated with Multibanco (euPago, Ifthenpay, easypay, Hipay Compra Facil, Sibs, LusoPay), WooCommerce PagSeguro', 'smart-marketing-addon-sms-order' ); ?></p>
 
 				<p class="label_text"><?php esc_html_e( 'Select payment method', 'smart-marketing-addon-sms-order' ); ?></p>
 
@@ -1093,7 +1093,7 @@ $reminder_times = array( '1', '12', '24', '36', '48', '72' );
 								<tr>
 									<td><span><?php echo esc_html( $tracking_name ); ?></span></td>
 									<td>
-										<input name="<?php echo esc_html( $tracking_code_name ); ?>" id="egoi_sms_order_tracking_<?php echo esc_attr( $tracking_code_name ); ?>" style="min-width: 400px;width: 100%;" value="<?php echo isset( $urls[ $tracking_code_name ] ) ? esc_attr( urls[ $tracking_code_name ] ) : ''; ?>"/>
+										<input name="<?php echo esc_html( $tracking_code_name ); ?>" id="egoi_sms_order_tracking_<?php echo esc_attr( $tracking_code_name ); ?>" style="min-width: 400px;width: 100%;" value="<?php echo isset( $urls[ $tracking_code_name ] ) ? esc_attr( $urls[ $tracking_code_name ] ) : ''; ?>"/>
 									</td>
 								</tr>
 							<?php } ?>

@@ -37,10 +37,6 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 			'ref' => '_eupago_multibanco_referencia',
 			'val' => '_order_total',
 		),
-		'eupago_payshop'    => array(
-			'ref' => '_eupago_payshop_referencia',
-			'val' => '_order_total',
-		),
 		'easypay_mb'        => array(
 			'ent' => '',
 			'ref' => '',
@@ -143,20 +139,6 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 				'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
 			),
 		),
-		'payshop'    => array(
-			'first'    => array(
-				'en'    => 'Hello, your order at %shop_name% is waiting for MB payment. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
-				'es'    => 'Hola, su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
-				'pt'    => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
-				'pt_BR' => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
-			),
-			'reminder' => array(
-				'en'    => 'Hello, we remind you that your order at %shop_name% is waiting for MB. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
-				'es'    => 'Hola, recordamos que su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
-				'pt'    => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
-				'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
-			),
-		),
 		'billet'     => array(
 			'first'    => array( 'pt_BR' => 'Obrigado pela sua encomenda! Pague por %payment_method% usando este Link %billet_url%' ),
 			'reminder' => array( 'pt_BR' => 'Olá %billing_name%, relembramos o link para pagamento %billet_url%' ),
@@ -189,30 +171,6 @@ Obrigado',
 				'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB.
                 
 %mb_table% 
-                
-Obrigado',
-			),
-		),
-		'payshop'    => array(
-			'reminder' => array(
-				'en'    => 'Hello, we remind you that your order at %shop_name% is waiting for MB.
-
-%mb_table% 
-                
-Thank you',
-				'es'    => 'Hola, recordamos que su pedido en %shop_name% está esperando el pago MB.
-
-%mb_table%
-                
-Gracias',
-				'pt'    => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB.
-
-%mb_table%
-                
-Obrigado',
-				'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB.
-                
-%mb_table%
                 
 Obrigado',
 			),
@@ -398,7 +356,6 @@ Obrigado',
 	public function smsonw_get_payment_methods() {
 		return array(
 			'multibanco' => __( 'Multibanco (euPago, IfthenPay, easypay, hipaymultibanco, sibs, lusopay)', 'smart-marketing-addon-sms-order' ),
-			'payshop'    => __( 'Payshop (euPago)', 'smart-marketing-addon-sms-order' ),
 			'billet'     => __( 'PagSeguro', 'smart-marketing-addon-sms-order' ),
 		);
 	}
@@ -910,8 +867,6 @@ Obrigado',
 	public function smsonw_get_option_payment_method( $order_payment_method ) {
 		if ( strpos( $order_payment_method, 'multibanco' ) !== false || in_array( $order_payment_method, $this->multibanco_bypass ) ) {
 			return 'multibanco';
-		} elseif ( strpos( $order_payment_method, 'payshop' ) !== false ) {
-			return 'payshop';
 		} elseif ( strpos( $order_payment_method, 'pagseguro' ) !== false ) {
 			return 'billet';
 		}
