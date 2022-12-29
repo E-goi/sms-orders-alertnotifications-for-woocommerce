@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Define the internationalization functionality
  *
@@ -24,7 +23,7 @@
  * @subpackage Smart_Marketing_Addon_Sms_Order/includes
  * @author     E-goi <egoi@egoi.com>
  */
-class Smart_Marketing_Addon_Sms_Order_i18n {
+class Smart_Marketing_Addon_Sms_Order_I18n {
 
 
 	/**

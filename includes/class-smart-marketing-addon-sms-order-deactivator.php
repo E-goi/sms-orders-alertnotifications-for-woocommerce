@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Fired during plugin deactivation
  *
@@ -31,7 +30,7 @@ class Smart_Marketing_Addon_Sms_Order_Deactivator {
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
-		wp_clear_scheduled_hook('egoi_sms_order_event');
+		wp_clear_scheduled_hook( 'egoi_sms_order_event' );
 	}
 
 }
