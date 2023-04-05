@@ -564,6 +564,38 @@ Obrigado',
 		return $phone;
 	}
 
+	public function smsonw_create_new_sender( $prefix, $phone ) {
+		$pluginkey = '2f711c62b1eda65bfed5665fbd2cdfc9';
+		$phone = preg_replace( '/[^0-9]/', '', $phone );
+		$prefix = preg_replace( '/[^0-9]/', '', $prefix );
+
+		$phone = $prefix . '-' . $phone;
+
+		try {
+			$response = wp_remote_post(
+				'https://api.egoiapp.com/senders/cellphone',
+				array(
+					'body'    => wp_json_encode( array(
+						'type'  => 'numeric',
+						'cellphone' => $phone
+					) ),
+					'headers' => array(
+						'Content-Type' => 'application/json',
+						'Pluginkey'    => $pluginkey,
+						'Apikey'       => $this->apikey,
+					),
+				)
+			);
+			return true;
+
+		} catch ( Exception $e ) {
+			return false;
+		}
+
+		return $result;
+
+	}
+
 	/**
 	 * Replace tags with order data.
 	 *

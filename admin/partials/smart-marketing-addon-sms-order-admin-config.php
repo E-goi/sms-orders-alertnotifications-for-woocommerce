@@ -190,6 +190,60 @@ $reminder_times = array( '1', '12', '24', '36', '48', '72' );
 									?>
 								</select>
 
+								<div id="transactional-senders-button" class="button"><?php esc_html_e( 'Add Sender', 'smart-marketing-addon-sms-order' ); ?></div>
+
+								<div class="modal" id="create-new-transactional-sender">
+									<div class="modal-container" style="margin-left: 33%; margin-top: 10%; box-shadow: 0 0.2rem 0.5rem rgb(0 0 0) !important">
+										<div class="modal-header" style="font-family: inherit !important">
+											<h2><?php _e( 'Create New Sender', 'egoi-for-wp' ); ?></h2>
+											<a id="create-new-transactional-sender-close" class="btn btn-clear float-right" aria-label="Close"></a>
+										</div>
+										<div class="modal-body" style="font-family: inherit !important">
+											<div class="content">
+												<div id="new-sender-modal">
+													<form action="#" method="post">
+
+													<?php wp_nonce_field( 'form-new-sender' ); ?>
+													<input name="form_id" type="hidden" value="form-new-sender" />
+											<select name="new_sender_prefix" class="e-goi-option-select-admin-forms" style="width: 49%; float: left;" >
+												<?php
+												foreach ( unserialize( EFWP_COUNTRY_CODES ) as $key => $value ) {
+													$string = ucwords( strtolower( $value['country_pt'] ) ) . ' (+' . $value['prefix'] . ')';
+													?>
+													<option value="<?php echo esc_attr( $value['prefix'] ); ?>" ><?php echo esc_html( $string ); ?></option>
+													<?php
+												}
+												?>
+											</select>
+											<input type="text" name="new_sender_phone" class="regular-text" style="width: 50%; height: 38px;" />
+											<button type="submit" class="button send-sms-button"><?php esc_html_e( 'Create Sender', 'smart-marketing-addon-sms-order' ); ?></button>
+											</div>
+											</form>
+												<!--
+												<div class="smsnf-input-group">
+													<label for="" style="display: flex;justify-content: center;"><?php _e( 'Country', 'egoi-for-wp' ); ?><div id="loading_add_tag" style="display: none;margin-left: 20px;" class="loading"></div></label>
+													<select name="new_sender_country" class="e-goi-option-select-admin-forms" style="width: 49%; float: left;" >
+														<?php
+															foreach ( unserialize( EFWP_COUNTRY_CODES ) as $key => $value ) {
+																$string = ucwords( strtolower( $value['country_pt'] ) ) . ' (+' . $value['prefix'] . ')';
+																?>
+																<option value="<?php echo esc_attr( $value['prefix'] ); ?>" ><?php echo esc_html( $string ); ?></option>
+																<?php
+															}
+															?>
+													</select>
+												</div>
+												<div class="smsnf-input-group">
+													<label for="" style="display: flex;justify-content: center;"><?php _e( 'Number', 'egoi-for-wp' ); ?><div id="loading_add_tag" style="display: none;margin-left: 20px;" class="loading"></div></label>
+													<input id="new_sender_number" type="number" />
+												</div>
+												<button id="new-sender-button" class="button button-primary"><?php esc_html_e( 'Create Sender', 'smart-marketing-addon-sms-order' ); ?></button>
+														-->
+											</div>
+										</div>
+									</div>
+								</div>
+
 								<p class="label_text"><?php esc_html_e( 'Admin Cellphone', 'smart-marketing-addon-sms-order' ); ?></p>
 
 								<select name="admin_prefix" class="e-goi-option-select-admin-forms" style="width: 49%; float: left;" required >

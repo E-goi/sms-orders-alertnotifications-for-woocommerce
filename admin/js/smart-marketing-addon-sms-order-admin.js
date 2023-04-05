@@ -77,6 +77,22 @@
 				}
 			);
 
+			$( "#transactional-senders-button" ).on(
+				"click",
+				function () {
+					$( "#create-new-transactional-sender" ).show();
+				}
+			);
+
+			$( "#create-new-transactional-sender-close" ).on(
+				"click",
+				function () {
+					$( "#create-new-transactional-sender" ).hide();
+				}
+			);
+
+
+
 			$( "#button-test-sms" ).on(
 				"click",
 				function () {

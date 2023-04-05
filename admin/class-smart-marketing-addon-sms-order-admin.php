@@ -286,6 +286,15 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 				);
 
 				update_option( 'egoi_sms_abandoned_cart', wp_json_encode( $post ) );
+			} elseif ( isset( $form_id ) && $form_id == 'form-new-sender' ) {
+				// New Sender Prefix
+				$new_sender_prefix  = filter_var( $post['new_sender_prefix'], FILTER_SANITIZE_NUMBER_INT );
+
+				// New Sender Phone
+				$new_sender_phone   = sanitize_text_field( $post['new_sender_phone'] );
+
+				// Create new sender request
+				$response  = $this->helper->smsonw_create_new_sender( $new_sender_prefix, $new_sender_phone );
 			}
 			return true;
 		} catch ( Exception $e ) {
