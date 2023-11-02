@@ -19,6 +19,12 @@
  */
 class Smart_Marketing_Addon_Sms_Order_Helper {
 
+
+	/**
+	 * Plugin key.
+	 */
+	const PLUGINKEY = '2f711c62b1eda65bfed5665fbd2cdfc9';
+
 	/**
 	 * E-goi apikey.
 	 *
@@ -292,16 +298,24 @@ Obrigado',
 	 * @since    1.0.0
 	 */
 	public function __construct() {
+
 		try {
-			$this->egoi_api_client = new SoapClient( 'http://api.e-goi.com/v2/soap.php?wsdl' );
+			require_once plugin_dir_path( __DIR__ ) . '../smart-marketing-for-wp/includes/class-egoi-for-wp-apiv3.php';
+
+			$apikey       = get_option( 'egoi_api_key' );
+			$this->apikey = $apikey['api_key'];
+
+			$this->egoi_api_client = new EgoiApiV3( $this->apikey );
+
+			$result = $this->egoi_api_client->ping();
+
+			if(!$result){
+				$this->egoi_api_client = false;
+			}
 		} catch ( Exception $e ) {
-			// Exception.
+			$this->egoi_api_client = false;
 		}
 
-		$apikey       = get_option( 'egoi_api_key' );
-		$this->apikey = $apikey['api_key'];
-		// check if api is on
-		self::ping( $apikey['api_key'] );
 	}
 
 	/**
@@ -366,20 +380,19 @@ Obrigado',
 	 * @return array with senders
 	 */
 	public function smsonw_get_senders() {
-
-		if ( empty( $this->egoi_api_client ) ) {
+		try{
+			
+			if ( empty( $this->egoi_api_client ) ) {
+				return array();
+			}
+	
+			return json_decode( $this->egoi_api_client->getSenders( 'cellphone' ) );
+		}catch (Exception $e){
 			return array();
 		}
-		$result = $this->egoi_api_client->getSenders(
-			array(
-				'apikey'  => $this->apikey,
-				'channel' => 'telemovel',
-			)
-		);
-
-		return $result;
 	}
 
+	  
 	/**
 	 * Get Balance.
 	 *
@@ -387,13 +400,19 @@ Obrigado',
 	 */
 	public function smsonw_get_balance() {
 
-		if ( empty( $this->egoi_api_client ) ) {
+		try{
+			
+			if ( empty( $this->egoi_api_client ) ) {
+				return '0.00$';
+			}
+	
+			$response = $this->egoi_api_client->getMyAccount(false);
+
+			return $response['balance_info']['balance'] . $this->currency[ $response['balance_info']['currency']];
+
+		}catch (Exception $e){
 			return '0.00$';
 		}
-
-		$credits = explode( ' ', $this->egoi_api_client->getClientData( array( 'apikey' => $this->apikey ) )['CREDITS'] );
-		return $credits[1] . $this->currency[ $credits[0] ];
-
 	}
 
 	/**
@@ -880,16 +899,14 @@ Obrigado',
 	 * @return array|mixed
 	 */
 	public static function ping( $apikey ) {
-		$pluginkey = '2f711c62b1eda65bfed5665fbd2cdfc9';
-
 		try {
-			$response = wp_remote_post(
+			wp_remote_post(
 				'https://api.egoiapp.com/ping',
 				array(
 					'body'    => wp_json_encode( array() ),
 					'headers' => array(
 						'Content-Type' => 'application/json',
-						'Pluginkey'    => $pluginkey,
+						'Pluginkey'    => self::PLUGINKEY,
 						'Apikey'       => $apikey,
 					),
 				)
@@ -897,7 +914,7 @@ Obrigado',
 			return true;
 
 		} catch ( Exception $e ) {
-			return true;
+			return false;
 		}
 	}
 
