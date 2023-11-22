@@ -870,6 +870,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 			array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'smsonw_billet_redirect' ),
+				'permission_callback' => function() {return true;},
 				'args'     => array(
 					'c' => array(
 						'sanitize_callback' => 'sanitize_text_field',
