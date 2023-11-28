@@ -330,6 +330,15 @@ class Smart_Marketing_Addon_Sms_Order_Public {
 	 * Abandoned cart trigger
 	 */
 	public function smsonw_notification_abandoned_cart_trigger() {
+
+		if ( is_admin() ) {
+			return false;
+		}
+
+		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+			return false;
+		}
+
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-smart-marketing-addon-sms-order-abandonned-cart.php';
 		$abandoned_service = new Smart_Marketing_Addon_Sms_Order_Abandoned_Cart();
 		$abandoned_service->start();
@@ -341,6 +350,15 @@ class Smart_Marketing_Addon_Sms_Order_Public {
 	 * @param string $order_id order identification.
 	 */
 	public function smsonw_notification_abandoned_cart_clear( $order_id ) {
+		
+		if ( is_admin() ) {
+			return false;
+		}
+
+		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+			return false;
+		}
+		
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-smart-marketing-addon-sms-order-abandonned-cart.php';
 		$abandoned_service = new Smart_Marketing_Addon_Sms_Order_Abandoned_Cart();
 		$abandoned_service->convertCart( $order_id );
