@@ -324,7 +324,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 						$order_data = $order->get_data();
 
 						if ( $recipient_options['notification_option'] ) {
-							$sms_notification = (bool) get_post_meta( $order->get_id(), 'egoi_notification_option' )[0];
+							$order = wc_get_order( $order->get_id() );
+							$sms_notification = (bool) $order->is_internal_meta_key( 'egoi_notification_option' );
 						} else {
 							$sms_notification = 1;
 						}
@@ -458,7 +459,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 			$recipient_options = json_decode( get_option( 'egoi_sms_order_recipients' ), true );
 
 			if ( $recipient_options['notification_option'] ) {
-				$sms_notification = (bool) get_post_meta( $order_id, 'egoi_notification_option' )[0];
+				$order = wc_get_order( $order_id );
+				$sms_notification = (bool) $order->is_internal_meta_key( 'egoi_notification_option' );
 			} else {
 				$sms_notification = 1;
 			}
@@ -500,7 +502,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		$order = wc_get_order( $order_id )->get_data();
 
 		if ( $recipient_options['notification_option'] ) {
-			$sms_notification = (bool) get_post_meta( $order_id, 'egoi_notification_option' )[0];
+			$order = wc_get_order( $order_id );
+			$sms_notification = (bool) $order->is_internal_meta_key( 'egoi_notification_option' );
 		} else {
 			$sms_notification = 1;
 		}
@@ -537,11 +540,15 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 * Add SMS meta box to order admin page
 	 */
 	public function smsonw_order_add_sms_meta_box() {
+		$screen = class_exists( '\Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController' ) && wc_get_container()->get( CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled()
+		? wc_get_page_screen_id( 'shop-order' )
+		: 'shop_order';
+
 		add_meta_box(
 			'woocommerce-order-my-custom',
 			__( 'Send SMS to buyer', 'smart-marketing-addon-sms-order' ),
 			array( $this, 'smsonw_order_display_sms_meta_box' ),
-			'shop_order',
+			$screen,
 			'side',
 			'core'
 		);
@@ -552,11 +559,14 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 * Add tracking number meta box to order admin page
 	 */
 	public function smsonw_order_add_track_number_box() {
+		$screen = class_exists( '\Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController' ) && wc_get_container()->get( CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled()
+		? wc_get_page_screen_id( 'shop-order' )
+		: 'shop_order';
 		add_meta_box(
 			'woocommerce-order-my-custom-tracking',
 			__( 'SMS Tracking code', 'smart-marketing-addon-sms-order' ),
 			array( $this, 'smsonw_order_display_tracking_meta_box' ),
-			'shop_order',
+			$screen,
 			'side',
 			'core'
 		);
@@ -628,7 +638,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		$order             = wc_get_order( $post->ID )->get_data();
 
 		if ( $recipient_options['notification_option'] ) {
-			$sms_notification = (bool) get_post_meta( $post->ID, 'egoi_notification_option' )[0];
+			$order = wc_get_order( $post->ID );
+			$sms_notification = (bool) $order->is_internal_meta_key( 'egoi_notification_option' );
 		} else {
 			$sms_notification = 1;
 		}
@@ -723,12 +734,9 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 			'tracking_code' => $tracking_code,
 		);
 
-		if ( method_exists( $order, 'update_meta_data' ) ) {
-			$order->update_meta_data( '_tracking_code_egoi', wp_json_encode( $obj ) );
-			$order->save();
-		} else {
-			update_post_meta( $order->id, '_tracking_code_egoi', wp_json_encode( $obj ) );
-		}
+		$order->update_meta_data( '_tracking_code_egoi', wp_json_encode( $obj ) );
+		$order->save();
+
 
 		$order->add_order_note( sprintf( __( 'Added a E-goi tracking: %s', 'smart-marketing-addon-sms-order' ), $tracking_code ) );
 		echo wp_json_encode( array( 'RESPONSE' => 'SUCCESS' ) );
@@ -760,13 +768,9 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 			$newObjs[] = $track;
 		}
 
-		if ( method_exists( $order, 'update_meta_data' ) ) {
-			$order->update_meta_data( '_tracking_code_egoi', wp_json_encode( $newObjs ) );
-			$order->save();
-		} else {
-			update_post_meta( $order->id, '_tracking_code_egoi', wp_json_encode( $newObjs ) );
-		}
-
+		$order->update_meta_data( '_tracking_code_egoi', wp_json_encode( $newObjs ) );
+		$order->save();
+		
 		$order->add_order_note( sprintf( __( 'Removed a E-goi tracking: %s', 'woocommerce-correios' ), $tracking_code ) );
 		echo wp_json_encode( array( 'RESPONSE' => 'SUCCESS' ) );
 		wp_die();

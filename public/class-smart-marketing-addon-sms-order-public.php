@@ -114,10 +114,14 @@ class Smart_Marketing_Addon_Sms_Order_Public {
 			$option = sanitize_text_field( wp_unslash( $_POST['egoi_notification_option'] ) );
 		}
 
+		$order         = wc_get_order( $order_id );
+
 		if ( isset( $option ) && filter_var( $option, FILTER_VALIDATE_BOOLEAN ) ) {
-			update_post_meta( $order_id, 'egoi_notification_option', 1 );
+			$order->update_meta_data( 'egoi_notification_option', 1 );
+			$order->save();
 		} else {
-			update_post_meta( $order_id, 'egoi_notification_option', 0 );
+			$order->update_meta_data( 'egoi_notification_option', 0 );
+			$order->save();
 		}
 	}
 

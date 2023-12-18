@@ -535,7 +535,7 @@ Obrigado',
 	 * @return bool
 	 */
 	public function smsonw_get_payment_data( $order, $field ) {
-		$order_meta = get_post_meta( $order['id'] );
+		$order_meta = wc_get_order( $order['id'] )->get_meta_data();
 
 		if ( key_exists( $order['payment_method'], $this->payment_foreign_table ) ) {
 			return $this->priv_get_data_table( $order['payment_method'], $field, $order['id'] );
@@ -872,7 +872,8 @@ Obrigado',
 		$recipient_options = json_decode( get_option( 'egoi_sms_order_recipients' ), true );
 
 		if ( $recipient_options['notification_option'] ) {
-			return (bool) get_post_meta( $order_id, 'egoi_notification_option' )[0];
+			$order = wc_get_order( $order_id );
+			return (bool) $order->is_internal_meta_key( 'egoi_notification_option' );
 		} else {
 			return 1;
 		}
