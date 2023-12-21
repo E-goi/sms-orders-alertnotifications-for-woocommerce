@@ -540,7 +540,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 * Add SMS meta box to order admin page
 	 */
 	public function smsonw_order_add_sms_meta_box() {
-		$screen = class_exists( '\Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController' ) && wc_get_container()->get( CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled()
+		$screen = class_exists( '\Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController' ) && wc_get_container()->get( \Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled()
 		? wc_get_page_screen_id( 'shop-order' )
 		: 'shop_order';
 
@@ -559,7 +559,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 * Add tracking number meta box to order admin page
 	 */
 	public function smsonw_order_add_track_number_box() {
-		$screen = class_exists( '\Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController' ) && wc_get_container()->get( CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled()
+		$screen = class_exists( '\Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController' ) && wc_get_container()->get( \Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled()
 		? wc_get_page_screen_id( 'shop-order' )
 		: 'shop_order';
 		add_meta_box(
@@ -591,13 +591,14 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 				<div class="smsonw-tracking-code__list">
 					<strong><?php esc_html_e( 'Tracking code:', 'smart-marketing-addon-sms-order' ); ?></strong>
 					<ul>
-						<?php foreach ( $codes as $val ) { ?>
+						<?php if(isset($codes) && !empty($codes)) {
+							foreach ( $codes as $val ) { ?>
 							<li id="<?php echo esc_attr( $val['tracking_code'] ); ?>">
 								<span class="tracking-code-link"><?php echo esc_html( $carriers[ $val['carrier'] ] . ': ' ); ?></span>
 								<a href="#" class="tracking-code-link" title="<?php echo esc_attr( $carriers[ $val['carrier'] ] ); ?>"><?php echo esc_html( $val['tracking_code'] ); ?></a>
 								<a class="egoi_close_x select2-selection__clear" id="tracking-<?php echo esc_attr( $val['tracking_code'] ); ?>"  href="#" >×</a>
 								</li>
-						<?php } ?>
+						<?php }} ?>
 					</ul>
 				</div>
 				<div class="wide" id="egoi_tracking_for_sms_insert" <?php echo ( ! empty( $codes ) ) ? 'disabled' : ''; ?> style="<?php echo ( ! empty( $codes ) ) ? 'display: none;' : ''; ?>">
