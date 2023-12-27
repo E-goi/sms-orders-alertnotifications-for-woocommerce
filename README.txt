@@ -4,7 +4,7 @@ Donate link: https://www.e-goi.com
 Tags: SMS, Orders, WooCommerce, Notifications, Alert, sms, order, Subscribe, E-goi, Marketing Automation, egoi, List, SMS Marketing, Marketing, shipping, tracking number, carrier, transportadora, order notification, Multibanco
 Requires at least: 4.7
 Tested up to: 6.4.2
-Stable tag: 1.5.7
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
