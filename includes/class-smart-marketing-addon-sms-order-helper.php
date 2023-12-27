@@ -535,7 +535,7 @@ Obrigado',
 	 * @return bool
 	 */
 	public function smsonw_get_payment_data( $order, $field ) {
-		$order_meta = wc_get_order( $order['id'] )->get_meta_data();
+		$order_meta = get_post_meta( $order['id'] );
 
 		if ( key_exists( $order['payment_method'], $this->payment_foreign_table ) ) {
 			return $this->priv_get_data_table( $order['payment_method'], $field, $order['id'] );

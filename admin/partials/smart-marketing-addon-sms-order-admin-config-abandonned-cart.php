@@ -33,10 +33,7 @@
 							<tr>
 								<td><span><?php esc_html_e( 'Message', 'smart-marketing-addon-sms-order' ); ?></span></td>
 								<td>
-									<textarea name="message" id="message" style="min-width: 400px;width: 100%;">
-									<?php
-										echo ! empty( $abandoned_cart_obj['message'] ) ? esc_attr( $abandoned_cart_obj['message'] ) : '';
-									?>
+									<textarea name="message" id="message" style="min-width: 400px;width: 100%;"><?php echo ! empty( $abandoned_cart_obj['message'] ) ? esc_attr( $abandoned_cart_obj['message'] ) : '';?>
 										</textarea>
 									<p>
 										<?php esc_html_e( 'Use %link% to choose the position of the link otherwise the link will be placed at the end.', 'smart-marketing-addon-sms-order' ); ?><br>
@@ -51,11 +48,9 @@
 								<td>
 									<div>
 										<input type="text" id="title_pop" name="title_pop" style="width: 100%;"
-											   value="
-											   <?php
+											   value="<?php
 												echo ( isset( $abandoned_cart_obj['title_pop'] ) ) ? esc_attr( $abandoned_cart_obj['title_pop'] ) : '';
-												?>
-											   "
+												?>"
 										>
 									</div>
 								</td>
@@ -66,11 +61,9 @@
 								<td>
 									<div>
 										<input type="text" id="button_name" name="button_name" style="width: 100%;"
-											   value="
-											   <?php
+											   value="<?php
 												echo ( isset( $abandoned_cart_obj['button_name'] ) ) ? esc_attr( $abandoned_cart_obj['button_name'] ) : '';
-												?>
-											   "
+												?>"
 										>
 									</div>
 								</td>
@@ -81,11 +74,9 @@
 								<td>
 									<div>
 										<input type="text" id="button_cancel_name" name="button_cancel_name" style="width: 100%;"
-											   value="
-											   <?php
+											   value="<?php
 												echo ( isset( $abandoned_cart_obj['button_cancel_name'] ) ) ? esc_attr( $abandoned_cart_obj['button_cancel_name'] ) : '';
-												?>
-											   "
+												?>"
 										>
 									</div>
 								</td>

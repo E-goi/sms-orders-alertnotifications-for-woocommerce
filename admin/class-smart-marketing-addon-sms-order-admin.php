@@ -204,10 +204,10 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 				foreach ( $this->helper->smsonw_get_order_statuses() as $status => $name ) {
 					if ( trim( $post[ 'egoi_sms_order_text_customer_' . $status ] ) != '' ) {
-						$messages[ 'egoi_sms_order_text_customer_' . $status ] = sanitize_textarea_field( $post[ 'egoi_sms_order_text_customer_' . $status ] );
+						$messages[ 'egoi_sms_order_text_customer_' . $status ] = sanitize_textarea_field( trim($post[ 'egoi_sms_order_text_customer_' . $status ]) );
 					}
 					if ( trim( $post[ 'egoi_sms_order_text_admin_' . $status ] ) != '' ) {
-						$messages[ 'egoi_sms_order_text_admin_' . $status ] = sanitize_textarea_field( $post[ 'egoi_sms_order_text_admin_' . $status ] );
+						$messages[ 'egoi_sms_order_text_admin_' . $status ] = sanitize_textarea_field( trim($post[ 'egoi_sms_order_text_admin_' . $status ]) );
 
 					}
 				}

@@ -133,7 +133,7 @@ class Smart_Marketing_Addon_Sms_Order_Public {
 		$follow_price = json_decode( get_option( 'egoi_sms_follow_price' ), true );
 		$button_text  = ( isset( $follow_price['follow_price_button_name'] ) && '' !== $follow_price['follow_price_button_name'] ) ? $follow_price['follow_price_button_name'] : 'Follow price!';
 
-		echo esc_html( '<a class="button" id="triggerFollowPrice">' . $button_text . '</a>' );
+		echo'<a class="button" id="triggerFollowPrice">' . $button_text . '</a>';
 
 		$this->print_follow_price_form( $follow_price );
 	}
