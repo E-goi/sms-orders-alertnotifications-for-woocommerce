@@ -167,12 +167,6 @@ class Smart_Marketing_Addon_Sms_Order_Activator {
 	 */
 	public static function check_api_key() {
 		$apikey = get_option( 'egoi_api_key' );
-		$params = array(
-			'plugin_key' => '2f711c62b1eda65bfed5665fbd2cdfc9',
-			'apikey'     => $apikey['api_key'],
-		);
-		$client = new SoapClient( 'http://api.e-goi.com/v2/soap.php?wsdl' );
-		$client->checklogin( $params );
 		Smart_Marketing_Addon_Sms_Order_Helper::ping( $apikey['api_key'] );
 		self::activate_transactional( $apikey['api_key'] );
 	}

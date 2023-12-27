@@ -181,8 +181,8 @@ $reminder_times = array( '1', '12', '24', '36', '48', '72' );
 									if ( isset( $senders ) && count( $senders ) > 0 ) {
 										foreach ( $senders as $sender ) {
 											?>
-											<option value="<?php echo esc_attr( $sender['FROMID'] ); ?>" <?php selected( $sender['FROMID'], $sender_option['sender_hash'] ); ?> >
-												<?php echo esc_attr( $sender['SENDER'] ); ?>
+											<option value="<?php echo esc_attr( $sender->sender_id ); ?>" <?php selected( $sender->sender_id, $sender_option['sender_hash'] ); ?> >
+												<?php echo esc_attr( $sender->cellphone ); ?>
 											</option>
 											<?php
 										}
@@ -515,6 +515,7 @@ $reminder_times = array( '1', '12', '24', '36', '48', '72' );
 										<td>
 											<?php
 											$text = '';
+											$textAdmin = '';
 											if ( isset( $texts[ $code ][ 'egoi_sms_order_text_customer_' . $cod ] ) && trim( $texts[ $code ][ 'egoi_sms_order_text_customer_' . $cod ] ) != '' ) {
 												$text = $texts[ $code ][ 'egoi_sms_order_text_customer_' . $cod ];
 											} else {
@@ -524,7 +525,15 @@ $reminder_times = array( '1', '12', '24', '36', '48', '72' );
 											<textarea name="egoi_sms_order_text_customer_<?php echo esc_attr( $cod ); ?>" cols="40" rows="4" id="egoi_sms_order_text_customer_<?php echo esc_attr( $cod ); ?>"><?php echo esc_html( $text ); ?></textarea>
 										</td>
 										<td>
-											<textarea name="egoi_sms_order_text_admin_<?php echo esc_attr( $cod ); ?>" cols="40" rows="4" id="egoi_sms_order_text_admin_<?php echo esc_attr( $cod ); ?>"><?php echo esc_html( $texts[ $code ][ 'egoi_sms_order_text_admin_' . $cod ] ); ?></textarea>
+											<textarea name="egoi_sms_order_text_admin_<?php echo esc_attr( $cod ); ?>" cols="40" rows="4" id="egoi_sms_order_text_admin_<?php echo esc_attr( $cod ); ?>">
+												<?php 
+												    if (isset($texts[$code]['egoi_sms_order_text_admin_' . $cod]) && $texts[$code]['egoi_sms_order_text_admin_' . $cod] !== null) {
+														echo esc_html($texts[$code]['egoi_sms_order_text_admin_' . $cod]);
+													} else {
+														echo $textAdmin;
+													}
+												?>
+											</textarea>
 										</td>
 									</tr>
 								<?php } ?>
@@ -610,10 +619,10 @@ $reminder_times = array( '1', '12', '24', '36', '48', '72' );
 									<td>
 										<?php
 										$text = '';
-										if ( isset( $payment_texts[ $method_code ][ 'egoi_sms_order_payment_text_' . $lang_code ] ) && trim( $payment_texts[ $method_code ][ 'egoi_sms_order_payment_text_' . $lang_code ] ) != '' ) {
-											$text = $payment_texts[ $method_code ][ 'egoi_sms_order_payment_text_' . $lang_code ];
-										} else {
-											$text = $this->helper->sms_payment_info[ $method_code ]['first'][ $lang_code ];
+										if (isset($payment_texts[$method_code]['egoi_sms_order_payment_text_' . $lang_code]) && trim($payment_texts[$method_code]['egoi_sms_order_payment_text_' . $lang_code]) != '') {
+											$text = $payment_texts[$method_code]['egoi_sms_order_payment_text_' . $lang_code];
+										} elseif (isset($this->helper->sms_payment_info[$method_code]['first'][$lang_code])) {
+											$text = $this->helper->sms_payment_info[$method_code]['first'][$lang_code];
 										}
 										?>
 										<textarea name="egoi_sms_order_payment_text_<?php echo esc_attr( $lang_code ); ?>" cols="40" rows="4" id="egoi_sms_order_payment_text_<?php echo esc_attr( $lang_code ); ?>"><?php echo esc_html( $text ); ?></textarea>
@@ -623,7 +632,7 @@ $reminder_times = array( '1', '12', '24', '36', '48', '72' );
 										$text = '';
 										if ( isset( $payment_texts[ $method_code ][ 'egoi_sms_order_reminder_text_' . $lang_code ] ) && trim( $payment_texts[ $method_code ][ 'egoi_sms_order_reminder_text_' . $lang_code ] ) != '' ) {
 											$text = $payment_texts[ $method_code ][ 'egoi_sms_order_reminder_text_' . $lang_code ];
-										} else {
+										} elseif( isset( $this->helper->sms_payment_info[ $method_code ]['reminder'][ $lang_code ] ) ) {
 											$text = $this->helper->sms_payment_info[ $method_code ]['reminder'][ $lang_code ];
 										}
 										?>
@@ -712,7 +721,7 @@ $reminder_times = array( '1', '12', '24', '36', '48', '72' );
 										$text = '';
 										if ( isset( $payment_email_texts[ $method_code_email ][ 'egoi_sms_order_reminder_email_text_' . $lang_code_email ] ) && trim( $payment_email_texts[ $method_code_email ][ 'egoi_sms_order_reminder_email_text_' . $lang_code_email ] ) != '' ) {
 											$text = $payment_email_texts[ $method_code_email ][ 'egoi_sms_order_reminder_email_text_' . $lang_code_email ];
-										} else {
+										} elseif ( isset( $this->helper->email_payment_info[ $method_code_email ]['reminder'][ $lang_code_email ] ) ) {
 											$text = $this->helper->email_payment_info[ $method_code_email ]['reminder'][ $lang_code_email ];
 										}
 										?>
@@ -831,7 +840,9 @@ $reminder_times = array( '1', '12', '24', '36', '48', '72' );
 									<div>
 									  <input type="checkbox" id="follow_price_enable" name="follow_price_enable"
 									   <?php
-										checked( $follow_price['follow_price_enable'], 'on' );
+									   if (isset($follow_price['follow_price_enable'])) {
+											checked( $follow_price['follow_price_enable'], 'on' );
+									   }
 										?>
 									  >
 									</div>
@@ -844,7 +855,9 @@ $reminder_times = array( '1', '12', '24', '36', '48', '72' );
 									<div>
 										<input type="checkbox" id="follow_price_shortener" name="follow_price_shortener"
 											<?php
-											checked( $follow_price['follow_price_shortener'], 'on' );
+											if ( isset( $follow_price['follow_price_shortener'] )){
+												checked( $follow_price['follow_price_shortener'], 'on' );
+											}
 											?>
 										>
 									</div>
