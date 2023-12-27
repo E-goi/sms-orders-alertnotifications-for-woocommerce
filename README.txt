@@ -133,11 +133,14 @@ Or [WooCommerce PagSeguro](https://wordpress.org/plugins/woocommerce-pagseguro/ 
 
 == Changelog ==
 
+= 2.0.1 =
+* Minor fixes
+
 = 2.0.0 =
-- Processed PHP warnings
-- Migrated api calls to the latest E-goi API
-- Deprecated logic removed
-- Major improvements on performance and hooks calls 
+* Processed PHP warnings
+* Migrated api calls to the latest E-goi API
+* Deprecated logic removed
+* Major improvements on performance and hooks calls 
 
 = 1.5.7 =
 * Deprecate PayShop
