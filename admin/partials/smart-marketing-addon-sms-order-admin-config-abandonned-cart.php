@@ -17,7 +17,7 @@
 			<div class="main-content col col-12" style="margin:0 0 20px;">
 
 				<p class="label_text"><?php esc_html_e( 'Use this to add a lost cart sms trigger.', 'smart-marketing-addon-sms-order' ); ?></p>
-
+				<br>
 				<form action="#" method="post" class="form-sms-order-config" id="form-sms-order-abandoned-cart">
 					<?php wp_nonce_field( 'form-sms-order-abandoned-cart' ); ?>
 					<input name="form_id" type="hidden" value="form-sms-order-abandoned-cart" />

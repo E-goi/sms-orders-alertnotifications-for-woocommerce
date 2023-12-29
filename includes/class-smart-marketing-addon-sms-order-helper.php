@@ -1041,12 +1041,6 @@ Obrigado',
 			$objs = json_decode( $objs, true );
 		}
 
-		if ( empty( $objs_costum ) ) {
-			$objs_costum = array();
-		} else {
-			$objs_costum = json_decode( $objs_costum, true );
-		}
-
 		foreach ( $objs_costum as $costum ) {
 			$objs[ $costum['carrier'] ] = $costum['url'];
 		}
