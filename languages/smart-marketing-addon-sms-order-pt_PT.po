@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: SMS Orders Alert/Notifications for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-17 15:01+0000\n"
-"PO-Revision-Date: 2023-12-28 17:09+0000\n"
+"PO-Revision-Date: 2023-12-29 16:48+0000\n"
 "Last-Translator: \n"
 "Language-Team: Português\n"
 "Language: pt-PT\n"
@@ -95,7 +95,7 @@ msgstr "Aplicar"
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:866 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config-abandonned-cart.php:120
 msgid "Background Color"
-msgstr "Cor de fundo"
+msgstr ""
 
 #: includes/class-smart-marketing-addon-sms-order-helper.php:364
 msgid "Brazilian Portuguese"
@@ -104,12 +104,12 @@ msgstr "Português do Brasil"
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:897 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config-abandonned-cart.php:151
 msgid "Button Color"
-msgstr "Cor do botão"
+msgstr ""
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:913 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config-abandonned-cart.php:167
 msgid "Button Text Color"
-msgstr "Cor do texto do botão"
+msgstr ""
 
 #: smart-marketing-addon-sms-order.php:90
 msgid ""
@@ -141,7 +141,7 @@ msgstr "Nome da Transportadora"
 msgid "Carriers URL"
 msgstr "URL da transportadora"
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:834
+#: includes/class-smart-marketing-addon-sms-order-helper.php:840
 msgid "Changes saved successfully"
 msgstr "Alterações gravadas com sucesso"
 
@@ -327,7 +327,7 @@ msgid "In your E-goi account you must add a Sender to send sms,"
 msgstr ""
 "Na sua conta E-goi tem de adicionar um Remetente para conseguir enviar sms,"
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:845
+#: includes/class-smart-marketing-addon-sms-order-helper.php:851
 msgid "Irks! An error has occurred."
 msgstr "Ups! Aconteceu um erro"
 
@@ -400,7 +400,7 @@ msgstr ""
 "Opção de envio de SMS com os dados do Pagseguro só é compatível com o plugin "
 "WooCommerce PagSeguro"
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:792
+#: includes/class-smart-marketing-addon-sms-order-helper.php:798
 msgid "Order"
 msgstr "Encomenda"
 
@@ -417,7 +417,7 @@ msgstr "Estado da encomenda"
 msgid "PagSeguro"
 msgstr "PagSeguro"
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:792
+#: includes/class-smart-marketing-addon-sms-order-helper.php:798
 msgid "Payment reminder"
 msgstr "Lembrete de pagamento"
 
@@ -483,7 +483,7 @@ msgstr "Selecione uma opção"
 #:  
 #: admin/partials/smart-marketing-addon-sms-order-admin-config-abandonned-cart.php:172
 msgid "Select Color"
-msgstr "Selecionar cor"
+msgstr ""
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:570 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:671
@@ -585,7 +585,7 @@ msgstr "A enviar... Espere por favor"
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:843 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config-abandonned-cart.php:99
 msgid "Shortener"
-msgstr "Diminuição do URL exibido no %link%"
+msgstr ""
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:111
 msgid "SMS Follow Price"
@@ -621,16 +621,16 @@ msgstr "Espanhol"
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:859 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config-abandonned-cart.php:113
 msgid "Styles for dialog"
-msgstr "Configurações de aparência do Pop-up"
+msgstr ""
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:881 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config-abandonned-cart.php:135
 msgid "Text Color"
-msgstr "Cor do texto"
+msgstr ""
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:815
 msgid "Text on button"
-msgstr "Texto do botão"
+msgstr ""
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config-abandonned-cart.php:73
 msgid "Text on cancel button"
@@ -760,7 +760,7 @@ msgstr ""
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:796
 #| msgid "Use <b>%product%</b> for product name."
 msgid "Use %product%for product name."
-msgstr "Use <b>%product%</b> para apresentar o nome do produto"
+msgstr "Use %product% para apresentar o nome do produto"
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:795 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config-abandonned-cart.php:40
