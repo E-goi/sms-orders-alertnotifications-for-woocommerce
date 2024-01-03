@@ -22,8 +22,8 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       smart-marketing-addon-sms-order
  * Domain Path:       /languages
- * WC requires at least: 3.2
- * WC tested up to: 5.8
+ * WC requires at least: 4.7
+ * WC tested up to: 6.4.2
  */
 
 // If this file is called directly, abort.
