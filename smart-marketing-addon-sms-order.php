@@ -15,15 +15,15 @@
  * Plugin Name:       E-goi SMS Orders Alert/Notifications
  * Plugin URI:        https://wordpress.org/plugins/sms-orders-alertnotifications-for-woocommerce/
  * Description:       Send SMS notifications to your buyers and admins for each change to the order status in your WooCommerce store. Increase your conversions and better communicate with your customers.
- * Version:           2.0.0
+ * Version:           2.0.1
  * Author:            E-goi
  * Author URI:        https://www.e-goi.com
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       smart-marketing-addon-sms-order
  * Domain Path:       /languages
- * WC requires at least: 3.2
- * WC tested up to: 5.8
+ * WC requires at least: 4.7
+ * WC tested up to: 6.4.2
  */
 
 // If this file is called directly, abort.
@@ -97,7 +97,7 @@ function smsonw_child_plugin_notice() {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'EGOI_SMART_MARKETING_SMS_WOOCOMMERCE', '2.0.0' );
+define( 'EGOI_SMART_MARKETING_SMS_WOOCOMMERCE', '2.0.1' );
 
 /**
  * The code that runs during plugin activation.

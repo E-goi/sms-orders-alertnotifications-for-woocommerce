@@ -1,4 +1,7 @@
 <?php
+
+use Automattic\WooCommerce\Utilities\OrderUtil;
+
 /**
  * Helper class
  *
@@ -535,16 +538,30 @@ Obrigado',
 	 * @return bool
 	 */
 	public function smsonw_get_payment_data( $order, $field ) {
-		$order_meta = wc_get_order( $order['id'] )->get_meta_data();
+		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+			// HPOS usage is enabled.
+			$order = wc_get_order($order['id'] );
 
-		if ( key_exists( $order['payment_method'], $this->payment_foreign_table ) ) {
-			return $this->priv_get_data_table( $order['payment_method'], $field, $order['id'] );
-		}
+			if(isset( $this->payment_map[ $order->get_payment_method() ][ $field ] ) ){
+				$payment_field = $this->payment_map[ $order->get_payment_method() ][ $field ];
 
-		if ( isset( $this->payment_map[ $order['payment_method'] ][ $field ] ) ) {
-			$payment_field = $this->payment_map[ $order['payment_method'] ][ $field ];
-			return $order_meta[ $payment_field ][0];
+				return $order->get_meta( $payment_field );
+			}
+
+		} else {
+			// Traditional CPT-based orders are in use.
+			$order_meta = get_post_meta( $order['id'] );
+
+			if ( key_exists( $order['payment_method'], $this->payment_foreign_table ) ) {
+				return $this->priv_get_data_table( $order['payment_method'], $field, $order['id'] );
+			}
+
+			if ( isset( $this->payment_map[ $order['payment_method'] ][ $field ] ) ) {
+				$payment_field = $this->payment_map[ $order['payment_method'] ][ $field ];
+				return $order_meta[ $payment_field ][0];
+			}
 		}
+		
 		return false;
 	}
 
@@ -872,8 +889,7 @@ Obrigado',
 		$recipient_options = json_decode( get_option( 'egoi_sms_order_recipients' ), true );
 
 		if ( $recipient_options['notification_option'] ) {
-			$order = wc_get_order( $order_id );
-			return (bool) $order->is_internal_meta_key( 'egoi_notification_option' );
+			return (bool) get_post_meta( $order_id, 'egoi_notification_option' )[0];
 		} else {
 			return 1;
 		}
@@ -1023,12 +1039,6 @@ Obrigado',
 			$objs = array();
 		} else {
 			$objs = json_decode( $objs, true );
-		}
-
-		if ( empty( $objs_costum ) ) {
-			$objs_costum = array();
-		} else {
-			$objs_costum = json_decode( $objs_costum, true );
 		}
 
 		foreach ( $objs_costum as $costum ) {

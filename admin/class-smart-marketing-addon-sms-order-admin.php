@@ -92,7 +92,6 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 */
 	public function smsonw_enqueue_scripts( $hook ) {
 
-		if ( strpos( $hook, 'post.php' ) !== false || strpos( $hook, 'smart-marketing-addon-sms-order-config' ) !== false ) {
 			wp_enqueue_script( 'smsonw-meta-box-ajax-script', plugin_dir_url( __FILE__ ) . 'js/smsonw_order_action_sms_meta_box.min.js', array( 'jquery' ), $this->version );
 			wp_localize_script(
 				'smsonw-meta-box-ajax-script',
@@ -111,7 +110,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 					'ajax_nonce' => wp_create_nonce( 'egoi_add_custom_carrier' ),
 				)
 			);
-		}
+
 	}
 
 	/**
@@ -204,10 +203,10 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 				foreach ( $this->helper->smsonw_get_order_statuses() as $status => $name ) {
 					if ( trim( $post[ 'egoi_sms_order_text_customer_' . $status ] ) != '' ) {
-						$messages[ 'egoi_sms_order_text_customer_' . $status ] = sanitize_textarea_field( $post[ 'egoi_sms_order_text_customer_' . $status ] );
+						$messages[ 'egoi_sms_order_text_customer_' . $status ] = sanitize_textarea_field( trim($post[ 'egoi_sms_order_text_customer_' . $status ]) );
 					}
 					if ( trim( $post[ 'egoi_sms_order_text_admin_' . $status ] ) != '' ) {
-						$messages[ 'egoi_sms_order_text_admin_' . $status ] = sanitize_textarea_field( $post[ 'egoi_sms_order_text_admin_' . $status ] );
+						$messages[ 'egoi_sms_order_text_admin_' . $status ] = sanitize_textarea_field( trim($post[ 'egoi_sms_order_text_admin_' . $status ]) );
 
 					}
 				}
@@ -324,8 +323,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 						$order_data = $order->get_data();
 
 						if ( $recipient_options['notification_option'] ) {
-							$order = wc_get_order( $order->get_id() );
-							$sms_notification = (bool) $order->is_internal_meta_key( 'egoi_notification_option' );
+							$sms_notification =  (bool) get_post_meta( $order->get_id(), 'egoi_notification_option' )[0];
 						} else {
 							$sms_notification = 1;
 						}
@@ -460,7 +458,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 			if ( $recipient_options['notification_option'] ) {
 				$order = wc_get_order( $order_id );
-				$sms_notification = (bool) $order->is_internal_meta_key( 'egoi_notification_option' );
+				$sms_notification =  (bool) get_post_meta( $order->get_id(), 'egoi_notification_option' )[0];
 			} else {
 				$sms_notification = 1;
 			}
@@ -502,8 +500,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		$order = wc_get_order( $order_id )->get_data();
 
 		if ( $recipient_options['notification_option'] ) {
-			$order = wc_get_order( $order_id );
-			$sms_notification = (bool) $order->is_internal_meta_key( 'egoi_notification_option' );
+			$sms_notification = (bool) get_post_meta( $order_id, 'egoi_notification_option' )[0];
 		} else {
 			$sms_notification = 1;
 		}
@@ -639,8 +636,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		$order             = wc_get_order( $post->ID )->get_data();
 
 		if ( $recipient_options['notification_option'] ) {
-			$order = wc_get_order( $post->ID );
-			$sms_notification = (bool) $order->is_internal_meta_key( 'egoi_notification_option' );
+			(bool) get_post_meta( $post->ID, 'egoi_notification_option' )[0];
 		} else {
 			$sms_notification = 1;
 		}
@@ -1000,7 +996,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		$follow_price = json_decode( get_option( 'egoi_sms_follow_price' ), true );
 		if ( isset( $follow_price['follow_price_shortener'] ) && $follow_price['follow_price_shortener'] == 'on' ) {
 			$url = $this->helper->shortener( $url );
-			$url = $url['fullLink'];
+			$url = json_decode($url)->fullLink;
 		}
 
 		$message = str_replace( array( '%shop_name%', '%link%', '%product_name%', '%product%' ), array( get_bloginfo( 'name' ), $url, $product_name, $product_name ), $message );
