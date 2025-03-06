@@ -15,7 +15,7 @@
  * Plugin Name:       E-goi SMS Orders Alert/Notifications
  * Plugin URI:        https://wordpress.org/plugins/sms-orders-alertnotifications-for-woocommerce/
  * Description:       Send SMS notifications to your buyers and admins for each change to the order status in your WooCommerce store. Increase your conversions and better communicate with your customers.
- * Version:           2.0.1
+ * Version:           2.0.2
  * Author:            E-goi
  * Author URI:        https://www.e-goi.com
  * License:           GPL-2.0+
@@ -97,7 +97,7 @@ function smsonw_child_plugin_notice() {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'EGOI_SMART_MARKETING_SMS_WOOCOMMERCE', '2.0.1' );
+define( 'EGOI_SMART_MARKETING_SMS_WOOCOMMERCE', '2.0.2' );
 
 /**
  * The code that runs during plugin activation.
@@ -213,17 +213,17 @@ function egoi_woo_process_cellphone() {
  *
  * @return mixed
  */
-function egoi_woo_smsonw_my_add_every_fifteen_minutes( $schedules ) {
-	$schedules['every_fifteen_minutes'] = array(
-		'interval' => 60 * 15,
-		'display'  => __( 'Every Fifteen Minutes' ),
-	);
-	return $schedules;
+add_filter('cron_schedules', 'egoi_woo_register_custom_cron_intervals');
+function egoi_woo_register_custom_cron_intervals($schedules) {
+    $schedules['every_fifteen_minutes'] = array(
+        'interval' => 900,
+        'display'  => __( 'Every Fifteen Minutes' ),
+    );
+    return $schedules;
 }
-add_filter( 'cron_schedules', 'egoi_woo_smsonw_my_add_every_fifteen_minutes' );
-// Schedule an action if it's not already scheduled.
-if ( ! wp_next_scheduled( 'egoi_woo_smsonw_my_add_every_fifteen_minutes' ) ) {
-	wp_schedule_event( time(), 'every_fifteen_minutes', 'egoi_woo_smsonw_my_add_every_fifteen_minutes' );
+
+if ( ! wp_next_scheduled( 'egoi_woo_smsonw_cron_hook' ) ) {
+    wp_schedule_event( time(), 'every_fifteen_minutes', 'egoi_woo_smsonw_cron_hook' );
 }
 
 add_filter( 'upgrader_pre_install', 'filter_upgrader_pre_install', 10, 2 );

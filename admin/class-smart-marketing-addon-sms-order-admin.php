@@ -1075,12 +1075,13 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		return $output;
 	}
 
-	function egoi_woo_smsonw_my_add_every_fifteen_minutes( $schedules ) {
-		$schedules['every_fifteen_minutes'] = array(
-			'interval' => 60 * 15,
-			'display'  => __( 'Every Fifteen Minutes' ),
-		);
-		return $schedules;
-	}
+    /**
+     * Execute cron tasks every fifteen minutes.
+     */
+    public function smsonw_execute_cron_tasks() {
+        $this->smsonw_sms_order_reminder();
+        $this->smsonw_email_order_reminder();
+        $this->smsonw_sms_abandoned_cart_process();
+    }
 
 }
