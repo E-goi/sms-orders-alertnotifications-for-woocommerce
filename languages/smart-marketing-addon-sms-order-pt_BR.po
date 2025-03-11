@@ -12,7 +12,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.6.6; wp-6.4.2"
+"X-Loco-Version: 2.6.6; wp-6.7.2"
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:964
 msgid ""
