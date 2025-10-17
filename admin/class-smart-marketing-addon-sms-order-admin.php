@@ -56,6 +56,15 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	public $sms_sent = false;
 
 	/**
+	 * The plugin screen hook suffix.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      string    $plugin_screen_hook_suffix    The plugin screen hook suffix.
+	 */
+	private $plugin_screen_hook_suffix;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
