@@ -5,7 +5,7 @@ Tags: SMS, Orders, WooCommerce, Notifications, Alert, E-goi, Marketing Automatio
 Requires at least: 4.7
 Tested up to: 6.7.2
 Requires PHP: 5.6
-Stable tag: 2.0.3
+Stable tag: 2.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 SMS Order Alerts for WooCommerce: Increase conversions by sending status, shipping, and Multibanco/PagSeguro payment reminders via SMS.
@@ -135,6 +135,9 @@ Do you need an E-goi account ? [Click and create a free E-goi account](https://l
 
 
 == Changelog ==
+
+= 2.0.4 =
+* Add new declared variable to avoid PHP warning
 
 = 2.0.3 =
 * Bump tested up to tag
