@@ -8,15 +8,16 @@ Requires PHP: 5.6
 Stable tag: 2.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
+
 SMS Order Alerts for WooCommerce: Increase conversions by sending status, shipping, and Multibanco/PagSeguro payment reminders via SMS.
 
 == Description ==
 
-🇵🇹 VERSÃO EM PORTUGUÊS (PT-PT) 🇵🇹
+= 🇵🇹 VERSÃO EM PORTUGUÊS (PT-PT) =
 
 **O E-goi SMS Orders Alert/Notifications é um Add-on essencial para lojas WooCommerce, desenhado para aumentar as suas conversões e melhorar a comunicação com o cliente.**
 
-NOTA: Este add-on integra-se no Plugin Base [E-goi - Smart Marketing SMS and Newsletters Forms](https://wordpress.org/plugins/sms-orders-alertnotifications-for-woocommerce/ "E-goi - Smart Marketing SMS and Newsletters Forms") e oferece uma automação de SMS crítica para o e-commerce:
+**NOTA:** Este add-on integra-se no Plugin Base [E-goi - Smart Marketing SMS and Newsletters Forms](https://wordpress.org/plugins/smart-marketing-for-wp/ "E-goi - Smart Marketing SMS and Newsletters Forms") e oferece uma automação de SMS crítica para o e-commerce:
 
 * Enviar notificações SMS personalizadas ao **Cliente** e/ou **Administrador** em qualquer alteração de estado da encomenda.
 * Reduzir o abandono de encomendas com lembretes automáticos de pagamento por **SMS e/ou E-mail** para **Multibanco** e **PagSeguro**.
@@ -33,9 +34,9 @@ NOTA: Este add-on integra-se no Plugin Base [E-goi - Smart Marketing SMS and New
 * **Administração:** Envio de SMS diretos ao cliente dentro da página da encomenda.
 
 
-**Requisitos**
+**Requisitos:**
 
-* Necessita ter instalado e configurado o [E-goi - Smart Marketing SMS and Newsletters Forms](https://wordpress.org/plugins/sms-orders-alertnotifications-for-woocommerce/ "E-goi - Smart Marketing SMS and Newsletters Forms").
+* Necessita ter instalado e configurado o [E-goi - Smart Marketing SMS and Newsletters Forms](https://wordpress.org/plugins/smart-marketing-for-wp/ "E-goi - Smart Marketing SMS and Newsletters Forms").
 * Necessita ter instalado o **WooCommerce**.
 * É necessário um **Plano E-goi** com:
     * Transacional activa e congigurada
@@ -51,15 +52,15 @@ NOTA: Este add-on integra-se no Plugin Base [E-goi - Smart Marketing SMS and New
     * Hipay Comprafácil [plugin Comprafácil para WooCommerce](http://downloads.hipay.pt/download/hipay-comprafacil-multibanco-para-woocommerce/ "Comprafácil para WooCommerce")
     * PagSeguro - (de momento, compatível com o plugin WooCommerce PagSeguro)
 
-Já tem uma conta E-goi? [Criar conta E-goi Gratuita](https://login.egoiapp.com/signup "Criar conta E-goi")
+Já tem uma conta E-goi? [Criar conta E-goi gratuita](https://login.egoiapp.com/signup "Criar conta E-goi")
 
 ---
 
-= 🇬🇧 ENGLISH VERSION (EN-EN) 🇬🇧 =
+= 🇬🇧 ENGLISH VERSION (EN-EN) =
 
 **The E-goi SMS Orders Alert/Notifications is an essential Add-on for WooCommerce stores, designed to boost conversions and enhance customer communication.**
 
-NOTE: This plugin integrates with the main [E-goi - Smart Marketing SMS and Newsletters Forms](https://wordpress.org/plugins/sms-orders-alertnotifications-for-woocommerce/ "E-goi - Smart Marketing SMS and Newsletters Forms") Plugin and provides critical SMS automation for e-commerce:
+**NOTE:** This plugin integrates with the main [E-goi - Smart Marketing SMS and Newsletters Forms](https://wordpress.org/plugins/smart-marketing-for-wp/ "E-goi - Smart Marketing SMS and Newsletters Forms") Plugin and provides critical SMS automation for e-commerce:
 
 * Send personalized SMS notifications to the **Customer** and/or **Administrator** upon any order status change.
 * Reduce abandoned orders with automatic **SMS and/or Email** payment reminders for **Multibanco** and **PagSeguro**.
@@ -76,9 +77,9 @@ NOTE: This plugin integrates with the main [E-goi - Smart Marketing SMS and News
 * **Administration:** Send direct test SMS messages and manually send SMS from the order page.
 
 
-**Requirements**
+**Requirements:**
 
-* You must have the [E-goi - Smart Marketing SMS and Newsletters Forms](https://wordpress.org/plugins/sms-orders-alertnotifications-for-woocommerce/ "E-goi - Smart Marketing SMS and Newsletters Forms") plugin installed and configured.
+* You must have the [E-goi - Smart Marketing SMS and Newsletters Forms](https://wordpress.org/plugins/smart-marketing-for-wp/ "E-goi - Smart Marketing SMS and Newsletters Forms") plugin installed and configured.
 * You must have **WooCommerce** installed.
 * An **E-goi Plan** is required, including:
     * Transactional active and configured
@@ -97,6 +98,26 @@ NOTE: This plugin integrates with the main [E-goi - Smart Marketing SMS and News
 Do you need an E-goi account ? [Click and create a free E-goi account](https://login.egoiapp.com/signup "Create E-goi account")
 
 
+== Installation ==
+
+= VERSÃO EM PORTUGUÊS (PT-PT) 🇵🇹 =
+1. Descarregar o plugin.
+2. Instalar o plugin no WordPress.
+3. O plugin de Notificações SMS vai validar se está instalado o WooCommerce e o plugin E-goi Smart Marketing (estes plugins são obrigatórios).
+4. Activar o plugin.
+5. Deve aceder ao plugin e seguir os passos apresentados no separador Ajuda (o plugin vai aparecer como um addon ao plugin E-goi Smart Marketing).
+
+---
+
+= ENGLISH VERSION (EN-EN) 🇬🇧 =
+1. Download the plugin.
+2. Install the plugin in WordPress.
+3. The SMS Notifications plugin will validate if WooCommerce and the E-goi Smart Marketing plugin are installed (these plugins are required).
+4. Activate the plugin.
+5. You should access the plugin and follow the steps presented in the Help tab (the plugin will appear as an addon to the E-goi Smart Marketing plugin).
+
+--- 
+
 = 🇵🇹 Manual de instruções WordPress e WooCommerce =
 
 [Manual de Instruções](https://helpdesk.e-goi.com/835325-Integrar-o-E-goi-com-o-WordPress-e-WooCommerce#smsnotify "Manual de Instruções")
@@ -110,28 +131,10 @@ Do you need an E-goi account ? [Click and create a free E-goi account](https://l
 [Manual de Instrucciones](https://helpdesk.e-goi.com/685499-Integrar-E-goi-con-WordPress-y-WooCommerce#smsnotify "Manual de Instrucciones")
 
 
-== Installation ==
+== Frequently Asked Questions ==
 
-1. Descarregar o plugin.
-2. Instalar o plugin no WordPress.
-3. O plugin de Notificações SMS vai validar se está instalado o WooCommerce e o plugin E-goi Smart Marketing (estes plugins são obrigatórios).
-4. Activar o plugin.
-5. Deve aceder ao plugin e seguir os passos apresentados no separador Ajuda (o plugin vai aparecer como um addon ao plugin E-goi Smart Marketing).
-
----
-
-1. Download the plugin.
-2. Install the plugin in WordPress.
-3. The SMS Notifications plugin will validate if WooCommerce and the E-goi Smart Marketing plugin are installed (these plugins are required).
-4. Activate the plugin.
-5. You should access the plugin and follow the steps presented in the Help tab (the plugin will appear as an addon to the E-goi Smart Marketing plugin).
-
-
-== Screenshots ==
-
-1. Configurações gerais do plugin
-2. Edição das mensagens SMS enviadas aos clientes por estado de encomenda
-3. Encomenda com opção de envio de SMS directo ao cliente
+= Where can I get my API key? =
+Just click on the link available at the info screen, register an account, and get your API key.
 
 
 == Changelog ==
