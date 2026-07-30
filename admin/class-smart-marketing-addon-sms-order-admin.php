@@ -101,6 +101,11 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 */
 	public function smsonw_enqueue_scripts( $hook ) {
 
+			$allowed_hooks = array( 'post.php', 'woocommerce_page_wc-orders', $this->plugin_screen_hook_suffix );
+			if ( ! in_array( $hook, $allowed_hooks, true ) ) {
+				return;
+			}
+
 			wp_enqueue_script( 'smsonw-meta-box-ajax-script', plugin_dir_url( __FILE__ ) . 'js/smsonw_order_action_sms_meta_box.min.js', array( 'jquery' ), $this->version );
 			wp_localize_script(
 				'smsonw-meta-box-ajax-script',
@@ -681,6 +686,9 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 */
 	public function smsonw_order_action_sms_meta_box() {
 		check_ajax_referer( 'egoi_send_order_sms', 'security' );
+		if ( ! current_user_can( 'edit_shop_orders' ) ) {
+			wp_die( -1, 403 );
+		}
 
 		$cellphone = isset( $_POST['recipient'] ) ? sanitize_text_field( wp_unslash( $_POST['recipient'] ) ) : '';
 		$country   = isset( $_POST['country'] ) ? sanitize_text_field( wp_unslash( $_POST['country'] ) ) : '';
@@ -711,6 +719,9 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 */
 	public function smsonw_order_add_tracking_number() {
 		check_ajax_referer( 'egoi_send_order_sms', 'security' );
+		if ( ! current_user_can( 'edit_shop_orders' ) ) {
+			wp_die( -1, 403 );
+		}
 
 		$order_id      = ! empty( $_POST['order_id'] ) ? sanitize_key( $_POST['order_id'] ) : '';
 		$tracking_code = ! empty( $_POST['code'] ) ? sanitize_text_field( wp_unslash( $_POST['code'] ) ) : '';
@@ -754,6 +765,9 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 * */
 	public function smsonw_order_delete_tracking_number() {
 		check_ajax_referer( 'egoi_send_order_sms', 'security' );
+		if ( ! current_user_can( 'edit_shop_orders' ) ) {
+			wp_die( -1, 403 );
+		}
 		$order_id      = ! empty( $_POST['order_id'] ) ? sanitize_key( $_POST['order_id'] ) : 0;
 		$tracking_code = ! empty( $_POST['code'] ) ? sanitize_text_field( wp_unslash( $_POST['code'] ) ) : '';
 		$order         = wc_get_order( $order_id );
@@ -784,6 +798,9 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 	public function smsonw_add_custom_carrier() {
 		check_ajax_referer( 'egoi_add_custom_carrier', 'security' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( -1, 403 );
+		}
 		$carrier = ! empty( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
 		$url     = ! empty( $_POST['url'] ) ? sanitize_text_field( wp_unslash( $_POST['url'] ) ) : '';
 		$obj     = get_option( 'egoi_custom_carriers' );
@@ -808,6 +825,9 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 	public function smsonw_remove_custom_carrier() {
 		check_ajax_referer( 'egoi_add_custom_carrier', 'security' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( -1, 403 );
+		}
 		$carrier = ! empty( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
 		$obj     = get_option( 'egoi_custom_carriers' );
 

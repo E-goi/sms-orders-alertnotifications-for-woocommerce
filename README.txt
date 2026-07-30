@@ -5,7 +5,7 @@ Tags: SMS, Orders, WooCommerce, Notifications, Alert, E-goi, Marketing Automatio
 Requires at least: 4.7
 Tested up to: 6.7.2
 Requires PHP: 5.6
-Stable tag: 2.0.4
+Stable tag: 2.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -138,6 +138,9 @@ Just click on the link available at the info screen, register an account, and ge
 
 
 == Changelog ==
+= 2.0.5 =
+* Add security
+
 
 = 2.0.4 =
 * Add new declared variable to avoid PHP warning
