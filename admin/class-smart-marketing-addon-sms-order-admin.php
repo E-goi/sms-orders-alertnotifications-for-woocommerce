@@ -337,7 +337,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 						$order_data = $order->get_data();
 
 						if ( $recipient_options['notification_option'] ) {
-							$sms_notification =  (bool) get_post_meta( $order->get_id(), 'egoi_notification_option' )[0];
+							$sms_notification = $this->helper->smsonw_get_order_notification_option( $order->get_id() );
 						} else {
 							$sms_notification = 1;
 						}
@@ -472,7 +472,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 			if ( $recipient_options['notification_option'] ) {
 				$order = wc_get_order( $order_id );
-				$sms_notification =  (bool) get_post_meta( $order->get_id(), 'egoi_notification_option' )[0];
+				$sms_notification = $this->helper->smsonw_get_order_notification_option( $order->get_id() );
 			} else {
 				$sms_notification = 1;
 			}
@@ -514,7 +514,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		$order = wc_get_order( $order_id )->get_data();
 
 		if ( $recipient_options['notification_option'] ) {
-			$sms_notification = (bool) get_post_meta( $order_id, 'egoi_notification_option' )[0];
+			$sms_notification = $this->helper->smsonw_get_order_notification_option( $order_id );
 		} else {
 			$sms_notification = 1;
 		}
@@ -650,7 +650,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		$order             = wc_get_order( $post->ID )->get_data();
 
 		if ( $recipient_options['notification_option'] ) {
-			(bool) get_post_meta( $post->ID, 'egoi_notification_option' )[0];
+			$sms_notification = $this->helper->smsonw_get_order_notification_option( $post->ID );
 		} else {
 			$sms_notification = 1;
 		}
