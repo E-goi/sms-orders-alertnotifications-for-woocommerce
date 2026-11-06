@@ -742,40 +742,80 @@ Obrigado',
 	 * @return mixed
 	 */
 	public function smsonw_send_sms( $recipient, $message, $type, $order_id, $gsm = false, $max_count = 3 ) {
-		$url = 'http://dev-web-agency.e-team.biz/smaddonsms/sms';
+		$url = 'https://slingshot.egoiapp.com/api/v2/sms/messages/action/send/single';
 
 		$sender = json_decode( get_option( 'egoi_sms_order_sender' ), true );
 
+		if ( empty( $sender['sender_hash'] ) ) {
+			return false;
+		}
+
+		// GSM 03.38 only when the text allows it, otherwise unicode (accents like "ã" or "ç" are not GSM).
+		$encoding = $this->smsonw_is_gsm_text( $message ) ? 'gsm0338' : 'unicode';
+
 		$sms_params = array(
-			'apikey'      => $this->apikey,
-			'sender_hash' => $sender['sender_hash'],
-			'message'     => $message,
-			'recipient'   => $recipient,
-			'type'        => $type,
-			'order_id'    => $order_id,
-			'gsm'         => $gsm,
-			'max_count'   => $max_count,
+			'to'       => $recipient,
+			// The option key is legacy: it stores the sender_id returned by the senders API.
+			'from'     => $sender['sender_hash'],
+			'textBody' => $message,
+			'encoding' => $encoding,
+			'maxCount' => (int) $max_count,
 		);
 
 		$response = wp_remote_post(
 			$url,
 			array(
-				'timeout' => 60,
-				'body'    => $sms_params,
+				'timeout' => 15,
+				'body'    => wp_json_encode( $sms_params ),
+				'headers' => array(
+					'Apikey'       => $this->apikey,
+					'Content-Type' => 'application/json',
+				),
 			)
 		);
 
-		$result = wp_json_encode( $response['body'] );
-
-		if ( 200 === $response['response']['code'] ) {
-			$sms_counter = get_option( 'egoi_sms_counter' );
-			$counter     = $sms_counter ? $sms_counter + 1 : 1;
-			update_option( 'egoi_sms_counter', $counter );
-		} else {
+		// Never break the checkout because of the SMS.
+		if ( is_wp_error( $response ) ) {
+			error_log( 'smart-marketing-addon-sms-order: order ' . $order_id . ' (' . $type . '): ' . $response->get_error_message() );
 			return false;
 		}
 
-		return $result;
+		$code = (int) wp_remote_retrieve_response_code( $response );
+		if ( $code < 200 || $code >= 300 ) {
+			error_log( 'smart-marketing-addon-sms-order: order ' . $order_id . ' (' . $type . '): HTTP ' . $code );
+			return false;
+		}
+
+		$sms_counter = get_option( 'egoi_sms_counter' );
+		$counter     = $sms_counter ? $sms_counter + 1 : 1;
+		update_option( 'egoi_sms_counter', $counter );
+
+		return wp_json_encode( wp_remote_retrieve_body( $response ) );
+	}
+
+	/**
+	 * Check if a text only has GSM 03.38 characters.
+	 *
+	 * @param string $text Text to check.
+	 *
+	 * @return bool
+	 */
+	public function smsonw_is_gsm_text( $text ) {
+		$gsm = "@£\$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà^{}\\[~]|€\f";
+		return 1 === preg_match( '/^[' . preg_quote( $gsm, '/' ) . ']*$/u', $text );
+	}
+
+	/**
+	 * Read the customer SMS notification option of an order (HPOS compatible).
+	 *
+	 * @param int $order_id Order id.
+	 *
+	 * @return bool
+	 */
+	public function smsonw_get_order_notification_option( $order_id ) {
+		$order = wc_get_order( $order_id );
+
+		return $order ? (bool) $order->get_meta( 'egoi_notification_option' ) : false;
 	}
 
 	/**
@@ -889,7 +929,7 @@ Obrigado',
 		$recipient_options = json_decode( get_option( 'egoi_sms_order_recipients' ), true );
 
 		if ( $recipient_options['notification_option'] ) {
-			return (bool) get_post_meta( $order_id, 'egoi_notification_option' )[0];
+			return $this->smsonw_get_order_notification_option( $order_id );
 		} else {
 			return 1;
 		}
